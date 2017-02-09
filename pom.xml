@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 
 	<name>caracore-pdv</name>
-	<description>PDV Cara Core poject for Spring MVC and Spring Boot</description>
+	<description>PDV Cara Core Project for Spring MVC and Spring Boot</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
