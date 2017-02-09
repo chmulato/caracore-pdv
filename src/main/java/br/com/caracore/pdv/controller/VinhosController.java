@@ -1,7 +1,5 @@
 package br.com.caracore.pdv.controller;
 
-import java.util.Optional;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,17 +13,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import br.com.caracore.pdv.model.TipoVinho;
 import br.com.caracore.pdv.model.Vinho;
-import br.com.caracore.pdv.repository.Vinhos;
+import br.com.caracore.pdv.model.types.TipoVinho;
 import br.com.caracore.pdv.repository.filter.VinhoFilter;
+import br.com.caracore.pdv.service.VinhoService;
 
 @Controller
 @RequestMapping("/vinhos")
 public class VinhosController {
 	
 	@Autowired
-	private Vinhos vinhos;
+	private VinhoService vinhoService;
 	
 	@GetMapping("/novo")
 	public ModelAndView novo(Vinho vinho) {
@@ -41,27 +39,32 @@ public class VinhosController {
 		if (result.hasErrors()) {
 			return novo(vinho);
 		}
-		vinhos.save(vinho);
+		vinhoService.salvar(vinho);
 		attributes.addFlashAttribute("mensagem", "Vinho salvo com sucesso!");
 		return new ModelAndView("redirect:/vinhos/novo");
 	}
 	
 	@GetMapping
-	public ModelAndView pesquisar(VinhoFilter vinhoFilter) {
+	public ModelAndView pesquisar(VinhoFilter filtroVinho) {
 		ModelAndView mv = new ModelAndView("vinho/pesquisa-vinhos");
-		mv.addObject("vinhos", vinhos.findByNomeContainingIgnoreCase(Optional.ofNullable(vinhoFilter.getNome()).orElse("%")));
+		if (filtroVinho != null) {
+			mv.addObject("vinhos", vinhoService.pesquisar(filtroVinho));
+		} else {
+			filtroVinho = new VinhoFilter();
+			filtroVinho.setNome("%");
+		}
 		return mv;		
 	}
 	
 	@GetMapping("/{codigo}")
 	public ModelAndView editar(@PathVariable Long codigo) {
-		Vinho vinho = vinhos.findOne(codigo);
+		Vinho vinho = vinhoService.pesquisarPorId(codigo);
 		return novo(vinho);
 	}
 	
 	@DeleteMapping("/{codigo}")
 	public String apagar(@PathVariable Long codigo, RedirectAttributes attributes) {
-		vinhos.delete(codigo);
+		vinhoService.excluir(codigo);
 		attributes.addFlashAttribute("mensagem", "Vinho removido com sucesso!");
 		return "redirect:/vinhos";
 	}

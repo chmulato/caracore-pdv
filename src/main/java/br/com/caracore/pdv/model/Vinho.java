@@ -13,6 +13,8 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.NumberFormat;
 
+import br.com.caracore.pdv.model.types.TipoVinho;
+
 @Entity
 public class Vinho {
 

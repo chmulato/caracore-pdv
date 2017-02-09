@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.com.caracore.pdv.model.Vinho;
 
-public interface Vinhos extends JpaRepository<Vinho, Long> {
+public interface VinhoRepository extends JpaRepository<Vinho, Long> {
 	
 	public List<Vinho> findByNomeContainingIgnoreCase(String nome);
 
