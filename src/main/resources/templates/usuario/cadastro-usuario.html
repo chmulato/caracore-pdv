@@ -38,44 +38,53 @@
 			<input type="hidden" th:field="*{codigo}" />
 	
 			<div class="row">
-				<div class="form-group">
-					<label for="nome">Nome</label>
-					<input id="nome" type="text" class="form-control" th:field="*{nome}"/>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label for="nome">Nome</label>
+						<input id="nome" type="text" class="form-control" th:field="*{nome}"/>
+					</div>
 				</div>
-
+	
 				<div class="col-sm-6">
 					<div class="form-group">
 						<label for="perfil">Perfil</label>
 						<select id="perfil" class="form-control" th:field="*{perfil}">
 							<option value="">Selecione o perfil</option>
-							<option th:each="tipo : ${tipos}" th:value="${tipo}" th:text="#{|tipoUsuario.${tipo}|}"></option>
+							<option th:each="tipo : ${tipos}" th:value="${tipo}" th:text="#{|tipoPerfil.${tipo}|}"></option>
 						</select>
 					</div>
 				</div>
 			</div>
 	
-	
 			<div class="row">
-				<div class="form-group">
-					<label for="senha">Senha</label>
-					<input id="senha" type="password" class="form-control" th:field="*{senha}"/>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label for="senha">Senha</label>
+						<input id="senha" type="password" class="form-control" th:field="*{senha}"/>
+					</div>
 				</div>
-		
-				<div class="form-group">
-					<label for="repetirSenha">Repetir Senha</label>
-					<input id="repetirSenha" type="password" class="form-control" th:field="*{repetirSenha}"/>
+			
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label for="repetirSenha">Repetir Senha</label>
+						<input id="repetirSenha" type="password" class="form-control" th:field="*{repetirSenha}"/>
+					</div>
 				</div>
 			</div>
 	
 			<div class="row">
-				<div class="form-group">
-					<label for="email">E-mail</label>
-					<input id="email" type="text" class="form-control" th:field="*{email}"/>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label for="email">E-mail</label>
+						<input id="email" type="text" class="form-control" th:field="*{email}"/>
+					</div>
 				</div>
 		
-				<div class="form-group">
-					<label for="repetirEmail">Repetir E-mail</label>
-					<input id="repetirEmail" type="text" class="form-control" th:field="*{repetirEmail}"/>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label for="repetirEmail">Repetir E-mail</label>
+						<input id="repetirEmail" type="text" class="form-control" th:field="*{repetirEmail}"/>
+					</div>
 				</div>
 			</div>
 			

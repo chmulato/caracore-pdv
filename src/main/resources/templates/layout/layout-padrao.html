@@ -66,11 +66,11 @@
 				          </a>
 				      
 				          <ul class="aw-menu__list  aw-menu__list--sublist">
-						        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_ADMINISTRADOR')">
+						        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_USUARIO')">
 						          <a th:href="@{/usuarios/novo}"><i class="fa  fa-fw  fa-home"></i><span>Cadastro usuário</span></a>
 						        </li>
 						
-						        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_USUARIO', 'ROLE_VISITANTE')">
+						        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_USUARIO')">
 						          <a th:href="@{/usuarios}"><i class="fa  fa-fw  fa-home"></i><span>Pesquisa usuário</span></a>
 						        </li>
 				          </ul>
@@ -80,7 +80,7 @@
 						          <a th:href="@{/vinhos/novo}"><i class="fa  fa-fw  fa-home"></i><span>Cadastro vinho</span></a>
 						        </li>
 						
-						        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_VISITANTE')">
+						        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_USUARIO')">
 						          <a th:href="@{/vinhos}"><i class="fa  fa-fw  fa-home"></i><span>Pesquisa vinho</span></a>
 						        </li>
 				          </ul>

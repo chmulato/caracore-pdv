@@ -19,8 +19,7 @@
 
 	<div class="container-fluid">
 	
-		<form method="post" class="form-vertical  js-form-loading"
-			 th:object="${vinho}" th:action="@{/vinhos/novo}">
+		<form method="post" class="form-vertical  js-form-loading" th:object="${vinho}" th:action="@{/vinhos/novo}">
 	
 			<div class="alert  alert-danger  alert-dismissible" role="alert" th:if="${#fields.hasAnyErrors()}">
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>

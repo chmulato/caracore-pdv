@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.caracore.pdv.model.Usuario;
 import br.com.caracore.pdv.repository.UsuarioRepository;
+import br.com.caracore.pdv.repository.filter.UsuarioFilter;
 
 @Service
 public class UsuarioService {
@@ -34,6 +35,11 @@ public class UsuarioService {
 			}
 		}
 		return result;
+	}
+
+	public List<Usuario> pesquisar(UsuarioFilter filtro) {
+		String nome = filtro.getNome() == null ? "%" : filtro.getNome();
+		return usuarioRepository.findByNomeContainingIgnoreCase(nome);
 	}
 	
 	public List<Usuario> buscarTodos() {

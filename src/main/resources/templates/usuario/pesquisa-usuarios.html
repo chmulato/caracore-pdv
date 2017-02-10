@@ -8,7 +8,7 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 	
 	<head>
-		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/pesquisa-vinhos.css}"/>
+		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/pesquisa-itens.css}"/>
 	</head>
 	<body>
 		<section layout:fragment="conteudo">
@@ -21,9 +21,9 @@
 						</h1>
 					</div>
 					
-					<div class="col-xs-2" sec:authorize="hasRole('ROLE_ADMINISTRADOR')">
+					<div class="col-xs-2" sec:authorize="hasRole('ROLE_USUARIO')">
 						<div class="aw-page-header-controls">
-							<a class="btn btn-primary" th:href="@{/vinhos/novo}">
+							<a class="btn btn-primary" th:href="@{/usuarios/novo}">
 								<i class="fa  fa-plus-circle"></i> <span class="hidden-xs  hidden-sm">Novo usuário</span>
 							</a>
 						</div>
@@ -38,7 +38,7 @@
 				<span th:text="${mensagem}"></span>
 			</div>
 		
-			<form method="get" class="form-vertical  js-form-loading" th:object="${vinhoFilter}">
+			<form method="get" class="form-vertical  js-form-loading" th:object="${usuarioFilter}">
 				<div class="form-group">
 					<div class="input-group">
 						<input id="nome" type="text" th:field="*{nome}" class="form-control" 
@@ -59,27 +59,27 @@
 							<th class="av-table-vinhos-col-codigo">Código</th>
 							<th>Nome</th>
 							<th class="av-table-vinhos-col-tipo">Tipo</th>
-							<th class="av-table-vinhos-col-valor">Valor</th>
-							<th class="av-table-vinhos-col-icons" sec:authorize="hasRole('ROLE_ADMINISTRADOR')"></th>
+							<th class="av-table-vinhos-col-valor">E-mail</th>
+							<th class="av-table-vinhos-col-icons" sec:authorize="hasRole('ROLE_USUARIO')"></th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="vinho : ${vinhos}">
-							<td th:text="${vinho.codigo}" class="text-center">1</td>
+						<tr th:each="usuario : ${usuarios}">
+							<td th:text="${usuario.codigo}" class="text-center">1</td>
 							<td>
-								<a th:href="@{/vinhos/{codigo}(codigo=${vinho.codigo})}" th:text="${vinho.nome}" sec:authorize="hasRole('ROLE_USUARIO')"></a>
-								<span th:text="${vinho.nome}" sec:authorize="not hasRole('ROLE_ADMINISTRADOR')"></span>
+								<a th:href="@{/usuarios/{codigo}(codigo=${usuario.codigo})}" th:text="${usuario.nome}" sec:authorize="hasRole('ROLE_USUARIO')"></a>
+								<span th:text="${usuario.nome}" sec:authorize="not hasRole('ROLE_USUARIO')"></span>
 							</td>
-							<td th:text="#{|tipoVinho.${vinho.tipo}|}">Tinto</td>
-							<td th:text="|R$${{vinho.valor}}|" class="text-right">55,00</td>
-							<td class="text-center" sec:authorize="hasRole('ROLE_ADMINISTRADOR')">
+							<td th:text="#{|tipoPerfil.${usuario.perfil}|}">Administrador</td>
+							<td th:text="${usuario.email}" class="text-right">chmulato@hotmail.com</td>
+							<td class="text-center" sec:authorize="hasRole('ROLE_USUARIO')">
 								<i class="fa  fa-trash" style="cursor:pointer"
 									data-toggle="modal" data-target="#confirmaExclusaoModal"
-									data:nome="${vinho.nome}" 
-									data:url-apagar="@{/vinhos/{codigo}(codigo=${vinho.codigo})}"></i>
+									data:nome="${usuario.nome}" 
+									data:url-apagar="@{/usuarios/{codigo}(codigo=${usuario.codigo})}"></i>
 							</td>
 						</tr>
-						<tr th:if="${vinhos.empty}">
+						<tr th:if="${usuarios.empty}">
 							<td colspan="5">Nenhum usuário cadastrado</td>
 						</tr>
 					</tbody>

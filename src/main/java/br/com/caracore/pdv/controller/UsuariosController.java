@@ -14,16 +14,29 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.caracore.pdv.model.Usuario;
 import br.com.caracore.pdv.model.types.TipoUsuario;
+import br.com.caracore.pdv.repository.filter.UsuarioFilter;
 import br.com.caracore.pdv.service.UsuarioService;
 
 @Controller
 @RequestMapping("/usuarios")
 public class UsuariosController {
 	
-	private static final String CADASTRO_VIEW = "cadastro-usuario";
+	private static final String CADASTRO_VIEW = "usuario/cadastro-usuario";
 
 	@Autowired
 	private UsuarioService usuarioService;
+	
+	@GetMapping
+	public ModelAndView pesquisar(UsuarioFilter filtroUsuario) {
+		ModelAndView mv = new ModelAndView("usuario/pesquisa-usuarios");
+		if (filtroUsuario != null) {
+			mv.addObject("usuarios", usuarioService.pesquisar(filtroUsuario));
+		} else {
+			filtroUsuario = new UsuarioFilter();
+			filtroUsuario.setNome("%");
+		}
+		return mv;		
+	}
 	
 	
 	@GetMapping("/novo")
