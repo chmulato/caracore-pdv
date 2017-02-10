@@ -19,7 +19,7 @@ target/
 nbproject/private/
 build/
 nbbuild/
+database/
 dist/
 nbdist/
 .nb-gradle/
-/database/
