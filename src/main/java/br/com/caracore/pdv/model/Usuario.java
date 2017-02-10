@@ -4,9 +4,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
@@ -16,7 +16,7 @@ public class Usuario {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
 	
-	@NotBlank(message = "Usuário é obrigatório!")
+	@NotEmpty(message = "Usuário é obrigatório!")
 	@Size(max = 15, message = "A usuário não pode conter mais de 15 caracteres.")
 	private String nome;
 	
@@ -24,8 +24,22 @@ public class Usuario {
 	@Size(max = 15, message = "A senha não pode conter mais de 15 caracteres.")
 	private String senha;
 	
-	@NotBlank(message = "Perfil é obrigatório!")
+	@NotEmpty(message = "Repetir senha é obrigatória!")
+	@Size(max = 15, message = "Repetir senha não pode conter mais de 15 caracteres.")
+	@Transient
+	private String repetirSenha;
+	
+	@NotEmpty(message = "Perfil é obrigatório!")
 	private String perfil;
+
+	@NotEmpty(message = "E-mail é obrigatório!")
+	@Size(max = 30, message = "O e-mail não pode conter mais de 30 caracteres.")
+	private String email;
+
+	@NotEmpty(message = "Repetir e-mail é obrigatório!")
+	@Size(max = 30, message = "Repetir e-mail não pode conter mais de 30 caracteres.")
+	@Transient
+	private String repetirEmail;
 
 	public Long getCodigo() {
 		return codigo;
@@ -51,6 +65,14 @@ public class Usuario {
 		this.senha = senha;
 	}
 
+	public String getRepetirSenha() {
+		return repetirSenha;
+	}
+
+	public void setRepetirSenha(String repetirSenha) {
+		this.repetirSenha = repetirSenha;
+	}
+
 	public String getPerfil() {
 		return perfil;
 	}
@@ -59,13 +81,32 @@ public class Usuario {
 		this.perfil = perfil;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getRepetirEmail() {
+		return repetirEmail;
+	}
+
+	public void setRepetirEmail(String repetirEmail) {
+		this.repetirEmail = repetirEmail;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
 		result = prime * result + ((perfil == null) ? 0 : perfil.hashCode());
+		result = prime * result + ((repetirEmail == null) ? 0 : repetirEmail.hashCode());
+		result = prime * result + ((repetirSenha == null) ? 0 : repetirSenha.hashCode());
 		result = prime * result + ((senha == null) ? 0 : senha.hashCode());
 		return result;
 	}
@@ -84,6 +125,11 @@ public class Usuario {
 				return false;
 		} else if (!codigo.equals(other.codigo))
 			return false;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
 		if (nome == null) {
 			if (other.nome != null)
 				return false;
@@ -94,6 +140,16 @@ public class Usuario {
 				return false;
 		} else if (!perfil.equals(other.perfil))
 			return false;
+		if (repetirEmail == null) {
+			if (other.repetirEmail != null)
+				return false;
+		} else if (!repetirEmail.equals(other.repetirEmail))
+			return false;
+		if (repetirSenha == null) {
+			if (other.repetirSenha != null)
+				return false;
+		} else if (!repetirSenha.equals(other.repetirSenha))
+			return false;
 		if (senha == null) {
 			if (other.senha != null)
 				return false;
@@ -101,5 +157,4 @@ public class Usuario {
 			return false;
 		return true;
 	}
-
 }

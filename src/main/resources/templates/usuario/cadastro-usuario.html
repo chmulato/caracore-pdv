@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt" 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout-padrao}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	
+<body>
+<section layout:fragment="conteudo">
+
+	<div class="page-header">
+		<div class="container-fluid">
+			<h1>
+				Cadastro de Usuário
+			</h1>
+		</div>
+	</div>
+
+	<div class="container-fluid">
+	
+		<form method="post" class="form-vertical  js-form-loading" th:object="${usuario}" th:action="@{/usuarios/novo}">
+	
+			<div class="alert  alert-danger  alert-dismissible" role="alert" th:if="${#fields.hasAnyErrors()}">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<th:block th:each="error : ${#fields.detailedErrors()}">
+					<div>
+						<i class="fa  fa-exclamation-circle"></i>
+						<span th:text="${error.message}"></span>
+					</div>
+				</th:block>
+			</div>
+			
+			<div class="alert  alert-success" th:if="${!#strings.isEmpty(mensagem)}">
+				<span th:text="${mensagem}"></span>
+			</div>
+	
+			<input type="hidden" th:field="*{codigo}" />
+	
+			<div class="row">
+				<div class="form-group">
+					<label for="nome">Nome</label>
+					<input id="nome" type="text" class="form-control" th:field="*{nome}"/>
+				</div>
+
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label for="perfil">Perfil</label>
+						<select id="perfil" class="form-control" th:field="*{perfil}">
+							<option value="">Selecione o perfil</option>
+							<option th:each="tipo : ${tipos}" th:value="${tipo}" th:text="#{|tipoUsuario.${tipo}|}"></option>
+						</select>
+					</div>
+				</div>
+			</div>
+	
+	
+			<div class="row">
+				<div class="form-group">
+					<label for="senha">Senha</label>
+					<input id="senha" type="password" class="form-control" th:field="*{senha}"/>
+				</div>
+		
+				<div class="form-group">
+					<label for="repetirSenha">Repetir Senha</label>
+					<input id="repetirSenha" type="password" class="form-control" th:field="*{repetirSenha}"/>
+				</div>
+			</div>
+	
+			<div class="row">
+				<div class="form-group">
+					<label for="email">E-mail</label>
+					<input id="email" type="text" class="form-control" th:field="*{email}"/>
+				</div>
+		
+				<div class="form-group">
+					<label for="repetirEmail">Repetir E-mail</label>
+					<input id="repetirEmail" type="text" class="form-control" th:field="*{repetirEmail}"/>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<button class="btn  btn-primary" type="submit">Salvar</button>
+				<a th:href="@{/usuarios}" class="btn  btn-default">Cancelar</a>
+			</div>
+	
+		</form>
+	
+	</div>
+
+</section>
+</body>
+</html>

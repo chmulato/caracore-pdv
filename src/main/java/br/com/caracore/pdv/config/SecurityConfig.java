@@ -49,6 +49,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 			.authorizeRequests()
 				.antMatchers("/esqueceu-a-senha").permitAll()
+				.antMatchers("/usuarios").hasRole("VISITANTE")
+				.antMatchers("/usuarios").hasRole("USUARIO")
+				.antMatchers("/usuarios/**").hasRole("ADMINISTRADOR")
 				.antMatchers("/vinhos").hasRole("VISITANTE")
 				.antMatchers("/vinhos/**").hasRole("USUARIO")
 				.anyRequest().authenticated()

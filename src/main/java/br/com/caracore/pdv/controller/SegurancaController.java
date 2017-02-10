@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class SegurancaController {
-
+	
 	@RequestMapping("/login")
 	public String login(@AuthenticationPrincipal User user) {
 		if (user != null) {
@@ -20,4 +20,5 @@ public class SegurancaController {
 	public String esqueceuSenha() {
 		return "esqueceu-a-senha";
 	}
+	
 }

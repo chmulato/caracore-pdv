@@ -17,14 +17,14 @@
 				<div class="row">
 					<div class="col-xs-10">
 						<h1>
-							Pesquisa de Vinhos
+							Pesquisa de Usuários
 						</h1>
 					</div>
 					
-					<div class="col-xs-2" sec:authorize="hasRole('ROLE_USUARIO')">
+					<div class="col-xs-2" sec:authorize="hasRole('ROLE_ADMINISTRADOR')">
 						<div class="aw-page-header-controls">
 							<a class="btn btn-primary" th:href="@{/vinhos/novo}">
-								<i class="fa  fa-plus-circle"></i> <span class="hidden-xs  hidden-sm">Novo vinho</span>
+								<i class="fa  fa-plus-circle"></i> <span class="hidden-xs  hidden-sm">Novo usuário</span>
 							</a>
 						</div>
 					</div>
@@ -60,7 +60,7 @@
 							<th>Nome</th>
 							<th class="av-table-vinhos-col-tipo">Tipo</th>
 							<th class="av-table-vinhos-col-valor">Valor</th>
-							<th class="av-table-vinhos-col-icons" sec:authorize="hasRole('ROLE_USUARIO')"></th>
+							<th class="av-table-vinhos-col-icons" sec:authorize="hasRole('ROLE_ADMINISTRADOR')"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -68,11 +68,11 @@
 							<td th:text="${vinho.codigo}" class="text-center">1</td>
 							<td>
 								<a th:href="@{/vinhos/{codigo}(codigo=${vinho.codigo})}" th:text="${vinho.nome}" sec:authorize="hasRole('ROLE_USUARIO')"></a>
-								<span th:text="${vinho.nome}" sec:authorize="not hasRole('ROLE_USUARIO')"></span>
+								<span th:text="${vinho.nome}" sec:authorize="not hasRole('ROLE_ADMINISTRADOR')"></span>
 							</td>
 							<td th:text="#{|tipoVinho.${vinho.tipo}|}">Tinto</td>
 							<td th:text="|R$${{vinho.valor}}|" class="text-right">55,00</td>
-							<td class="text-center" sec:authorize="hasRole('ROLE_USUARIO')">
+							<td class="text-center" sec:authorize="hasRole('ROLE_ADMINISTRADOR')">
 								<i class="fa  fa-trash" style="cursor:pointer"
 									data-toggle="modal" data-target="#confirmaExclusaoModal"
 									data:nome="${vinho.nome}" 
@@ -80,7 +80,7 @@
 							</td>
 						</tr>
 						<tr th:if="${vinhos.empty}">
-							<td colspan="5">Nenhum vinho cadastrado</td>
+							<td colspan="5">Nenhum usuário cadastrado</td>
 						</tr>
 					</tbody>
 				</table>
@@ -90,13 +90,13 @@
 		<div class="modal  fade" id="confirmaExclusaoModal" tabindex="-1" role="dialog">
 			<div class="modal-dialog" role="document">
 		  		<div class="modal-content">
-		  			<form th:action="@{/vinhos}" method="POST">
+		  			<form th:action="@{/usuarios}" method="POST">
 		  				<input type="hidden" name="_method" value="DELETE"/>
 		     			<div class="modal-header">
 			       			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			       				<span aria-hidden="true">&times;</span>
 			       			</button>
-			       			<h4 class="modal-title" id="myModalLabel">Excluir vinho</h4>
+			       			<h4 class="modal-title" id="myModalLabel">Excluir usuário</h4>
 		     			</div>
 		     			<div class="modal-body">
 		       				<span>Tem certeza?</span>
