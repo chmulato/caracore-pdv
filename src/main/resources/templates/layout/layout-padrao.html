@@ -59,11 +59,11 @@
 				    <nav class="aw-menu  js-menu">
 				      <ul class="aw-menu__list">
 				
-				        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_CADASTRAR_VINHO')">
+				        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_USUARIO')">
 				          <a th:href="@{/vinhos/novo}"><i class="fa  fa-fw  fa-home"></i><span>Cadastro vinho</span></a>
 				        </li>
 				
-				        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_PESQUISAR_VINHO')">
+				        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_VISITANTE')">
 				          <a th:href="@{/vinhos}"><i class="fa  fa-fw  fa-home"></i><span>Pesquisa vinho</span></a>
 				        </li>
 				

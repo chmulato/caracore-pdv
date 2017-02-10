@@ -1,5 +1,8 @@
 package br.com.caracore.pdv.config;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -7,36 +10,45 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import br.com.caracore.pdv.model.Usuario;
+import br.com.caracore.pdv.service.UsuarioService;
+
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	
-	@Override
+
+	@Autowired
+	private UsuarioService usuarioService;
+
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication()
-			.withUser("joao").password("joao").roles("PESQUISAR_VINHO").and()
-			.withUser("maria").password("maria").roles("CADASTRAR_VINHO", "PESQUISAR_VINHO");
+		
+		List<Usuario> listar = usuarioService.buscarTodos();
+		
+		for (Usuario usuario : listar) {
+			
+			String usr = usuario.getNome(); 
+			String pwd = usuario.getSenha(); 
+			String roles = usuario.getPerfil(); 
+			
+			if (roles.equals("ADMINISTRADOR")) {
+				auth.inMemoryAuthentication().withUser(usr).password(pwd).roles("ADMINISTRADOR");
+			} else if (roles.equals("USUARIO")) {
+				auth.inMemoryAuthentication().withUser(usr).password(pwd).roles("USUARIO", "VISITANTE");
+			} else if (roles.equals("VISITANTE")) {
+				auth.inMemoryAuthentication().withUser(usr).password(pwd).roles("VISITANTE");
+			}
+		}
 	}
-	
+
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring()
-			.antMatchers("/layout/**");
+		web.ignoring().antMatchers("/layout/**");
 	}
-	
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http
-			.authorizeRequests()
-				.antMatchers("/vinhos").hasRole("PESQUISAR_VINHO")
-				.antMatchers("/vinhos/**").hasRole("CADASTRAR_VINHO")
-				.anyRequest().authenticated()
-				.and()
-			.formLogin()
-				.loginPage("/login")
-				.permitAll()
-				.and()
-			.logout()
-				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
+		http.authorizeRequests().antMatchers("/vinhos").hasRole("VISITANTE").antMatchers("/vinhos/**")
+				.hasRole("USUARIO").anyRequest().authenticated().and().formLogin().loginPage("/login").permitAll().and()
+				.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
 	}
 
 }

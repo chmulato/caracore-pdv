@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 
 @SpringBootApplication
-public class PdvApplication {
+public class PDVApplication {
 
 	public static void main(String[] args) {
 		new Thread(new Runnable() {
@@ -20,7 +20,7 @@ public class PdvApplication {
 				new HsqlServer();
 			}
 		}).start();
-		SpringApplication.run(PdvApplication.class, args);
+		SpringApplication.run(PDVApplication.class, args);
 	}
 	
 	@Bean

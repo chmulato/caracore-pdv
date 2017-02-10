@@ -49,19 +49,19 @@
 							<th>Nome</th>
 							<th class="av-table-vinhos-col-tipo">Tipo</th>
 							<th class="av-table-vinhos-col-valor">Valor</th>
-							<th class="av-table-vinhos-col-icons" sec:authorize="hasRole('ROLE_CADASTRAR_VINHO')"></th>
+							<th class="av-table-vinhos-col-icons" sec:authorize="hasRole('ROLE_USUARIO')"></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="vinho : ${vinhos}">
 							<td th:text="${vinho.codigo}" class="text-center">1</td>
 							<td>
-								<a th:href="@{/vinhos/{codigo}(codigo=${vinho.codigo})}" th:text="${vinho.nome}" sec:authorize="hasRole('ROLE_CADASTRAR_VINHO')"></a>
-								<span th:text="${vinho.nome}" sec:authorize="not hasRole('ROLE_CADASTRAR_VINHO')"></span>
+								<a th:href="@{/vinhos/{codigo}(codigo=${vinho.codigo})}" th:text="${vinho.nome}" sec:authorize="hasRole('ROLE_USUARIO')"></a>
+								<span th:text="${vinho.nome}" sec:authorize="not hasRole('ROLE_USUARIO')"></span>
 							</td>
 							<td th:text="#{|tipoVinho.${vinho.tipo}|}">Tinto</td>
 							<td th:text="|R$${{vinho.valor}}|" class="text-right">55,00</td>
-							<td class="text-center" sec:authorize="hasRole('ROLE_CADASTRAR_VINHO')">
+							<td class="text-center" sec:authorize="hasRole('ROLE_USUARIO')">
 								<i class="fa  fa-trash" style="cursor:pointer"
 									data-toggle="modal" data-target="#confirmaExclusaoModal"
 									data:nome="${vinho.nome}" 
