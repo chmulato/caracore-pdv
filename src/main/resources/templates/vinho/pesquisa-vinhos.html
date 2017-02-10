@@ -12,14 +12,25 @@
 	</head>
 	<body>
 		<section layout:fragment="conteudo">
-			
 		<div class="page-header">
 			<div class="container-fluid">
-				<h1>
-					Pesquisa de Vinho
-				</h1>
+				<div class="row">
+					<div class="col-xs-10">
+						<h1>
+							Pesquisa de produtos
+						</h1>
+					</div>
+					
+					<div class="col-xs-2">
+						<div class="aw-page-header-controls">
+							<a class="btn btn-primary" th:href="@{/vinhos/novo}">
+								<i class="fa  fa-plus-circle"></i> <span class="hidden-xs  hidden-sm">Novo vinho</span>
+							</a>
+						</div>
+					</div>
+				</div>
 			</div>
-		</div>
+		</div>			
 		
 		<div class="container-fluid">
 
