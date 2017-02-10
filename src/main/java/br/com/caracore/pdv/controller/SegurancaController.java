@@ -16,4 +16,8 @@ public class SegurancaController {
 		return "login";
 	}
 
+	@RequestMapping("/esqueceu-a-senha")
+	public String esqueceuSenha() {
+		return "esqueceu-a-senha";
+	}
 }

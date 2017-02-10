@@ -28,8 +28,20 @@
 						<input type="password" class="form-control  input-lg" placeholder="Sua senha" name="password"/>
 						<span class="glyphicon  glyphicon-lock  form-control-feedback" ></span>
 					</div>
+
 					<div class="form-group">
 						<button type="submit" class="btn  btn-primary  btn-lg  aw-btn-full-width">Entrar</button>
+					</div>
+			
+					<div class="form-group clearfix">
+						<div class="checkbox  pull-left  aw-checkbox-no-margin">
+							<input type="checkbox" id="lembrar"/>
+							<label for="lembrar">Lembre de mim</label>
+						</div>
+						
+						<div class="pull-right">
+							<a th:href="@{/esqueceu-a-senha}">Esqueceu a senha?</a>
+						</div>
 					</div>
 				</div>
 				

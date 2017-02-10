@@ -46,9 +46,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/vinhos").hasRole("VISITANTE").antMatchers("/vinhos/**")
-				.hasRole("USUARIO").anyRequest().authenticated().and().formLogin().loginPage("/login").permitAll().and()
-				.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
+		http
+			.authorizeRequests()
+				.antMatchers("/esqueceu-a-senha").permitAll()
+				.antMatchers("/vinhos").hasRole("VISITANTE")
+				.antMatchers("/vinhos/**").hasRole("USUARIO")
+				.anyRequest().authenticated()
+				.and()
+			.formLogin()
+				.loginPage("/login")
+				.permitAll()
+				.and()
+			.logout()
+				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
 	}
 
 }
