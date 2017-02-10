@@ -14,12 +14,16 @@ import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 @SpringBootApplication
 public class PDVApplication {
 
-	public static void main(String[] args) {
-		new Thread(new Runnable() {
+	private static Thread ThreadingServer() {
+		return new Thread(new Runnable() {
 			public void run() {
 				new HsqlServer();
 			}
-		}).start();
+		});
+	}
+
+	public static void main(String[] args) {
+		ThreadingServer().start();
 		SpringApplication.run(PDVApplication.class, args);
 	}
 	
