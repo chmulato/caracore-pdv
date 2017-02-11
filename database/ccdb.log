@@ -1,4 +1,4 @@
-/*C11*/SET SCHEMA PUBLIC
+/*C12*/SET SCHEMA PUBLIC
 alter table produto drop constraint FKopu9jggwnamfv0c8k2ri3kx0a
 alter table produto drop constraint FKjwfodivt9e04sad1s7u0ya4jq
 drop table categoria if exists
