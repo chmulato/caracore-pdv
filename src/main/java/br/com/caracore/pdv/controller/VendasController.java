@@ -14,8 +14,11 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.caracore.pdv.model.Venda;
+import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.repository.filter.VendaFilter;
+import br.com.caracore.pdv.repository.filter.VendedorFilter;
 import br.com.caracore.pdv.service.VendaService;
+import br.com.caracore.pdv.service.VendedorService;
 
 @Controller
 @RequestMapping("/vendas")
@@ -23,6 +26,9 @@ public class VendasController {
 	
 	@Autowired
 	private VendaService vendaService;
+
+	@Autowired
+	private VendedorService vendedorService;
 	
 	@GetMapping("/novo")
 	public ModelAndView novo(Venda venda) {
@@ -46,6 +52,7 @@ public class VendasController {
 		ModelAndView mv = new ModelAndView("venda/pesquisa-vendas");
 		if (filtroVenda != null) {
 			mv.addObject("vendas", vendaService.pesquisar(filtroVenda));
+			mv.addObject("vendedores", vendedorService.pesquisar(transformarFiltro(filtroVenda)));
 		}
 		return mv;		
 	}
@@ -62,6 +69,17 @@ public class VendasController {
 		attributes.addFlashAttribute("mensagem", "Venda removida com sucesso!");
 		return "redirect:/vendas";
 	}
-
+	
+	private VendedorFilter transformarFiltro(VendaFilter vendaFiltro) {
+		VendedorFilter vendedorFiltro = null;
+		if (vendaFiltro.getVendedor() != null) {
+			if (vendaFiltro.getVendedor().getNome() != null) {
+				Vendedor vendedor = vendaFiltro.getVendedor();
+				vendedorFiltro = new VendedorFilter();
+				vendedorFiltro.setNome(vendedor.getNome());
+			}
+		}
+		return vendedorFiltro;
+	}
 }
 
