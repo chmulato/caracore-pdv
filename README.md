@@ -27,7 +27,10 @@ O banco de dados da aplicação é o HSQLDB.
 
 O banco de dados HSQLDB é compatível com o Open Office e Libre Office.
 
-Este banco de dados segue o padrão de bancos relacionais.
+Este banco de dados segue o padrão (SGDB) de bancos relacionais.
+
+
+
 
 
 
