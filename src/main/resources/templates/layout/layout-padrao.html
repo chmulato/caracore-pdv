@@ -8,7 +8,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 	
-		<title>AlgaWorks</title>
+		<title>Cara Core PDV</title>
 	
 		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/vendors.min.css}"/>
 		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/algaworks.min.css}"/>
@@ -32,7 +32,7 @@
 		
 			    <div class="navbar-header">
 			      <a class="navbar-brand  hidden-xs" href="#">
-			        <img alt="AlgaWorks" th:src="@{/layout/images/logo.png}"/>
+			        <img alt="Cara Core" th:src="@{/layout/images/logo.png}"/>
 			      </a>
 		
 			      <ul class="nav  navbar-nav">
@@ -67,21 +67,31 @@
 				      
 				          <ul class="aw-menu__list  aw-menu__list--sublist">
 						        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_USUARIO')">
-						          <a th:href="@{/usuarios/novo}"><i class="fa  fa-fw  fa-home"></i><span>Cadastro usuário</span></a>
+						          <a th:href="@{/usuarios/novo}"><i class="fa  fa-fw  fa-home"></i><span>Cadastro Usuário</span></a>
 						        </li>
 						
 						        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_USUARIO')">
-						          <a th:href="@{/usuarios}"><i class="fa  fa-fw  fa-home"></i><span>Pesquisa usuário</span></a>
+						          <a th:href="@{/usuarios}"><i class="fa  fa-fw  fa-home"></i><span>Pesquisa Usuários</span></a>
 						        </li>
 				          </ul>
 				      
 				          <ul class="aw-menu__list  aw-menu__list--sublist">
 						        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_USUARIO')">
-						          <a th:href="@{/vinhos/novo}"><i class="fa  fa-fw  fa-home"></i><span>Cadastro vinho</span></a>
+						          <a th:href="@{/vinhos/novo}"><i class="fa  fa-fw  fa-home"></i><span>Cadastro Vinho</span></a>
 						        </li>
 						
 						        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_USUARIO')">
-						          <a th:href="@{/vinhos}"><i class="fa  fa-fw  fa-home"></i><span>Pesquisa vinho</span></a>
+						          <a th:href="@{/vinhos}"><i class="fa  fa-fw  fa-home"></i><span>Pesquisa Vinhos</span></a>
+						        </li>
+				          </ul>
+				      
+				          <ul class="aw-menu__list  aw-menu__list--sublist">
+						        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_USUARIO')">
+						          <a th:href="@{/produtos/novo}"><i class="fa  fa-fw  fa-home"></i><span>Cadastro Produto</span></a>
+						        </li>
+						
+						        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_USUARIO')">
+						          <a th:href="@{/produtos}"><i class="fa  fa-fw  fa-home"></i><span>Pesquisa Produtos</span></a>
 						        </li>
 				          </ul>
 				        </li>

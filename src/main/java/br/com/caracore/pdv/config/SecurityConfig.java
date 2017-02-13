@@ -30,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			String roles = usuario.getPerfil(); 
 			
 			if (roles.equals("ADMINISTRADOR")) {
-				auth.inMemoryAuthentication().withUser(usr).password(pwd).roles("ADMINISTRADOR");
+				auth.inMemoryAuthentication().withUser(usr).password(pwd).roles("ADMINISTRADOR", "USUARIO", "VISITANTE");
 			} else if (roles.equals("USUARIO")) {
 				auth.inMemoryAuthentication().withUser(usr).password(pwd).roles("USUARIO", "VISITANTE");
 			} else if (roles.equals("VISITANTE")) {
@@ -49,11 +49,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 			.authorizeRequests()
 				.antMatchers("/esqueceu-a-senha").permitAll()
-				.antMatchers("/usuarios").hasRole("VISITANTE")
 				.antMatchers("/usuarios").hasRole("USUARIO")
 				.antMatchers("/usuarios/**").hasRole("USUARIO")
-//				.antMatchers("/usuarios/**").hasRole("ADMINISTRADOR")
-				.antMatchers("/vinhos").hasRole("VISITANTE")
+				.antMatchers("/produtos").hasRole("USUARIO")
+				.antMatchers("/produtos/**").hasRole("USUARIO")
+				.antMatchers("/vinhos").hasRole("USUARIO")
 				.antMatchers("/vinhos/**").hasRole("USUARIO")
 				.anyRequest().authenticated()
 				.and()

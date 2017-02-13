@@ -16,8 +16,8 @@ public class ProdutoService {
 	private ProdutoRepository produtoRepository;
 
 	public List<Produto> pesquisar(ProdutoFilter filtro) {
-		String nome = filtro.getNome() == null ? "%" : filtro.getNome();
-		return produtoRepository.findByNomeContainingIgnoreCase(nome);
+		String descricao = filtro.getDescricao() == null ? "%" : filtro.getDescricao();
+		return produtoRepository.findByDescricaoContainingIgnoreCase(descricao);
 	}
 
 	public void salvar(Produto produto) {
