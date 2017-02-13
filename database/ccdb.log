@@ -1,4 +1,4 @@
-/*C13*/SET SCHEMA PUBLIC
+/*C12*/SET SCHEMA PUBLIC
 alter table item_venda drop constraint FK7wkinkvno0wlhv821hhu34y04
 alter table item_venda drop constraint FKkiky88fkai72328rhw3r3yebx
 alter table venda drop constraint FK50murhuotq9h2dnxej317jjiy

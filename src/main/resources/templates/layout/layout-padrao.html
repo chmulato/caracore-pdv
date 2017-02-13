@@ -58,8 +58,25 @@
 				<div class="aw-layout-sidebar__content">
 				    <nav class="aw-menu  js-menu">
 				      <ul class="aw-menu__list">
-
 				        <li class="aw-menu__item  is-expanded  is-active">
+				          <a href="#">
+				            <i class="fa  fa-fw  fa-file-text"></i><span>Vendas</span>
+				            <i class="aw-menu__navigation-icon  fa"></i>
+				          </a>
+				      
+				          <ul class="aw-menu__list  aw-menu__list--sublist">
+						        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_USUARIO')">
+						          <a th:href="@{/vendas/novo}"><i class="fa  fa-fw  fa-home"></i><span>Cadastro Venda</span></a>
+						        </li>
+							
+							<!--<li class="aw-menu__item" sec:authorize="hasRole('ROLE_USUARIO')">
+						          <a th:href="@{/vendas}"><i class="fa  fa-fw  fa-home"></i><span>Pesquisa Vendas</span></a>
+						       	</li> -->						        
+				          </ul>
+				      
+				        </li>
+
+				        <li class="aw-menu__item  is-expanded">
 				          <a href="#">
 				            <i class="fa  fa-fw  fa-file-text"></i><span>Cadastros</span>
 				            <i class="aw-menu__navigation-icon  fa"></i>

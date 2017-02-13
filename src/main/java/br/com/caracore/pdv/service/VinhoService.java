@@ -15,11 +15,6 @@ public class VinhoService {
 	@Autowired
 	private VinhoRepository vinhoRepository;
 
-	public List<Vinho> pesquisar(VinhoFilter filtro) {
-		String nome = filtro.getNome() == null ? "%" : filtro.getNome();
-		return vinhoRepository.findByNomeContainingIgnoreCase(nome);
-	}
-
 	public void salvar(Vinho vinho) {
 		vinhoRepository.save(vinho);
 	}
@@ -30,5 +25,10 @@ public class VinhoService {
 
 	public Vinho pesquisarPorId(Long codigo) {
 		return vinhoRepository.findOne(codigo);
+	}
+
+	public List<Vinho> pesquisar(VinhoFilter filtro) {
+		String nome = filtro.getNome() == null ? "%" : filtro.getNome();
+		return vinhoRepository.findByNomeContainingIgnoreCase(nome);
 	}
 }

@@ -15,11 +15,6 @@ public class ProdutoService {
 	@Autowired
 	private ProdutoRepository produtoRepository;
 
-	public List<Produto> pesquisar(ProdutoFilter filtro) {
-		String descricao = filtro.getDescricao() == null ? "%" : filtro.getDescricao();
-		return produtoRepository.findByDescricaoContainingIgnoreCase(descricao);
-	}
-
 	public void salvar(Produto produto) {
 		produtoRepository.save(produto);
 	}
@@ -30,5 +25,10 @@ public class ProdutoService {
 
 	public Produto pesquisarPorId(Long codigo) {
 		return produtoRepository.findOne(codigo);
+	}
+
+	public List<Produto> pesquisar(ProdutoFilter filtro) {
+		String descricao = filtro.getDescricao() == null ? "%" : filtro.getDescricao();
+		return produtoRepository.findByDescricaoContainingIgnoreCase(descricao);
 	}
 }
