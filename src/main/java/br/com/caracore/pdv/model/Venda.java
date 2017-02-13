@@ -38,6 +38,10 @@ public class Venda {
 	@JoinColumn(name = "VENDEDOR_ID")
     private Vendedor vendedor;
 	
+	@ManyToOne
+	@JoinColumn(name = "CLIENTE_ID")
+	private Cliente cliente;
+	
 	@NotNull
 	@OneToMany(mappedBy = "venda")
 	private List<ItemVenda> item;
@@ -75,6 +79,14 @@ public class Venda {
 
 	public void setVendedor(Vendedor vendedor) {
 		this.vendedor = vendedor;
+	}
+
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
 	}
 
 	public List<ItemVenda> getItem() {
@@ -124,6 +136,7 @@ public class Venda {
 		result = prime * result + ((subTotal == null) ? 0 : subTotal.hashCode());
 		result = prime * result + ((total == null) ? 0 : total.hashCode());
 		result = prime * result + ((vendedor == null) ? 0 : vendedor.hashCode());
+		result = prime * result + ((cliente == null) ? 0 : cliente.hashCode());
 		return result;
 	}
 
@@ -170,6 +183,11 @@ public class Venda {
 			if (other.vendedor != null)
 				return false;
 		} else if (!vendedor.equals(other.vendedor))
+			return false;
+		if (cliente == null) {
+			if (other.cliente != null)
+				return false;
+		} else if (!cliente.equals(other.cliente))
 			return false;
 		return true;
 	}
