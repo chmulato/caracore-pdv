@@ -16,18 +16,18 @@ import org.springframework.format.annotation.NumberFormat;
 public class Produto {
 
 	@Id
-	@NotNull(message = "O código do produto é obrigatório!")
+	@NotNull(message = "Código é obrigatório!")
 	private Long codigo;
 	
 	@NotEmpty(message = "Descrição do produto/serviço é obrigatório!")
 	@Size(max = 30, message = "A descrição não pode conter mais de 30 caracteres.")
 	private String descricao;
 	
-	@NotNull(message = "Valor do produto é obrigatório!")
+	@NotNull(message = "Valor é obrigatório!")
 	@DecimalMin(value = "0.01", message = "Valor não pode ser menor que 0,01")
 	@DecimalMax(value = "9999999.99", message = "Valor não pode ser maior que 9.999.999,99")
 	@NumberFormat(pattern = "#,##0.00")
-	private BigDecimal precoVenda;
+	private BigDecimal valor;
 
 	public Long getCodigo() {
 		return codigo;
@@ -45,12 +45,12 @@ public class Produto {
 		this.descricao = descricao;
 	}
 
-	public BigDecimal getPrecoVenda() {
-		return precoVenda;
+	public BigDecimal getValor() {
+		return valor;
 	}
 
-	public void setPrecoVenda(BigDecimal precoVenda) {
-		this.precoVenda = precoVenda;
+	public void setValor(BigDecimal valor) {
+		this.valor = valor;
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class Produto {
 		int result = 1;
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
 		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
-		result = prime * result + ((precoVenda == null) ? 0 : precoVenda.hashCode());
+		result = prime * result + ((valor == null) ? 0 : valor.hashCode());
 		return result;
 	}
 
@@ -82,10 +82,10 @@ public class Produto {
 				return false;
 		} else if (!descricao.equals(other.descricao))
 			return false;
-		if (precoVenda == null) {
-			if (other.precoVenda != null)
+		if (valor == null) {
+			if (other.valor != null)
 				return false;
-		} else if (!precoVenda.equals(other.precoVenda))
+		} else if (!valor.equals(other.valor))
 			return false;
 		return true;
 	}

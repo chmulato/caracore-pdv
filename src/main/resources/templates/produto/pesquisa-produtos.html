@@ -68,7 +68,7 @@
 								<a th:href="@{/produtos/{codigo}(codigo=${produto.codigo})}" th:text="${produto.descricao}" sec:authorize="hasRole('ROLE_USUARIO')"></a>
 								<span th:text="${produto.descricao}" sec:authorize="not hasRole('ROLE_USUARIO')"></span>
 							</td>
-							<td th:text="|R$${{produto.precoVenda}}|" class="text-right">55,00</td>
+							<td th:text="|R$${{produto.valor}}|" class="text-right">55,00</td>
 							<td class="text-center" sec:authorize="hasRole('ROLE_USUARIO')">
 								<i class="fa  fa-trash" style="cursor:pointer"
 									data-toggle="modal" data-target="#confirmaExclusaoModal"
