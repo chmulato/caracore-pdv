@@ -1,22 +1,23 @@
 Aplicação PDV da Cara Core.
 
-Java SDK 8
+- Java SDK 8
 
-Spring MVC
+- Spring MVC
 
-Spring Data
+- Spring Data
 
-Spring Security
+- Spring Security
 
-Thymeleaf Web Page
+- Thymeleaf Web Page
 
-Bootstrap (Telas Responsivas)
+- Bootstrap (Telas Responsivas)
 
-Database Local com HSQLDB
+- Database Local com HSQLDB
 
-Build com Jar tipo "Fat"
+- Build com Jar tipo "Fat"
  
-#Projeto inicial PDV Cara Core"
+ 
+#"Projeto PDV Cara Core"
 
 Este projeto tem como objetivo executar uma aplicação local de PDV.
 
