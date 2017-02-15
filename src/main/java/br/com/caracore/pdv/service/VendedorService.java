@@ -14,6 +14,9 @@ public class VendedorService {
 	VendedorRepository vendedorRepository;
 	
 	public Vendedor buscarPorUsuario(Usuario usuario) {
-		return vendedorRepository.findByUsuario(usuario);
+		Vendedor vendedor = null;
+		Long usuarioId = usuario.getCodigo();
+		vendedor = vendedorRepository.findByUsuarioId(usuarioId);
+		return vendedor;
 	}
 }

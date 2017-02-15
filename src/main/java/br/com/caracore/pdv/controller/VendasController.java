@@ -1,5 +1,7 @@
 package br.com.caracore.pdv.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.caracore.pdv.model.Venda;
+import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.repository.filter.ProdutoFilter;
 import br.com.caracore.pdv.service.VendaService;
 
@@ -48,8 +51,12 @@ public class VendasController {
 	
 	@GetMapping("/novo")
 	public ModelAndView novo(Venda venda) {
+		List<Vendedor> listaVendedores = null;
+		String login = null;
 		ModelAndView mv = new ModelAndView("venda/cadastro-venda");
-		mv.addObject("vendedores", vendaService.listarVendedoresPorLogin(recuperarLogin()));
+		login = recuperarLogin();
+		listaVendedores = vendaService.listarVendedoresPorLogin(login);
+		mv.addObject("vendedores", listaVendedores);
 		mv.addObject(criarProdutoFilter(venda));
 		mv.addObject(venda);
 		
