@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
@@ -31,6 +33,10 @@ public class Usuario {
 	
 	@NotEmpty(message = "Perfil é obrigatório!")
 	private String perfil;
+
+	@OneToOne
+	@JoinColumn(name = "VENDEDOR_ID")
+	private Vendedor vendedor;
 
 	@NotEmpty(message = "E-mail é obrigatório!")
 	@Size(max = 30, message = "O e-mail não pode conter mais de 30 caracteres.")
@@ -79,6 +85,14 @@ public class Usuario {
 
 	public void setPerfil(String perfil) {
 		this.perfil = perfil;
+	}
+	
+	public Vendedor getVendedor() {
+		return vendedor;
+	}
+
+	public void setVendedor(Vendedor vendedor) {
+		this.vendedor = vendedor;
 	}
 
 	public String getEmail() {

@@ -36,6 +36,19 @@ public class UsuarioService {
 		}
 		return result;
 	}
+	
+	public Usuario pesquisarPorNome(String login) {
+		Usuario result = null;
+		List<Usuario> lista = pesquisarPorLogin(login);
+		if (lista != null && lista.size() > 0) {
+			if (lista.size() == 1) {
+				for (Usuario usuario : lista) {
+					result = usuario;
+				}
+			}
+		}
+		return result;
+	}
 
 	public List<Usuario> pesquisar(UsuarioFilter filtro) {
 		String nome = filtro.getNome() == null ? "%" : filtro.getNome();

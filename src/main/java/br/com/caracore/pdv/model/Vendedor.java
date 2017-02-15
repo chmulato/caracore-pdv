@@ -30,6 +30,10 @@ public class Vendedor {
 	@JoinColumn(name = "LOJA_ID")
 	private Loja loja;
 	
+	@OneToOne
+	@JoinColumn(name = "USUARIO_ID")
+	private Usuario usuario;
+
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private TipoVendedor tipo;
@@ -59,6 +63,14 @@ public class Vendedor {
 
 	public void setLoja(Loja loja) {
 		this.loja = loja;
+	}
+	
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 
 	public TipoVendedor getTipo() {
