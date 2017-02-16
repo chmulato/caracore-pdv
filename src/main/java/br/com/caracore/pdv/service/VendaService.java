@@ -63,8 +63,8 @@ public class VendaService {
 		return usuarioService.pesquisarPorNome(login);
 	}
 	
-	private Vendedor buscarVendedorPorUsuario(Usuario usuario) {
-		return vendedorService.buscarPorUsuario(usuario);
+	private Vendedor buscarVendedorDefault() {
+		return vendedorService.buscarDefault();
 	}
 	
 	private List<Vendedor> listarVendedoresPorLoja(Loja loja) {
@@ -104,7 +104,7 @@ public class VendaService {
 		List<Vendedor> lista = null;
 		Usuario usuario = buscarUsuario(login);
 		if (validar(usuario)) {
-			Vendedor vendedor = buscarVendedorPorUsuario(usuario);
+			Vendedor vendedor = buscarVendedorDefault();
 			if (validar(vendedor)) {
 				Loja loja = vendedor.getLoja();
 				lista = listarVendedoresPorLoja(loja);
@@ -118,7 +118,7 @@ public class VendaService {
 		if (validar(codigoProduto)) {
 			Usuario usuario = buscarUsuario(login);
 			if (validar(usuario)) {
-				Vendedor vendedor = buscarVendedorPorUsuario(usuario);
+				Vendedor vendedor = buscarVendedorDefault();
 				if (validar(vendedor)) {
 					Venda venda = recuperarVendaEmAberto(vendedor);
 					List<ItemVenda> itens = new ArrayList<>();

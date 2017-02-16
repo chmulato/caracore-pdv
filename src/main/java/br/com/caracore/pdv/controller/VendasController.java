@@ -59,7 +59,6 @@ public class VendasController {
 		mv.addObject("vendedores", listaVendedores);
 		mv.addObject(criarProdutoFilter(venda));
 		mv.addObject(venda);
-		
 		return mv;
 	}
 	

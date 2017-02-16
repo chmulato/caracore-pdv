@@ -4,5 +4,6 @@ public enum TipoVendedor {
 
 	COMISSIONADO,
 	ASSALARIADO,
+	DEFAULT
 
 }

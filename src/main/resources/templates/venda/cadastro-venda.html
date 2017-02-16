@@ -151,10 +151,10 @@
 					<div class="row" style="padding-top: 30px;">
 						<div class="col-xs-3">
 							<div class="form-group">
-								<label for="vendedor">Perfil</label>
+								<label for="vendedor">Vendedor</label>
 								<select id="vendedor" class="form-control" th:field="*{vendedor}">
 									<option value="">Selecione o vendedor</option>
-									<option th:each="vendedor : ${vendedores}" th:value="${vendedor}" th:text="#{|vendedor.${nome|}"></option>
+									<option th:each="vendedor : ${vendedores}" th:value="${vendedor.codigo}" th:text="${vendedor.nome}"></option>
 								</select>
 							</div>
 						</div>
