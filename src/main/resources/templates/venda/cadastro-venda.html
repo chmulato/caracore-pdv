@@ -38,7 +38,7 @@
 					<span th:text="${mensagem}"></span>
 				</div>
 	
-				<form method="post" class="form-vertical  js-form-loading" th:object="${produtoFilter}" th:action="@{/vendas/produto}">
+				<form method="get" class="form-vertical  js-form-loading" th:object="${produtoFilter}" th:action="@{/vendas/produto}">
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group">
@@ -47,9 +47,7 @@
 									<input id="codigo" type="text" th:field="*{codigo}" class="form-control" placeholder="Código do produto" />
 								</div>
 							</div>
-							<button class="btn  btn-primary" type="submit">Buscar</button>
 						</div>
-
 						<div class="col-sm-6">
 							<div class="form-group">
 								<div class="form-group">
@@ -59,6 +57,7 @@
 							</div>
 						</div>
 					</div>
+					<button class="btn  btn-primary" type="submit">Buscar</button>
 				</form>
 			
 				<div class="row" style="padding-top: 50px;">
@@ -97,7 +96,7 @@
 									<tbody>
 										<tr th:each="item : ${venda.itens}">
 											<td><input type="checkbox"></td>
-											<td th:text="${item.codigo}" class="text-center">1000</td>
+											<td th:text="${item.produto.codigo}" class="text-center">1000</td>
 											<td th:text="${item.produto.descricao}" class="text-right">Produto 1 Produto 1 Produto 1 Produto 1 Produto 1 Produto 1 Produto 1</td>
 											<td th:text="${item.quantidade}" class="text-center">1</td>
 											<td th:text="|R$${{item.precoUnitario}}|" class="text-right">R$ 1.999,99</td>

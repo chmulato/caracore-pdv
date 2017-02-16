@@ -10,7 +10,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -20,6 +19,7 @@ import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.repository.filter.ProdutoFilter;
 import br.com.caracore.pdv.service.VendaService;
+import br.com.caracore.pdv.util.Util;
 
 @Controller
 @RequestMapping("/vendas")
@@ -42,17 +42,22 @@ public class VendasController {
 		return filtro;
 	}
 	
-	@PostMapping("/produto/{codigo}")
-	public ModelAndView pesquisarProduto(@PathVariable Long codigoProduto) {
+	@GetMapping("/produto")
+	public ModelAndView pesquisarProduto(ProdutoFilter produtoFilter) {
+		Long codigoProduto = null;
+		if (Util.validar(produtoFilter)) {
+			if (Util.validar(produtoFilter.getCodigo())) {
+				codigoProduto = Long.valueOf(produtoFilter.getCodigo());
+			}
+		}
 		Venda venda = vendaService.cadastrar(codigoProduto, recuperarLogin());
 		return novo(venda);
 	}
-
 	
 	@GetMapping("/novo")
 	public ModelAndView novo(Venda venda) {
-		List<Vendedor> listaVendedores = null;
 		String login = null;
+		List<Vendedor> listaVendedores = null;
 		ModelAndView mv = new ModelAndView("venda/cadastro-venda");
 		login = recuperarLogin();
 		listaVendedores = vendaService.listarVendedoresPorLogin(login);

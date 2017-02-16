@@ -17,6 +17,7 @@ import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.model.types.StatusVenda;
 import br.com.caracore.pdv.repository.VendaRepository;
 import br.com.caracore.pdv.repository.filter.VendaFilter;
+import br.com.caracore.pdv.util.Util;
 
 @Service
 public class VendaService {
@@ -37,14 +38,6 @@ public class VendaService {
 	private VendedorService vendedorService;
 
 	final private Date DATA_ATUAL = new Date();
-	
-	private boolean validar(Object objeto) {
-		boolean result = false;
-		if (objeto != null) {
-			result = true;
-		}
-		return result;
-	}
 	
 	private Venda recuperarVendaEmAberto(Vendedor vendedor) {
 		Venda result = new Venda();
@@ -103,9 +96,9 @@ public class VendaService {
 	public List<Vendedor> listarVendedoresPorLogin(String login) {
 		List<Vendedor> lista = null;
 		Usuario usuario = buscarUsuario(login);
-		if (validar(usuario)) {
+		if (Util.validar(usuario)) {
 			Vendedor vendedor = buscarVendedorDefault();
-			if (validar(vendedor)) {
+			if (Util.validar(vendedor)) {
 				Loja loja = vendedor.getLoja();
 				lista = listarVendedoresPorLoja(loja);
 			}
@@ -115,14 +108,14 @@ public class VendaService {
 	
 	public Venda cadastrar(Long codigoProduto, String login) {
 		Venda result = null;
-		if (validar(codigoProduto)) {
+		if (Util.validar(codigoProduto)) {
 			Usuario usuario = buscarUsuario(login);
-			if (validar(usuario)) {
+			if (Util.validar(usuario)) {
 				Vendedor vendedor = buscarVendedorDefault();
-				if (validar(vendedor)) {
+				if (Util.validar(vendedor)) {
 					Venda venda = recuperarVendaEmAberto(vendedor);
 					List<ItemVenda> itens = new ArrayList<>();
-					if (validar(venda)) {
+					if (Util.validar(venda)) {
 						if (venda.getItens() != null && venda.getItens().size() > 0) {
 							itens = venda.getItens();
 						}
@@ -132,7 +125,7 @@ public class VendaService {
 						venda.setStatus(StatusVenda.EM_ABERTO);
 					}
 					Produto produto = produtoService.pesquisarPorId(codigoProduto);
-					if (validar(produto)) {
+					if (Util.validar(produto)) {
 						ItemVenda item = new ItemVenda();
 						item.setDesconto(BigDecimal.ZERO);
 						item.setProduto(produto);
