@@ -3,6 +3,7 @@ package br.com.caracore.pdv.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.caracore.pdv.model.Loja;
 import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.model.types.TipoVendedor;
 import br.com.caracore.pdv.repository.VendedorRepository;
@@ -13,10 +14,10 @@ public class VendedorService {
 	@Autowired
 	VendedorRepository vendedorRepository;
 	
-	public Vendedor buscarDefault() {
+	public Vendedor buscarDefault(Loja loja) {
 		Vendedor vendedor = null;
 		TipoVendedor tipo = TipoVendedor.DEFAULT;
-		vendedor = vendedorRepository.findByTipo(tipo);
+		vendedor = vendedorRepository.findByTipoAndLoja(tipo, loja);
 		return vendedor;
 	}
 	

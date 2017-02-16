@@ -37,7 +37,7 @@ public class VendasController {
 		return login;
 	}
 	
-	private ProdutoFilter criarProdutoFilter(Venda venda) {
+	private ProdutoFilter limparFiltro(Venda venda) {
 		ProdutoFilter filtro = new ProdutoFilter("","");
 		return filtro;
 	}
@@ -45,12 +45,13 @@ public class VendasController {
 	@GetMapping("/produto")
 	public ModelAndView pesquisarProduto(ProdutoFilter produtoFilter) {
 		Long codigoProduto = null;
+		String login = recuperarLogin();
 		if (Util.validar(produtoFilter)) {
 			if (Util.validar(produtoFilter.getCodigo())) {
 				codigoProduto = Long.valueOf(produtoFilter.getCodigo());
 			}
 		}
-		Venda venda = vendaService.cadastrar(codigoProduto, recuperarLogin());
+		Venda venda = vendaService.cadastrar(codigoProduto, login);
 		return novo(venda);
 	}
 	
@@ -60,9 +61,10 @@ public class VendasController {
 		List<Vendedor> listaVendedores = null;
 		ModelAndView mv = new ModelAndView("venda/cadastro-venda");
 		login = recuperarLogin();
+		venda = vendaService.recuperarVendaEmAberto(login);
 		listaVendedores = vendaService.listarVendedoresPorLogin(login);
 		mv.addObject("vendedores", listaVendedores);
-		mv.addObject(criarProdutoFilter(venda));
+		mv.addObject(limparFiltro(venda));
 		mv.addObject(venda);
 		return mv;
 	}

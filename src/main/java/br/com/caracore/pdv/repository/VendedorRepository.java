@@ -14,6 +14,6 @@ public interface VendedorRepository extends JpaRepository<Vendedor, Long> {
 
 	public List<Vendedor> findByLoja(Loja loja);
 	
-    public Vendedor findByTipo(TipoVendedor tipo);
+    public Vendedor findByTipoAndLoja(TipoVendedor tipo, Loja loja);
 
 }

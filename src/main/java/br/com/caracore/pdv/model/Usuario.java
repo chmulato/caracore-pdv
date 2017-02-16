@@ -1,12 +1,14 @@
 package br.com.caracore.pdv.model;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -34,9 +36,10 @@ public class Usuario {
 	@NotEmpty(message = "Perfil é obrigatório!")
 	private String perfil;
 
-	@OneToOne
-	@JoinColumn(name = "VENDEDOR_ID")
-	private Vendedor vendedor;
+	@NotNull(message = "Loja é obrigatória!")
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "LOJA_ID")
+	private Loja loja;
 
 	@NotEmpty(message = "E-mail é obrigatório!")
 	@Size(max = 30, message = "O e-mail não pode conter mais de 30 caracteres.")
@@ -86,13 +89,13 @@ public class Usuario {
 	public void setPerfil(String perfil) {
 		this.perfil = perfil;
 	}
-	
-	public Vendedor getVendedor() {
-		return vendedor;
+
+	public Loja getLoja() {
+		return loja;
 	}
 
-	public void setVendedor(Vendedor vendedor) {
-		this.vendedor = vendedor;
+	public void setLoja(Loja loja) {
+		this.loja = loja;
 	}
 
 	public String getEmail() {
@@ -117,6 +120,7 @@ public class Usuario {
 		int result = 1;
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((loja == null) ? 0 : loja.hashCode());
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
 		result = prime * result + ((perfil == null) ? 0 : perfil.hashCode());
 		result = prime * result + ((repetirEmail == null) ? 0 : repetirEmail.hashCode());
@@ -143,6 +147,11 @@ public class Usuario {
 			if (other.email != null)
 				return false;
 		} else if (!email.equals(other.email))
+			return false;
+		if (loja == null) {
+			if (other.loja != null)
+				return false;
+		} else if (!loja.equals(other.loja))
 			return false;
 		if (nome == null) {
 			if (other.nome != null)
@@ -171,4 +180,5 @@ public class Usuario {
 			return false;
 		return true;
 	}
+
 }

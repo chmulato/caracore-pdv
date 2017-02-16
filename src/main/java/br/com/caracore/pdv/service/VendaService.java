@@ -22,6 +22,10 @@ import br.com.caracore.pdv.util.Util;
 @Service
 public class VendaService {
 
+	final private Date DATA_DE_HOJE = new Date();
+	
+	final private int QUANTIDADE_UNITARIA = 1;
+
 	@Autowired
 	private VendaRepository vendaRepository;
 
@@ -36,14 +40,12 @@ public class VendaService {
 
 	@Autowired
 	private VendedorService vendedorService;
-
-	final private Date DATA_ATUAL = new Date();
 	
 	private Venda recuperarVendaEmAberto(Vendedor vendedor) {
 		Venda result = new Venda();
-		List<Venda> lista = vendaRepository.findByVendedorAndDataAndStatus(vendedor, DATA_ATUAL, StatusVenda.EM_ABERTO);
-		if (lista != null && lista.size() > 0) {
-			if (lista.size() == 1) {
+		List<Venda> lista = vendaRepository.findByVendedorAndDataAndStatus(vendedor, DATA_DE_HOJE, StatusVenda.EM_ABERTO);
+		if (Util.validar(lista)) {
+			if (lista.size() == QUANTIDADE_UNITARIA) {
 				for (Venda venda : lista) {
 					result = venda;
 				}
@@ -52,16 +54,38 @@ public class VendaService {
 		return result;
 	}
 	
+	private void carregarItemVenda(List<ItemVenda> itens, Produto produto) {
+		ItemVenda item = new ItemVenda();
+		item.setDesconto(BigDecimal.ZERO);
+		item.setProduto(produto);
+		item.setPrecoUnitario(produto.getValor());
+		item.setQuantidade(Integer.valueOf(QUANTIDADE_UNITARIA));
+		itens.add(item);
+	}
+	
 	private Usuario buscarUsuario(String login) {
 		return usuarioService.pesquisarPorNome(login);
 	}
 	
-	private Vendedor buscarVendedorDefault() {
-		return vendedorService.buscarDefault();
+	private Vendedor buscarVendedorDefault(Loja loja) {
+		return vendedorService.buscarDefault(loja);
 	}
 	
 	private List<Vendedor> listarVendedoresPorLoja(Loja loja) {
 		return lojaService.listarVendedores(loja);
+	}
+
+	public Venda recuperarVendaEmAberto(String login) {
+		Venda venda = null;
+		Usuario usuario = buscarUsuario(login);
+		if (Util.validar(usuario)) {
+			if (Util.validar(usuario.getLoja())) {
+				Loja loja = usuario.getLoja();
+				Vendedor vendedorDefault = vendedorService.buscarDefault(loja);
+				venda = recuperarVendaEmAberto(vendedorDefault);
+			}
+		}
+		return venda;
 	}
 	
 	public void salvar(Venda venda) {
@@ -96,10 +120,10 @@ public class VendaService {
 	public List<Vendedor> listarVendedoresPorLogin(String login) {
 		List<Vendedor> lista = null;
 		Usuario usuario = buscarUsuario(login);
-		if (Util.validar(usuario)) {
-			Vendedor vendedor = buscarVendedorDefault();
+		if (Util.validar(usuario) && Util.validar(usuario.getLoja())) {
+			Loja loja = usuario.getLoja();
+			Vendedor vendedor = buscarVendedorDefault(loja);
 			if (Util.validar(vendedor)) {
-				Loja loja = vendedor.getLoja();
 				lista = listarVendedoresPorLoja(loja);
 			}
 		}
@@ -108,32 +132,30 @@ public class VendaService {
 	
 	public Venda cadastrar(Long codigoProduto, String login) {
 		Venda result = null;
+		List<ItemVenda> itens = null;
 		if (Util.validar(codigoProduto)) {
 			Usuario usuario = buscarUsuario(login);
-			if (Util.validar(usuario)) {
-				Vendedor vendedor = buscarVendedorDefault();
+			if (Util.validar(usuario) && Util.validar(usuario.getLoja())) {
+				Loja loja = usuario.getLoja();
+				Vendedor vendedor = buscarVendedorDefault(loja);
 				if (Util.validar(vendedor)) {
 					Venda venda = recuperarVendaEmAberto(vendedor);
-					List<ItemVenda> itens = new ArrayList<>();
 					if (Util.validar(venda)) {
-						if (venda.getItens() != null && venda.getItens().size() > 0) {
+						if (Util.validar(venda.getItens())) {
 							itens = venda.getItens();
+						} else {
+							itens = new ArrayList<>();
 						}
-					} else {
-						venda.setData(DATA_ATUAL);
-						venda.setVendedor(vendedor);
-						venda.setStatus(StatusVenda.EM_ABERTO);
 					}
 					Produto produto = produtoService.pesquisarPorId(codigoProduto);
 					if (Util.validar(produto)) {
-						ItemVenda item = new ItemVenda();
-						item.setDesconto(BigDecimal.ZERO);
-						item.setProduto(produto);
-						item.setQuantidade(Integer.valueOf(1));
-						item.setPrecoUnitario(produto.getValor());
-						itens.add(item);
+						carregarItemVenda(itens, produto);
 					}
 					venda.setItens(itens);
+					venda.setData(DATA_DE_HOJE);
+					venda.setVendedor(vendedor);
+					venda.setStatus(StatusVenda.EM_ABERTO);
+					vendaRepository.save(venda);
 					result = venda;
 				}
 			}
