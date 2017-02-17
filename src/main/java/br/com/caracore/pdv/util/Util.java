@@ -13,14 +13,13 @@ public class Util {
 				if (!str.equals("")) {
 					result = true;
 				}
-			} else {
-				result = true;
-			}
-			if (objeto instanceof List) {
+			} else if (objeto instanceof List) {
 				List lista = (List) objeto;
 				if (lista.size() > 0) {
 					result = true;
 				}
+			} else {
+				result = true;
 			}
 		}
 		return result;
