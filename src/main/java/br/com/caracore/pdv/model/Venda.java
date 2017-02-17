@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -38,16 +39,16 @@ public class Venda {
 	private Date data;
 	
 	@NotNull
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "VENDEDOR_ID")
     private Vendedor vendedor;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "CLIENTE_ID")
 	private Cliente cliente;
 	
 	@NotNull
-	@OneToMany(mappedBy = "venda")
+	@OneToMany(mappedBy = "venda", fetch = FetchType.EAGER)
 	private List<ItemVenda> itens;
 	
 	@NotNull
