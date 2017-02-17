@@ -27,20 +27,6 @@ public class VendasController {
 	
 	@Autowired
 	private VendaService vendaService;
-
-	private String recuperarLogin() {
-		String login = null;
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth != null && auth.getName() != null) {
-			login = auth.getName(); 
-		}
-		return login;
-	}
-	
-	private ProdutoFilter limparFiltro(Venda venda) {
-		ProdutoFilter filtro = new ProdutoFilter("","");
-		return filtro;
-	}
 	
 	@GetMapping("/produto")
 	public ModelAndView pesquisarProduto(ProdutoFilter produtoFilter) {
@@ -79,5 +65,18 @@ public class VendasController {
 		return new ModelAndView("redirect:/vendas/novo");
 	}
 
+	private String recuperarLogin() {
+		String login = null;
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null && auth.getName() != null) {
+			login = auth.getName(); 
+		}
+		return login;
+	}
+	
+	private ProdutoFilter limparFiltro(Venda venda) {
+		ProdutoFilter filtro = new ProdutoFilter("","");
+		return filtro;
+	}
 }
 
