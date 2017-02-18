@@ -63,7 +63,7 @@ public class VendaService {
 		itens.add(item);
 	}
 	
-	private Usuario buscarUsuario(String login) {
+	private Usuario buscarUsuarioLogado(String login) {
 		return usuarioService.pesquisarPorNome(login);
 	}
 	
@@ -77,7 +77,7 @@ public class VendaService {
 
 	public Venda recuperarVendaEmAberto(String login) {
 		Venda venda = null;
-		Usuario usuario = buscarUsuario(login);
+		Usuario usuario = buscarUsuarioLogado(login);
 		if (Util.validar(usuario)) {
 			if (Util.validar(usuario.getLoja())) {
 				Loja loja = usuario.getLoja();
@@ -119,7 +119,7 @@ public class VendaService {
 	
 	public List<Vendedor> listarVendedoresPorLogin(String login) {
 		List<Vendedor> lista = null;
-		Usuario usuario = buscarUsuario(login);
+		Usuario usuario = buscarUsuarioLogado(login);
 		if (Util.validar(usuario) && Util.validar(usuario.getLoja())) {
 			Loja loja = usuario.getLoja();
 			Vendedor vendedor = buscarVendedorDefault(loja);
@@ -130,11 +130,11 @@ public class VendaService {
 		return lista;
 	}
 	
-	public Venda cadastrar(Long codigoProduto, String login) {
+	public Venda carregarCesta(Long codigoProduto, String login) {
 		Venda result = null;
 		List<ItemVenda> itens = null;
 		if (Util.validar(codigoProduto)) {
-			Usuario usuario = buscarUsuario(login);
+			Usuario usuario = buscarUsuarioLogado(login);
 			if (Util.validar(usuario) && Util.validar(usuario.getLoja())) {
 				Loja loja = usuario.getLoja();
 				Vendedor vendedor = buscarVendedorDefault(loja);

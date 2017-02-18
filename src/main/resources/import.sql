@@ -15,6 +15,3 @@ INSERT INTO USUARIO  (codigo,nome,perfil,senha,email,loja_id)	VALUES (3,'joao','
 INSERT INTO PRODUTO  (codigo,descricao,valor) VALUES (1,'CamisaPolo',80.9);
 INSERT INTO PRODUTO  (codigo,descricao,valor) VALUES (2,'CamisaSocial',134.9);
 INSERT INTO PRODUTO  (codigo,descricao,valor) VALUES (3,'ShortEsporte',40.9);
-
-INSERT INTO VINHO    (codigo,nome,tipo,valor) VALUES (1,'Coracao_De_Leao','TINTO',18.9);
-INSERT INTO VINHO    (codigo,nome,tipo,valor) VALUES (2,'Argentino','ROSE',14.9);

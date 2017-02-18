@@ -35,7 +35,7 @@ public class Vendedor {
 	@JoinColumn(name = "USUARIO_ID")
 	private Usuario usuario;
 
-	@NotNull
+	@NotNull(message = "Tipo de Vendedor é obrigatório!")
 	@Enumerated(EnumType.STRING)
 	private TipoVendedor tipo;
 	

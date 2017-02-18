@@ -12,14 +12,14 @@
 	<div class="page-header">
 		<div class="container-fluid">
 			<h1>
-				Cadastro de Vinho
+				Cadastro de Vendedor
 			</h1>
 		</div>
 	</div>
 
 	<div class="container-fluid">
 	
-		<form method="post" class="form-vertical  js-form-loading" th:object="${vinho}" th:action="@{/vinhos/novo}">
+		<form method="post" class="form-vertical  js-form-loading" th:object="${vendedor}" th:action="@{/vendedores/novo}">
 	
 			<div class="alert  alert-danger  alert-dismissible" role="alert" th:if="${#fields.hasAnyErrors()}">
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -43,28 +43,40 @@
 			</div>
 	
 			<div class="row">
-				<div class="col-sm-6">
+				<div class="col-sm-4">
+					<div class="form-group">
+						<label for="tipo">Usuário</label>
+						<select id="tipo" class="form-control" th:field="*{usuario}">
+							<option value="">Selecione o usuário</option>
+							<option th:each="usuario : ${usuarios}" th:value="${usuario.codigo}" th:text="${usuario.nome}"></option>
+						</select>
+					</div>
+				</div>
+
+				<div class="col-sm-4">
 					<div class="form-group">
 						<label for="tipo">Tipo</label>
 						<select id="tipo" class="form-control" th:field="*{tipo}">
 							<option value="">Selecione o tipo</option>
-							<option th:each="tipo : ${tipos}" th:value="${tipo}" th:text="#{|tipoVinho.${tipo}|}"></option>
-							
+							<option th:each="tipo : ${tipos}" th:value="${tipo}" th:text="#{|tipoVendedor.${tipo}|}"></option>
 						</select>
 					</div>
 				</div>
 				
-				<div class="col-sm-6">
+				<div class="col-sm-4">
 					<div class="form-group">
-						<label for="valor">Valor</label>
-						<input id="valor" type="text" class="form-control  js-moeda" th:field="*{valor}" placeholder="R$"/>
+						<label for="loja">Loja</label>
+						<select id="loja" class="form-control" th:field="*{loja}">
+							<option value="">Selecione a loja</option>
+							<option th:each="loja : ${lojas}" th:value="${loja.codigo}" th:text="${loja.nome}"></option>
+						</select>
 					</div>
 				</div>
 			</div>
 			
 			<div class="form-group">
 				<button class="btn  btn-primary" type="submit">Salvar</button>
-				<a th:href="@{/vinhos}" class="btn  btn-default">Cancelar</a>
+				<a th:href="@{/vendedores}" class="btn  btn-default">Cancelar</a>
 			</div>
 	
 		</form>

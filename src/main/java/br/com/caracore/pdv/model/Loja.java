@@ -3,6 +3,7 @@ package br.com.caracore.pdv.model;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,7 +23,7 @@ public class Loja {
 	@Size(max = 20, message = "A nome da loja não pode conter mais de 20 caracteres.")
 	private String nome;
 	
-	@OneToMany(mappedBy = "loja")
+	@OneToMany(mappedBy = "loja", fetch = FetchType.EAGER)
 	private List<Vendedor> vendedores;
 
 	public Long getCodigo() {
