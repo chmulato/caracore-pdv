@@ -43,6 +43,7 @@ public class VendaService {
 	
 	private Venda recuperarVendaEmAberto(Vendedor vendedor) {
 		Venda result = new Venda();
+		result.setVendedor(vendedor);
 		List<Venda> lista = vendaRepository.findByVendedorAndDataAndStatus(vendedor, DATA_DE_HOJE, StatusVenda.EM_ABERTO);
 		if (Util.validar(lista)) {
 			if (lista.size() == QUANTIDADE_UNITARIA) {
@@ -76,14 +77,18 @@ public class VendaService {
 	}
 
 	public Venda recuperarVendaEmAberto(String login) {
+		Vendedor vendedor = null;
 		Venda venda = null;
 		Usuario usuario = buscarUsuarioLogado(login);
 		if (Util.validar(usuario)) {
-			if (Util.validar(usuario.getLoja())) {
-				Loja loja = usuario.getLoja();
-				Vendedor vendedorDefault = vendedorService.buscarDefault(loja);
-				venda = recuperarVendaEmAberto(vendedorDefault);
+			vendedor = vendedorService.buscarPorUsuario(usuario);
+			if (!Util.validar(vendedor)) {
+				if (Util.validar(usuario.getLoja())) {
+					Loja loja = usuario.getLoja();
+					vendedor = vendedorService.buscarDefault(loja);
+				}
 			}
+			venda = recuperarVendaEmAberto(vendedor);
 		}
 		return venda;
 	}

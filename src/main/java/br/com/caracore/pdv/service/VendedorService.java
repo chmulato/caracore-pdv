@@ -32,6 +32,13 @@ public class VendedorService {
 		return lista;
 	}
 	
+	public Vendedor buscarPorUsuario(Usuario usuario) {
+		Vendedor vendedor = null;
+		vendedor = vendedorRepository.findByUsuario(usuario);
+		return vendedor;
+	}
+	
+	
 	public List<Loja> buscarLojas() {
 		List<Loja> lista = null;
 		lista = lojaRepository.findAll();
