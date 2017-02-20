@@ -38,7 +38,7 @@ public class VendasController {
 				codigoProduto = Long.valueOf(produtoFilter.getCodigo());
 			}
 		}
-		Venda venda = vendaService.carregarCesta(codigoProduto, usuario);
+		Venda venda = vendaService.comprar(codigoProduto, usuario);
 		return novo(venda);
 	}
 	

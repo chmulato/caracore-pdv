@@ -16,7 +16,6 @@ import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.model.types.StatusVenda;
 import br.com.caracore.pdv.repository.VendaRepository;
-import br.com.caracore.pdv.repository.filter.VendaFilter;
 import br.com.caracore.pdv.util.Util;
 
 @Service
@@ -51,7 +50,7 @@ public class VendaService {
 		if (Util.validar(lista)) {
 			if (lista.size() == QUANTIDADE_UNITARIA) {
 				for (Venda venda : lista) {
-					if (Util.validar(venda.getItens())) {
+					if (!Util.validar(venda.getItens())) {
 						List<ItemVenda> itens = itemVendaService.buscarItens(venda);
 						if (Util.validar(itens)) {
 							venda.setItens(itens);
@@ -117,24 +116,16 @@ public class VendaService {
 	public Venda pesquisarPorId(Long codigo) {
 		return vendaRepository.findOne(codigo);
 	}
-
-	public List<Venda> pesquisar(VendaFilter filtro) {
-		List<Venda> lista = null;
-		if (filtro.getCodigo() != null) {
-			Long codigo = filtro.getCodigo();
-			Venda venda = pesquisarPorId(codigo);
-			lista = new ArrayList<>();
-			lista.add(venda); 
-		} else  if (filtro.getVendedor() != null) {
-			Vendedor vendedor = filtro.getVendedor();
-			lista = vendaRepository.findByVendedor(vendedor); 
-		} else if (filtro.getData() != null) {
-			Date data = filtro.getData();
-			lista = vendaRepository.findByData(data); 
-		}
-		return lista; 
-	}
 	
+	/**
+	 * Método para recuperar lista de vendedores da loja
+	 * informando o usuário da loja.
+	 * No caso de nenhum usuário for encontrado
+	 * se assume recupsra o gerente de vendas
+	 * 
+	 * @param usuario
+	 * @return
+	 */
 	public List<Vendedor> listarVendedoresPorUsuario(Usuario usuario) {
 		List<Vendedor> lista = null;
 		if (Util.validar(usuario) && Util.validar(usuario.getLoja())) {
@@ -147,49 +138,62 @@ public class VendaService {
 		return lista;
 	}
 	
-	public Venda carregarCesta(Long codigoProduto, Usuario usuario) {
-		Venda result = null;
-		boolean step = false;
-		ItemVenda novoItem = new ItemVenda();
+	/**
+	 * Metodo interno para adicionar item na cesta de produtos
+	 * 
+	 * @param codigoProduto
+	 * @return
+	 */
+	private ItemVenda carregarItem(Long codigoProduto) {
+		ItemVenda item = new ItemVenda();
 		if (Util.validar(codigoProduto)) {
 			Produto produto = produtoService.pesquisarPorId(codigoProduto);
 			if (Util.validar(produto)) {
-				novoItem.setDesconto(BigDecimal.ZERO);
-				novoItem.setProduto(produto);
-				novoItem.setPrecoUnitario(produto.getValor());
-				novoItem.setQuantidade(Integer.valueOf(QUANTIDADE_UNITARIA));
-				step = true;
+				item.setDesconto(BigDecimal.ZERO);
+				item.setProduto(produto);
+				item.setPrecoUnitario(produto.getValor());
+				item.setQuantidade(Integer.valueOf(QUANTIDADE_UNITARIA));
 			}
 		}
-		if (step) {
-			if (Util.validar(usuario)) {
-				Vendedor vendedor = buscarVendedor(usuario);
-				if (Util.validar(vendedor)) {
-					Venda venda = recuperarVendaEmAberto(vendedor);
-					if (Util.validar(venda)) {
-						
-						// setar valores defaults
-						venda.setVendedor(vendedor);
-						venda.setDescontoTotal(BigDecimal.ZERO);
-						venda.setStatus(StatusVenda.EM_ABERTO);
-						
-						if (Util.validar(venda.getCodigo())) {
-							List<ItemVenda> itens = itemVendaService.buscarItens(venda);
-							if (Util.validar(itens)) {
-								itens.add(novoItem);
-								venda.setItens(itens);
-							}
-							venda = salvar(venda);
-							itemVendaService.salvarItens(itens, venda);
-						} else {
-							List<ItemVenda> itens = new ArrayList<>();
+		return item;
+	}
+	
+	/**
+	 * Metodo interno para carregar os itens de venda na cesta
+	 * 
+	 * @param codigoProduto
+	 * @param usuario
+	 * @return
+	 */
+	public Venda comprar(Long codigoProduto, Usuario usuario) {
+		Venda result = null;
+		ItemVenda novoItem = carregarItem(codigoProduto);
+		if (Util.validar(usuario)) {
+			Vendedor vendedor = buscarVendedor(usuario);
+			if (Util.validar(vendedor)) {
+				Venda venda = recuperarVendaEmAberto(vendedor);
+				if (Util.validar(venda)) {
+					
+					//Setar valores defaults
+					venda.setVendedor(vendedor);
+					venda.setDescontoTotal(BigDecimal.ZERO);
+					venda.setStatus(StatusVenda.EM_ABERTO);
+
+					List<ItemVenda> itens = new ArrayList<>();
+					
+					if (Util.validar(venda.getCodigo())) {
+						itens = itemVendaService.buscarItens(venda);
+						if (Util.validar(itens)) {
 							itens.add(novoItem);
-							venda.setItens(itens);
-							venda = salvar(venda);
 						}
+					} else {
+						itens.add(novoItem);
 					}
-					result = venda;
+					venda = salvar(venda);
+					venda.setItens(itens);
+					itemVendaService.salvarItens(itens, venda);
 				}
+				result = venda;
 			}
 		}
 		return result;
