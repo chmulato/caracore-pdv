@@ -45,7 +45,6 @@ public class VendaService {
 	
 	public Venda recuperarVendaEmAberto(Vendedor vendedor) {
 		Venda result = new Venda();
-		result.setVendedor(vendedor);
 		List<Venda> lista = vendaRepository.findByVendedorAndDataAndStatus(vendedor, DATA_DE_HOJE, StatusVenda.EM_ABERTO);
 		if (Util.validar(lista)) {
 			if (lista.size() == QUANTIDADE_UNITARIA) {
@@ -173,25 +172,35 @@ public class VendaService {
 			if (Util.validar(vendedor)) {
 				Venda venda = recuperarVendaEmAberto(vendedor);
 				if (Util.validar(venda)) {
+
+					List<ItemVenda> itens = new ArrayList<>();
 					
-					//Setar valores defaults
+					// setar valores defaults
 					venda.setVendedor(vendedor);
 					venda.setDescontoTotal(BigDecimal.ZERO);
 					venda.setStatus(StatusVenda.EM_ABERTO);
-
-					List<ItemVenda> itens = new ArrayList<>();
+					
+					if (Util.validar(venda.getItens())) {
+						itens = venda.getItens();
+						itens.add(novoItem);
+					} else {
+						itens.add(novoItem);
+					}
+					
+					venda.setItens(itens);
+					venda = salvar(venda);
 					
 					if (Util.validar(venda.getCodigo())) {
 						itens = itemVendaService.buscarItens(venda);
 						if (Util.validar(itens)) {
 							itens.add(novoItem);
+							itens = itemVendaService.salvarItens(itens, venda);
+							if (Util.validar(itens)) {
+								venda.setItens(itens);
+							}
 						}
-					} else {
-						itens.add(novoItem);
 					}
-					venda = salvar(venda);
-					venda.setItens(itens);
-					itemVendaService.salvarItens(itens, venda);
+					
 				}
 				result = venda;
 			}

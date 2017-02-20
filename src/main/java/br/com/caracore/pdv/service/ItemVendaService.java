@@ -24,12 +24,13 @@ public class ItemVendaService {
 		return itens;
 	}
 	
-	public void salvarItens(List<ItemVenda> itens, Venda venda) {
+	public List<ItemVenda> salvarItens(List<ItemVenda> itens, Venda venda) {
 		if (Util.validar(itens)) {
 			for (ItemVenda itemVenda : itens) {
 				itemVenda.setVenda(venda);
 				itemVendaRepository.save(itemVenda);
 			}
 		}
+		return itens;
 	}
 }
