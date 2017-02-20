@@ -240,17 +240,14 @@ public class VendaService {
 					venda.setItens(itens);
 					venda = salvar(venda);
 					
-					if (Util.validar(venda) && Util.validar(venda.getCodigo())) {
+					if (Util.validar(venda.getCodigo())) {
 						itens = itemVendaService.buscarItens(venda);
+						itens.add(novoItem);
+						itens = itemVendaService.salvarItens(itens, venda);
 						if (Util.validar(itens)) {
-							itens.add(novoItem);
-							itens = itemVendaService.salvarItens(itens, venda);
-							if (Util.validar(itens)) {
-								venda.setItens(itens);
-							}
+							venda.setItens(itens);
 						}
 					}
-					
 				}
 				result = venda;
 			}
