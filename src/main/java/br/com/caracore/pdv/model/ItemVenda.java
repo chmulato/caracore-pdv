@@ -10,7 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.NumberFormat;
@@ -33,8 +32,7 @@ public class ItemVenda {
 	@NotNull(message = "Preço é obrigatório!")
 	private BigDecimal precoUnitario;
 	
-	@NumberFormat(pattern = "#0.000")
-	@DecimalMin(value = "0.01", message = "Desconto não pode ser maior que 0,01")
+	@NumberFormat(pattern = "#0.00")
 	@DecimalMax(value = "1.00", message = "Desconto não pode ser maior que 1,00")
 	private BigDecimal desconto;
 	

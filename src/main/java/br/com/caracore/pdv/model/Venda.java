@@ -18,7 +18,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -55,9 +54,8 @@ public class Venda {
 	@Enumerated(EnumType.STRING)
 	private StatusVenda status;
 	
-	@DecimalMin(value = "0.01", message = "Desconto não pode ser menor que 0,01")
 	@DecimalMax(value = "1.00", message = "Desconto não pode ser maior que 1,00")
-	@NumberFormat(pattern = "#0.000")
+	@NumberFormat(pattern = "#0.00")
 	private BigDecimal descontoTotal;
 
 	@Transient

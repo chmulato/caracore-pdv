@@ -40,14 +40,23 @@ public class VendaService {
 
 	@Autowired
 	private VendedorService vendedorService;
+
+	@Autowired
+	private ItemVendaService itemVendaService;
 	
-	private Venda recuperarVendaEmAberto(Vendedor vendedor) {
+	public Venda recuperarVendaEmAberto(Vendedor vendedor) {
 		Venda result = new Venda();
 		result.setVendedor(vendedor);
 		List<Venda> lista = vendaRepository.findByVendedorAndDataAndStatus(vendedor, DATA_DE_HOJE, StatusVenda.EM_ABERTO);
 		if (Util.validar(lista)) {
 			if (lista.size() == QUANTIDADE_UNITARIA) {
 				for (Venda venda : lista) {
+					if (Util.validar(venda.getItens())) {
+						List<ItemVenda> itens = itemVendaService.buscarItens(venda);
+						if (Util.validar(itens)) {
+							venda.setItens(itens);
+						}
+					}
 					result = venda;
 				}
 			}
@@ -55,31 +64,8 @@ public class VendaService {
 		return result;
 	}
 	
-	private void carregarItemVenda(List<ItemVenda> itens, Produto produto) {
-		ItemVenda item = new ItemVenda();
-		item.setDesconto(BigDecimal.ZERO);
-		item.setProduto(produto);
-		item.setPrecoUnitario(produto.getValor());
-		item.setQuantidade(Integer.valueOf(QUANTIDADE_UNITARIA));
-		itens.add(item);
-	}
-	
-	private Usuario buscarUsuarioLogado(String login) {
-		return usuarioService.pesquisarPorNome(login);
-	}
-	
-	private Vendedor buscarVendedorDefault(Loja loja) {
-		return vendedorService.buscarDefault(loja);
-	}
-	
-	private List<Vendedor> listarVendedoresPorLoja(Loja loja) {
-		return lojaService.listarVendedores(loja);
-	}
-
-	public Venda recuperarVendaEmAberto(String login) {
+	public Vendedor buscarVendedor(Usuario usuario) {
 		Vendedor vendedor = null;
-		Venda venda = null;
-		Usuario usuario = buscarUsuarioLogado(login);
 		if (Util.validar(usuario)) {
 			vendedor = vendedorService.buscarPorUsuario(usuario);
 			if (!Util.validar(vendedor)) {
@@ -88,15 +74,42 @@ public class VendaService {
 					vendedor = vendedorService.buscarDefault(loja);
 				}
 			}
-			venda = recuperarVendaEmAberto(vendedor);
 		}
+		return vendedor;
+	}
+	
+	private List<Vendedor> listarVendedoresPorLoja(Loja loja) {
+		return lojaService.listarVendedores(loja);
+	}
+
+	public Usuario recuperarUsuario(String login) {
+		Usuario usuario = null;
+		if (Util.validar(login)) {
+			usuario = usuarioService.pesquisarPorNome(login); 
+		}
+		return usuario;
+	}
+	
+	public boolean validarVendaEmAndamento(Venda venda) {
+		boolean validar = false;
+		if (Util.validar(venda)) {
+			if (Util.validar(venda.getCodigo())) {
+				if (Util.validar(venda.getItens())) {
+					validar = true;
+				}
+			}
+		}
+		return validar;
+	}
+
+	public Venda salvar(Venda venda) {
+		if (Util.validar(venda)) {
+			venda.setData(DATA_DE_HOJE);
+		}
+		venda = vendaRepository.save(venda);
 		return venda;
 	}
 	
-	public void salvar(Venda venda) {
-		vendaRepository.save(venda);
-	}
-
 	public void excluir(Long codigo) {
 		vendaRepository.delete(codigo);;
 	}
@@ -122,12 +135,11 @@ public class VendaService {
 		return lista; 
 	}
 	
-	public List<Vendedor> listarVendedoresPorLogin(String login) {
+	public List<Vendedor> listarVendedoresPorUsuario(Usuario usuario) {
 		List<Vendedor> lista = null;
-		Usuario usuario = buscarUsuarioLogado(login);
 		if (Util.validar(usuario) && Util.validar(usuario.getLoja())) {
 			Loja loja = usuario.getLoja();
-			Vendedor vendedor = buscarVendedorDefault(loja);
+			Vendedor vendedor = vendedorService.buscarDefault(loja);
 			if (Util.validar(vendedor)) {
 				lista = listarVendedoresPorLoja(loja);
 			}
@@ -135,37 +147,53 @@ public class VendaService {
 		return lista;
 	}
 	
-	public Venda carregarCesta(Long codigoProduto, String login) {
+	public Venda carregarCesta(Long codigoProduto, Usuario usuario) {
 		Venda result = null;
-		List<ItemVenda> itens = null;
+		boolean step = false;
+		ItemVenda novoItem = new ItemVenda();
 		if (Util.validar(codigoProduto)) {
-			Usuario usuario = buscarUsuarioLogado(login);
-			if (Util.validar(usuario) && Util.validar(usuario.getLoja())) {
-				Loja loja = usuario.getLoja();
-				Vendedor vendedor = buscarVendedorDefault(loja);
+			Produto produto = produtoService.pesquisarPorId(codigoProduto);
+			if (Util.validar(produto)) {
+				novoItem.setDesconto(BigDecimal.ZERO);
+				novoItem.setProduto(produto);
+				novoItem.setPrecoUnitario(produto.getValor());
+				novoItem.setQuantidade(Integer.valueOf(QUANTIDADE_UNITARIA));
+				step = true;
+			}
+		}
+		if (step) {
+			if (Util.validar(usuario)) {
+				Vendedor vendedor = buscarVendedor(usuario);
 				if (Util.validar(vendedor)) {
 					Venda venda = recuperarVendaEmAberto(vendedor);
 					if (Util.validar(venda)) {
-						if (Util.validar(venda.getItens())) {
-							itens = venda.getItens();
+						
+						// setar valores defaults
+						venda.setVendedor(vendedor);
+						venda.setDescontoTotal(BigDecimal.ZERO);
+						venda.setStatus(StatusVenda.EM_ABERTO);
+						
+						if (Util.validar(venda.getCodigo())) {
+							List<ItemVenda> itens = itemVendaService.buscarItens(venda);
+							if (Util.validar(itens)) {
+								itens.add(novoItem);
+								venda.setItens(itens);
+							}
+							venda = salvar(venda);
+							itemVendaService.salvarItens(itens, venda);
 						} else {
-							itens = new ArrayList<>();
+							List<ItemVenda> itens = new ArrayList<>();
+							itens.add(novoItem);
+							venda.setItens(itens);
+							venda = salvar(venda);
 						}
 					}
-					Produto produto = produtoService.pesquisarPorId(codigoProduto);
-					if (Util.validar(produto)) {
-						carregarItemVenda(itens, produto);
-					}
-					venda.setItens(itens);
-					venda.setData(DATA_DE_HOJE);
-					venda.setVendedor(vendedor);
-					venda.setStatus(StatusVenda.EM_ABERTO);
-					vendaRepository.save(venda);
 					result = venda;
 				}
 			}
 		}
 		return result;
 	}
+
 
 }

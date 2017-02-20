@@ -3,6 +3,7 @@ package br.com.caracore.pdv.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.caracore.pdv.model.ItemVenda;
 import br.com.caracore.pdv.model.Loja;
 import br.com.caracore.pdv.model.Usuario;
 import br.com.caracore.pdv.model.Vendedor;
@@ -48,6 +49,13 @@ public class Util {
 		Usuario usuario = new Usuario();
 		List<Usuario> lista = new ArrayList<>();
 		lista.add(usuario);
+		return lista;
+	}
+	
+	public static List<ItemVenda> criarListaDeItensVenda(){
+		ItemVenda item = new ItemVenda();
+		List<ItemVenda> lista = new ArrayList<>();
+		lista.add(item);
 		return lista;
 	}
 }
