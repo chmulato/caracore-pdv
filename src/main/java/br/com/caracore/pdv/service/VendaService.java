@@ -43,6 +43,13 @@ public class VendaService {
 	@Autowired
 	private ItemVendaService itemVendaService;
 	
+	/**
+	 * Metodo para recuperar venda em aberto
+	 * informando o vendedor
+	 * 
+	 * @param vendedor
+	 * @return
+	 */
 	public Venda recuperarVendaEmAberto(Vendedor vendedor) {
 		Venda result = new Venda();
 		List<Venda> lista = vendaRepository.findByVendedorAndDataAndStatus(vendedor, DATA_DE_HOJE, StatusVenda.EM_ABERTO);
@@ -62,6 +69,13 @@ public class VendaService {
 		return result;
 	}
 	
+	/**
+	 * Método para recuperar o vendedor do usuário, 
+	 * se não encontrar recupera o vendedor padrão da loja
+	 * 
+	 * @param usuario
+	 * @return
+	 */
 	public Vendedor buscarVendedor(Usuario usuario) {
 		Vendedor vendedor = null;
 		if (Util.validar(usuario)) {
@@ -76,10 +90,22 @@ public class VendaService {
 		return vendedor;
 	}
 	
+	/**
+	 * Método interno para recuperar lista de vendedores da loja
+	 * 
+	 * @param loja
+	 * @return
+	 */
 	private List<Vendedor> listarVendedoresPorLoja(Loja loja) {
 		return lojaService.listarVendedores(loja);
 	}
 
+	/**
+	 * Método externo para recuperar usuario logado
+	 * 
+	 * @param login
+	 * @return
+	 */
 	public Usuario recuperarUsuario(String login) {
 		Usuario usuario = null;
 		if (Util.validar(login)) {
@@ -88,6 +114,12 @@ public class VendaService {
 		return usuario;
 	}
 	
+	/**
+	 *	Método para validar se existe um venda com itens de compra
+	 * 
+	 * @param venda
+	 * @return
+	 */
 	public boolean validarVendaEmAndamento(Venda venda) {
 		boolean validar = false;
 		if (Util.validar(venda)) {
@@ -100,6 +132,13 @@ public class VendaService {
 		return validar;
 	}
 
+	/**
+	 * Método externo para salvar vendas
+	 * Salva com a data atualizada de hoje 
+	 * 
+	 * @param venda
+	 * @return
+	 */
 	public Venda salvar(Venda venda) {
 		if (Util.validar(venda)) {
 			venda.setData(DATA_DE_HOJE);
@@ -107,11 +146,22 @@ public class VendaService {
 		venda = vendaRepository.save(venda);
 		return venda;
 	}
-	
+
+	/**
+	 * Método externo para excluir uma venda
+	 * 
+	 * @param codigo
+	 */
 	public void excluir(Long codigo) {
-		vendaRepository.delete(codigo);;
+		vendaRepository.delete(codigo);
 	}
 
+	/**
+	 * Método externo para pesquisar uma venda
+	 * 
+	 * @param codigo
+	 * @return
+	 */
 	public Venda pesquisarPorId(Long codigo) {
 		return vendaRepository.findOne(codigo);
 	}
@@ -120,7 +170,7 @@ public class VendaService {
 	 * Método para recuperar lista de vendedores da loja
 	 * informando o usuário da loja.
 	 * No caso de nenhum usuário for encontrado
-	 * se assume recupsra o gerente de vendas
+	 * recupera vendedor gerente
 	 * 
 	 * @param usuario
 	 * @return
@@ -138,7 +188,7 @@ public class VendaService {
 	}
 	
 	/**
-	 * Metodo interno para adicionar item na cesta de produtos
+	 * Metodo interno para adicionar item de produto na cesta de compras
 	 * 
 	 * @param codigoProduto
 	 * @return
@@ -158,7 +208,7 @@ public class VendaService {
 	}
 	
 	/**
-	 * Metodo interno para carregar os itens de venda na cesta
+	 * Metodo externo para carregar os itens de venda na cesta
 	 * 
 	 * @param codigoProduto
 	 * @param usuario
@@ -190,7 +240,7 @@ public class VendaService {
 					venda.setItens(itens);
 					venda = salvar(venda);
 					
-					if (Util.validar(venda.getCodigo())) {
+					if (Util.validar(venda) && Util.validar(venda.getCodigo())) {
 						itens = itemVendaService.buscarItens(venda);
 						if (Util.validar(itens)) {
 							itens.add(novoItem);
@@ -207,6 +257,5 @@ public class VendaService {
 		}
 		return result;
 	}
-
 
 }

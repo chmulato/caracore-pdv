@@ -66,6 +66,11 @@ public class VendasController {
 		return new ModelAndView("redirect:/vendas/novo");
 	}
 
+	/**
+	 * Método para recuperar usuário logado
+	 * 
+	 * @return
+	 */
 	private Usuario recuperarUsuario() {
 		Usuario usuario = null;
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -76,11 +81,23 @@ public class VendasController {
 		return usuario;
 	}
 	
+	/**
+	 * Método para auxiliar no filtro de tela de pesquisa de vendas em aberto
+	 * 
+	 * @param venda
+	 * @return
+	 */
 	private ProdutoFilter limparFiltro(Venda venda) {
 		ProdutoFilter filtro = new ProdutoFilter("","");
 		return filtro;
 	}
 	
+	/**
+	 * Médoto para recuperar lista de vendedores da loja
+	 * 
+	 * @param usuario
+	 * @return
+	 */
 	private List<Vendedor> buscarVendedores(Usuario usuario) {
 		List<Vendedor> vendedores = vendaService.listarVendedoresPorUsuario(usuario);
 		if (!Util.validar(vendedores)) {
@@ -88,5 +105,6 @@ public class VendasController {
 		}
 		return vendedores;
 	}
+	
 }
 
