@@ -15,6 +15,14 @@ public class ItemVendaService {
 
 	@Autowired
 	private ItemVendaRepository itemVendaRepository;
+	
+	public ItemVenda recuperar(Long codigo) {
+		return itemVendaRepository.findOne(codigo);
+	}
+	
+	public void excluir(Long codigo) {
+		itemVendaRepository.delete(codigo);
+	}
 
 	List<ItemVenda> buscarItens(Venda venda) {
 		List<ItemVenda> itens = null;
@@ -33,4 +41,5 @@ public class ItemVendaService {
 		}
 		return itens;
 	}
+	
 }

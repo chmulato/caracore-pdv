@@ -106,7 +106,17 @@
 											<td th:text="|R$${{item.precoUnitario}}|" class="text-right">R$ 1.999,99</td>
 											<td th:text="|R$${{item.desconto}}|" class="text-right">R$ 0,00</td>
 											<td th:text="|R$${{item.subTotal}}|" class="text-right">R$ 1.999,99</td>
-											<td></td>
+											<td>
+												<a class="btn btn-link btn-xs" th:href="@{/itens/{codigo}(codigo=${item.codigo})}"
+													title="Editar" rel="tooltip" data-placement="top">
+													<span class="glyphicon glyphicon-pencil"></span>
+												</a>
+												<a class="btn btn-link btn-xs" data-toggle="modal" data-target="confirmaExclusaoModal" 
+													th:attr="data-codigo=${item.codigo}, data-descricao=${item?.produto?.descricao}"
+													title="Excluir" rel="tooltip" data-placement="top">
+													<span class="glyphicon glyphicon-remove"></span>
+												</a>
+											</td>
 										</tr>
 									</tbody>
 								</table>
@@ -155,7 +165,33 @@
 				</div>
 			
 			</div>
+
+			<div class="modal fade" id="confirmaExclusaoModal" tabindex="-1" data-keyboard="false" data-backdrop="static">
+				<div class="modal-dialog">
+					<form th:attr="data-url-base=@{/vendas}" method="POST">
+						
+						<input type="hidden" name="_method" value="DELETE" />
+						
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title"> Você tem certeza?</h4>
+							</div>
+							
+							<div class="modal-body">
+								<span>Tem certeza que deseja apagar este item?</span>
+							</div>
+							
+							<div class="modal-footer">
+								<button type="button" class="btn btn-link" data-dismiss="modal">Cancelar</button>
+								<button type="submit" class="btn btn-primary">Excluir</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
 		
 		</section>
+
+
 </body>
 </html>
