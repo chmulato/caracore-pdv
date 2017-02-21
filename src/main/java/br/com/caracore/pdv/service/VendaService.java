@@ -44,8 +44,7 @@ public class VendaService {
 	private ItemVendaService itemVendaService;
 	
 	/**
-	 * Metodo para recuperar venda em aberto
-	 * informando o vendedor
+	 * Metodo para recuperar venda em aberto informando o vendedor
 	 * 
 	 * @param vendedor
 	 * @return
@@ -62,6 +61,7 @@ public class VendaService {
 							venda.setItens(itens);
 						}
 					}
+					venda = totalizar(venda);
 					result = venda;
 				}
 			}
@@ -133,8 +133,7 @@ public class VendaService {
 	}
 
 	/**
-	 * Método externo para salvar vendas
-	 * Salva com a data atualizada de hoje 
+	 * Método externo para salvar vendas. Salva a data atualizada de hoje 
 	 * 
 	 * @param venda
 	 * @return
@@ -167,10 +166,8 @@ public class VendaService {
 	}
 	
 	/**
-	 * Método para recuperar lista de vendedores da loja
-	 * informando o usuário da loja.
-	 * No caso de nenhum usuário for encontrado
-	 * recupera vendedor gerente
+	 * Método para recuperar lista de vendedores da loja informando o usuário da loja.
+	 * No caso de nenhum usuário for encontrado recupera vendedor gerente
 	 * 
 	 * @param usuario
 	 * @return
@@ -185,6 +182,30 @@ public class VendaService {
 			}
 		}
 		return lista;
+	}
+
+	/**
+	 * Método Interno para calcular o subTotal do item
+	 * 
+	 * @param item
+	 * @return
+	 */
+	private BigDecimal subTotal(ItemVenda item) {
+		long lngSubTotal = 0;
+		if (Util.validar(item)) {
+			if (Util.validar(item.getPrecoUnitario()) 
+					&& (Util.validar(item.getDesconto())) 
+					&& (Util.validar(item.getQuantidade()))) {
+				long lngPrecoTotal = item.getPrecoUnitario().longValue();
+				long lngDesconto = item.getDesconto().longValue();
+				int intQuantidade = item.getQuantidade().intValue();
+				if (lngDesconto >= 0 && lngDesconto <= 1) {
+					lngPrecoTotal = lngPrecoTotal * intQuantidade;
+					lngSubTotal = lngPrecoTotal - (lngPrecoTotal * lngDesconto);
+				}
+			}
+		}
+		return BigDecimal.valueOf(lngSubTotal);
 	}
 	
 	/**
@@ -202,6 +223,7 @@ public class VendaService {
 				item.setProduto(produto);
 				item.setPrecoUnitario(produto.getValor());
 				item.setQuantidade(Integer.valueOf(QUANTIDADE_UNITARIA));
+				item.setSubTotal(subTotal(item));
 			}
 		}
 		return item;
@@ -255,4 +277,36 @@ public class VendaService {
 		return result;
 	}
 
+	
+	/**
+	 * Método interno para totalizar valores da compra
+	 * 
+	 * @param venda
+	 * @return
+	 */
+	private Venda totalizar(Venda venda) {
+		if (Util.validar(venda)) {
+			long lngTotal = 0;
+			if (Util.validar(venda.getItens())) {
+				long total = 0L;
+				for (ItemVenda item : venda.getItens()) {
+					BigDecimal subTotal = subTotal(item);
+					item.setSubTotal(subTotal);
+					if (Util.validar(item.getSubTotal())) {
+						total = total + item.getSubTotal().longValue();
+					}
+				}
+				venda.setSubTotal(BigDecimal.valueOf(total));
+			}
+			if (Util.validar(venda.getSubTotal()) && Util.validar(venda.getDescontoTotal())) {
+				long lngSubTotal = venda.getSubTotal().longValue();
+				long lngDesconto = venda.getDescontoTotal().longValue();
+				if (lngDesconto >= 0 && lngDesconto <= 1) {
+					lngTotal = lngSubTotal - (lngSubTotal * lngDesconto);
+				}
+			}
+			venda.setTotal(BigDecimal.valueOf(lngTotal));
+		}
+		return venda;
+	}
 }

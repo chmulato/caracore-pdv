@@ -16,7 +16,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.NotNull;
 
@@ -58,10 +57,10 @@ public class Venda {
 	@NumberFormat(pattern = "#0.00")
 	private BigDecimal descontoTotal;
 
-	@Transient
+	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal subTotal;
 
-	@Transient
+	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal total;
 
 	public Long getCodigo() {
@@ -104,16 +103,12 @@ public class Venda {
 		this.itens = itens;
 	}
 
-	public BigDecimal getSubTotal() {
-		long total = 0L;
-		if (itens != null && itens.size() > 0) {
-			for (ItemVenda itemVenda : itens) {
-				if (itemVenda.getSubTotal() != null) {
-					total = total + itemVenda.getSubTotal().longValue();
-				}
-			}
-		}
-		return BigDecimal.valueOf(total);
+	public StatusVenda getStatus() {
+		return status;
+	}
+
+	public void setStatus(StatusVenda status) {
+		this.status = status;
 	}
 
 	public BigDecimal getDescontoTotal() {
@@ -123,25 +118,21 @@ public class Venda {
 	public void setDescontoTotal(BigDecimal descontoTotal) {
 		this.descontoTotal = descontoTotal;
 	}
-	
-	public StatusVenda getStatus() {
-		return status;
+
+	public BigDecimal getSubTotal() {
+		return subTotal;
 	}
 
-	public void setStatus(StatusVenda status) {
-		this.status = status;
+	public void setSubTotal(BigDecimal subTotal) {
+		this.subTotal = subTotal;
 	}
 
 	public BigDecimal getTotal() {
-		long lngTotal = 0;
-		if (subTotal != null && descontoTotal != null) {
-			long lngSubTotal = subTotal.longValue();
-			long lngDesconto = descontoTotal.longValue();
-			if (lngDesconto > 0 && lngDesconto <= 1) {
-				lngTotal = lngSubTotal - (lngSubTotal * lngDesconto);
-			}
-		}
-		return BigDecimal.valueOf(lngTotal);
+		return total;
+	}
+
+	public void setTotal(BigDecimal total) {
+		this.total = total;
 	}
 
 	@Override
@@ -154,6 +145,8 @@ public class Venda {
 		result = prime * result + ((descontoTotal == null) ? 0 : descontoTotal.hashCode());
 		result = prime * result + ((itens == null) ? 0 : itens.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
+		result = prime * result + ((subTotal == null) ? 0 : subTotal.hashCode());
+		result = prime * result + ((total == null) ? 0 : total.hashCode());
 		result = prime * result + ((vendedor == null) ? 0 : vendedor.hashCode());
 		return result;
 	}
@@ -194,6 +187,16 @@ public class Venda {
 			return false;
 		if (status != other.status)
 			return false;
+		if (subTotal == null) {
+			if (other.subTotal != null)
+				return false;
+		} else if (!subTotal.equals(other.subTotal))
+			return false;
+		if (total == null) {
+			if (other.total != null)
+				return false;
+		} else if (!total.equals(other.total))
+			return false;
 		if (vendedor == null) {
 			if (other.vendedor != null)
 				return false;
@@ -201,4 +204,5 @@ public class Venda {
 			return false;
 		return true;
 	}
+
 }

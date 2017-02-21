@@ -8,7 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.NotNull;
 
@@ -30,6 +29,7 @@ public class ItemVenda {
 	private Integer quantidade;
 	
 	@NotNull(message = "Preço é obrigatório!")
+	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal precoUnitario;
 	
 	@NumberFormat(pattern = "#0.00")
@@ -41,7 +41,7 @@ public class ItemVenda {
 	@JoinColumn(name = "VENDA_ID")
 	private Venda venda;
 	
-	@Transient
+	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal subTotal;
 
 	public Long getCodigo() {
@@ -91,21 +91,15 @@ public class ItemVenda {
 	public void setVenda(Venda venda) {
 		this.venda = venda;
 	}
-	
-	public BigDecimal getSubTotal() {
-		long lngSubTotal = 0;
-		if (precoUnitario != null && desconto != null && quantidade != null) {
-			long lngPrecoTotal = precoUnitario.longValue();
-			long lngDesconto = desconto.longValue();
-			int intQuantidade = quantidade.intValue();
-			if (lngDesconto > 0 && lngDesconto <= 1) {
-				lngPrecoTotal = lngPrecoTotal * intQuantidade;
-				lngSubTotal = lngPrecoTotal - (lngPrecoTotal * lngDesconto);
-			}
-		}
-		return BigDecimal.valueOf(lngSubTotal);
 
-	}	
+	public BigDecimal getSubTotal() {
+		return subTotal;
+	}
+
+	public void setSubTotal(BigDecimal subTotal) {
+		this.subTotal = subTotal;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -115,6 +109,7 @@ public class ItemVenda {
 		result = prime * result + ((precoUnitario == null) ? 0 : precoUnitario.hashCode());
 		result = prime * result + ((produto == null) ? 0 : produto.hashCode());
 		result = prime * result + ((quantidade == null) ? 0 : quantidade.hashCode());
+		result = prime * result + ((subTotal == null) ? 0 : subTotal.hashCode());
 		result = prime * result + ((venda == null) ? 0 : venda.hashCode());
 		return result;
 	}
@@ -152,6 +147,11 @@ public class ItemVenda {
 			if (other.quantidade != null)
 				return false;
 		} else if (!quantidade.equals(other.quantidade))
+			return false;
+		if (subTotal == null) {
+			if (other.subTotal != null)
+				return false;
+		} else if (!subTotal.equals(other.subTotal))
 			return false;
 		if (venda == null) {
 			if (other.venda != null)
