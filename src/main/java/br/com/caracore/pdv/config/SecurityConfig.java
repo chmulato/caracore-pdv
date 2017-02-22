@@ -41,6 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
+		web.debug(true);
 		web.ignoring().antMatchers("/layout/**");
 	}
 
@@ -48,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeRequests()
-				.antMatchers("/esqueceu-a-senha").permitAll()
+				.antMatchers("/","/esqueceu-a-senha").permitAll()
 				.antMatchers("/usuarios").hasRole("USUARIO")
 				.antMatchers("/usuarios/**").hasRole("USUARIO")
 				.antMatchers("/produtos").hasRole("USUARIO")
