@@ -101,21 +101,19 @@
 										<tr th:each="item : ${venda?.itens}">
 											<td><input type="checkbox"></td>
 											<td th:text="${item?.produto?.codigo}" class="text-center">1000</td>
-											<td th:text="${item?.produto?.descricao}" class="text-right">Produto 1 Produto 1 Produto 1 Produto 1 Produto 1 Produto 1 Produto 1</td>
+											<td>
+												<a th:href="@{/vendas/{codigo}(codigo=${item.codigo})}" th:text="${item?.produto?.descricao}" sec:authorize="hasRole('ROLE_USUARIO')"></a>
+												<span th:text="${item?.produto?.descricao}" sec:authorize="not hasRole('ROLE_USUARIO')"></span>
+											</td>
 											<td th:text="${item.quantidade}" class="text-center">1</td>
 											<td th:text="|R$${{item.precoUnitario}}|" class="text-right">R$ 1.999,99</td>
 											<td th:text="|R$${{item.desconto}}|" class="text-right">R$ 0,00</td>
 											<td th:text="|R$${{item.subTotal}}|" class="text-right">R$ 1.999,99</td>
-											<td>
-												<a class="btn btn-link btn-xs" th:href="@{/itens/{codigo}(codigo=${item.codigo})}"
-													title="Editar" rel="tooltip" data-placement="top">
-													<span class="glyphicon glyphicon-pencil"></span>
-												</a>
-												<a class="btn btn-link btn-xs" data-toggle="modal" data-target="confirmaExclusaoModal" 
-													th:attr="data-codigo=${item.codigo}, data-descricao=${item?.produto?.descricao}"
-													title="Excluir" rel="tooltip" data-placement="top">
-													<span class="glyphicon glyphicon-remove"></span>
-												</a>
+											<td class="text-center" sec:authorize="hasRole('ROLE_USUARIO')">
+												<i class="fa  fa-trash" style="cursor:pointer"
+													data-toggle="modal" data-target="#confirmaExclusaoModal"
+													data:nome="${item?.produto?.descricao}" 
+													data:url-apagar="@{/vendas/{codigo}(codigo=${item.codigo})}"></i>
 											</td>
 										</tr>
 									</tbody>

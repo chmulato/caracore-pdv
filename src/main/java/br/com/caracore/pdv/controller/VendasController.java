@@ -68,7 +68,7 @@ public class VendasController {
 		return new ModelAndView("redirect:/vendas/novo");
 	}
 	
-	@DeleteMapping(value="{codigo}")
+	@DeleteMapping(value="/{codigo}")
 	public String excluir(@PathVariable Long codigo, RedirectAttributes attributes) {
 		vendaService.excluirItemVenda(codigo);
 		attributes.addFlashAttribute("mensagem", "Item excluído com sucesso!");
