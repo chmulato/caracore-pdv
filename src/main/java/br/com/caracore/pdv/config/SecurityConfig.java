@@ -41,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.debug(true);
+		//web.debug(true);
 		web.ignoring().antMatchers("/layout/**");
 	}
 
@@ -56,6 +56,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/produtos/**").hasRole("USUARIO")
 				.antMatchers("/vendas").hasRole("USUARIO")
 				.antMatchers("/vendas/**").hasRole("USUARIO")
+				.antMatchers("/itens").hasRole("USUARIO")
+				.antMatchers("/itens/**").hasRole("USUARIO")
 				.antMatchers("/vendedores").hasRole("USUARIO")
 				.antMatchers("/vendedores/**").hasRole("USUARIO")
 				.anyRequest().authenticated()

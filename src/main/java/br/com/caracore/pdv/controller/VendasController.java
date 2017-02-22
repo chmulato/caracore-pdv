@@ -5,7 +5,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -69,7 +68,6 @@ public class VendasController {
 		return new ModelAndView("redirect:/vendas/novo");
 	}
 	
-	@Secured({"ROLE_USUARIO","ROLE_ADMINISTRADOR"})
 	@DeleteMapping(value="/{codigo}")
 	public String apagar(@PathVariable Long codigo, RedirectAttributes attributes) {
 		vendaService.excluirItemVenda(codigo);

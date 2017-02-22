@@ -3,6 +3,7 @@ package br.com.caracore.pdv.model;
 import java.math.BigDecimal;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,14 +22,14 @@ public class ItemVenda {
 	private Long codigo;
 	
 	@NotNull(message = "Produto é obrigatório!")
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "PRODUTO_ID")
 	private Produto produto;
 	
 	@NotNull(message = "Quantidade é obrigatória!")
 	private Integer quantidade;
 	
-	@NotNull(message = "Preço é obrigatório!")
+	@NotNull(message = "Preço unitário é obrigatório!")
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal precoUnitario;
 	

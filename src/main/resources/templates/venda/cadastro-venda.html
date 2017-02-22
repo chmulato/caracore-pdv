@@ -34,10 +34,6 @@
 			
 			<div class="container-fluid">
 	
-				<div class="alert  alert-success" th:if="${!#strings.isEmpty(mensagem)}">
-					<span th:text="${mensagem}"></span>
-				</div>
-	
 				<form method="get" class="form-vertical  js-form-loading" th:object="${produtoFilter}" th:action="@{/vendas/produto}">
 					<div class="row">
 						<div class="col-sm-6">
@@ -102,7 +98,7 @@
 											<td><input type="checkbox"></td>
 											<td th:text="${item?.produto?.codigo}" class="text-center">1000</td>
 											<td>
-												<a th:href="@{/vendas/{codigo}(codigo=${item.codigo})}" th:text="${item?.produto?.descricao}" sec:authorize="hasRole('ROLE_USUARIO')"></a>
+												<a th:href="@{/itens/{codigo}(codigo=${item.codigo})}" th:text="${item?.produto?.descricao}" sec:authorize="hasRole('ROLE_USUARIO')"></a>
 												<span th:text="${item?.produto?.descricao}" sec:authorize="not hasRole('ROLE_USUARIO')"></span>
 											</td>
 											<td th:text="${item.quantidade}" class="text-center">1</td>

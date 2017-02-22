@@ -45,8 +45,8 @@
 			<div class="row">
 				<div class="col-sm-4">
 					<div class="form-group">
-						<label for="tipo">Usuário</label>
-						<select id="tipo" class="form-control" th:field="*{usuario}">
+						<label for="usuario">Usuário</label>
+						<select id="usuario" class="form-control" th:field="*{usuario}">
 							<option value="">Selecione o usuário</option>
 							<option th:each="usuario : ${usuarios}" th:value="${usuario.codigo}" th:text="${usuario.nome}"></option>
 						</select>
