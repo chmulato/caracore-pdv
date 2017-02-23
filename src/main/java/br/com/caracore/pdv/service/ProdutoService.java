@@ -23,7 +23,7 @@ public class ProdutoService {
 		produtoRepository.delete(codigo);;
 	}
 
-	public Produto pesquisarPorId(Long codigo) {
+	public Produto pesquisarPorCodigo(Long codigo) {
 		return produtoRepository.findOne(codigo);
 	}
 

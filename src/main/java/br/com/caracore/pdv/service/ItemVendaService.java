@@ -16,7 +16,7 @@ public class ItemVendaService {
 	@Autowired
 	private ItemVendaRepository itemVendaRepository;
 
-	public ItemVenda pesquisarPorId(Long codigo) {
+	public ItemVenda pesquisarPorCodigo(Long codigo) {
 		return itemVendaRepository.findOne(codigo);
 	}
 

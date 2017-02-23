@@ -217,7 +217,7 @@ public class VendaService {
 	private ItemVenda carregarItem(Long codigoProduto) {
 		ItemVenda item = new ItemVenda();
 		if (Util.validar(codigoProduto)) {
-			Produto produto = produtoService.pesquisarPorId(codigoProduto);
+			Produto produto = produtoService.pesquisarPorCodigo(codigoProduto);
 			if (Util.validar(produto)) {
 				item.setDesconto(BigDecimal.ZERO);
 				item.setProduto(produto);

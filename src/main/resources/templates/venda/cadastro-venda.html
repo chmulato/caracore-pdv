@@ -160,32 +160,37 @@
 			
 			</div>
 
-			<div class="modal fade" id="confirmaExclusaoModal" tabindex="-1" data-keyboard="false" data-backdrop="static">
-				<div class="modal-dialog">
-					<form th:attr="data-url-base=@{/vendas}" method="POST">
-						
-						<input type="hidden" name="_method" value="DELETE" />
-						
-						<div class="modal-content">
-							<div class="modal-header">
-								<h4 class="modal-title"> Você tem certeza?</h4>
-							</div>
-							
-							<div class="modal-body">
-								<span>Tem certeza que deseja apagar este item?</span>
-							</div>
-							
-							<div class="modal-footer">
-								<button type="button" class="btn btn-link" data-dismiss="modal">Cancelar</button>
-								<button type="submit" class="btn btn-primary">Excluir</button>
-							</div>
-						</div>
-					</form>
+			<div class="modal  fade" id="confirmaExclusaoModal" tabindex="-1" role="dialog">
+				<div class="modal-dialog" role="document">
+			  		<div class="modal-content">
+			  			<form th:action="@{/itens}" method="POST">
+			  				
+			  				<input type="hidden" name="_method" value="DELETE"/>
+			     			
+			     			<div class="modal-header">
+				       			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				       				<span aria-hidden="true">&times;</span>
+				       			</button>
+				       			<h4 class="modal-title" id="myModalLabel">Excluir item</h4>
+			     			</div>
+			     			
+			     			<div class="modal-body">
+			       				<span>Tem certeza?</span>
+			     			</div>
+			     			
+			     			<div class="modal-footer">
+			       				<button type="button" class="btn  btn-default" data-dismiss="modal">Cancelar</button>
+			       				<button type="submit" class="btn  btn-primary">Excluir</button>
+			     			</div>
+			     		</form>
+			  		</div>
 				</div>
-			</div>
+			</div>	
 		
 		</section>
-
-
+		
+		<th:block layout:fragment="javascript-extra">
+			<script th:src="@{/layout/javascripts/excluir-item-modal.js}"></script>
+		</th:block>
 </body>
 </html>
