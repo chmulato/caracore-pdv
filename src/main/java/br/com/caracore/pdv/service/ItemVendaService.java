@@ -25,7 +25,9 @@ public class ItemVendaService {
 	}
 	
 	public void excluir(Long codigo) {
-		itemVendaRepository.delete(codigo);
+		if (Util.validar(codigo)) {
+			itemVendaRepository.delete(codigo);
+		}
 	}
 
 	List<ItemVenda> buscarItens(Venda venda) {

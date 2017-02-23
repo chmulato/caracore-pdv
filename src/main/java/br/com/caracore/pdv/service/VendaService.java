@@ -156,17 +156,6 @@ public class VendaService {
 	}
 
 	/**
-	 * Método externo para excluir item da venda
-	 * 
-	 * @param codigo
-	 */
-	public void excluirItemVenda(Long codigo) {
-		if (Util.validar(codigo)) {
-			itemVendaService.excluir(codigo);
-		}
-	}
-
-	/**
 	 * Método externo para pesquisar uma venda
 	 * 
 	 * @param codigo
