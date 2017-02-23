@@ -36,7 +36,7 @@
 	
 				<form method="get" class="form-vertical  js-form-loading" th:object="${produtoFilter}" th:action="@{/vendas/produto}">
 					<div class="row">
-						<div class="col-sm-6">
+						<div class="col-sm-4">
 							<div class="form-group">
 								<div class="form-group">
 									<label for="codigo">Código do produto</label>
@@ -44,11 +44,19 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-6">
+						<div class="col-sm-4">
 							<div class="form-group">
 								<div class="form-group">
 									<label for="descricao">Descrição</label>
 									<input id="descricao" type="text" th:field="*{descricao}" class="form-control" readonly="readonly" />
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<div class="form-group">
+									<label for="descricao">Data/Hora</label>
+									<input id="descricao" type="text" th:field="*{data}" class="form-control" readonly="readonly" />
 								</div>
 							</div>
 						</div>
@@ -103,7 +111,7 @@
 											</td>
 											<td th:text="${item.quantidade}" class="text-center">1</td>
 											<td th:text="|R$${{item.precoUnitario}}|" class="text-right">R$ 1.999,99</td>
-											<td th:text="|R$${{item.desconto}}|" class="text-right">R$ 0,00</td>
+											<td th:text="|${{item.desconto}}%|" class="text-right">0,00 %</td>
 											<td th:text="|R$${{item.subTotal}}|" class="text-right">R$ 1.999,99</td>
 											<td class="text-center" sec:authorize="hasRole('ROLE_USUARIO')">
 												<i class="fa  fa-trash" style="cursor:pointer"

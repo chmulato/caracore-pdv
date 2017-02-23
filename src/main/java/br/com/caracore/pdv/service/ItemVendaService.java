@@ -1,5 +1,6 @@
 package br.com.caracore.pdv.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,29 @@ public class ItemVendaService {
 	}
 
 	public void salvar(ItemVenda itemVenda) {
+		if (Util.validar(itemVenda)) {
+			long lngSubTotal = 0l;
+			long lngPreco = 0l;
+			long lngQtd = 0l;
+			long lngDesconto = 0l;
+			if (Util.validar(itemVenda.getPrecoUnitario())) {
+				lngPreco = itemVenda.getPrecoUnitario().longValue();
+			}
+			if (Util.validar(itemVenda.getQuantidade())) {
+				lngQtd = itemVenda.getQuantidade().longValue();
+			}
+			if (Util.validar(itemVenda.getDesconto())) {
+				lngDesconto = itemVenda.getDesconto().longValue();
+			}
+			if (Util.validar(itemVenda.getSubTotal())) {
+				lngSubTotal = itemVenda.getSubTotal().longValue();
+			}
+			if (lngDesconto >= 0 && lngDesconto <= 1) {
+				lngPreco = lngPreco * lngQtd;
+				lngSubTotal = lngPreco - (lngPreco * lngDesconto);
+			}
+			itemVenda.setSubTotal(BigDecimal.valueOf(lngSubTotal));
+		}
 		itemVendaRepository.save(itemVenda);
 	}
 	

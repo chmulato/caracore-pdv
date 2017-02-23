@@ -88,7 +88,13 @@ public class VendasController {
 	 * @return
 	 */
 	private ProdutoFilter limparFiltro(Venda venda) {
-		ProdutoFilter filtro = new ProdutoFilter("","");
+		String strData = "";
+		if (Util.validar(venda.getData())) {
+			strData = vendaService.formatarData(venda.getData());
+		} else {
+			strData = vendaService.formatarData(null);
+		}
+		ProdutoFilter filtro = new ProdutoFilter("","",strData);
 		return filtro;
 	}
 	

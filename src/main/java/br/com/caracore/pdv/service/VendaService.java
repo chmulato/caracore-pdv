@@ -1,6 +1,7 @@
 package br.com.caracore.pdv.service;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +21,8 @@ import br.com.caracore.pdv.util.Util;
 
 @Service
 public class VendaService {
+
+	final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 
 	final private Date DATA_DE_HOJE = new Date();
 	
@@ -42,6 +45,22 @@ public class VendaService {
 
 	@Autowired
 	private ItemVendaService itemVendaService;
+	
+	/**
+	 * Formatar Data
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public String formatarData(Date data) {
+		String strData = "";
+		if (Util.validar(data)) {
+			strData = DATE_FORMAT.format(data);
+		} else {
+			strData = DATE_FORMAT.format(DATA_DE_HOJE);
+		}
+		return strData;
+	}
 	
 	/**
 	 * Metodo para recuperar venda em aberto informando o vendedor
