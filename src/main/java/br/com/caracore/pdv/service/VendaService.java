@@ -22,11 +22,15 @@ import br.com.caracore.pdv.util.Util;
 @Service
 public class VendaService {
 
-	final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
-
-	final private Date DATA_DE_HOJE = new Date();
+	final private int ZERO = 0;
+	
+	final private int PORCENTAGEM = 100;
 	
 	final private int QUANTIDADE_UNITARIA = 1;
+
+	final private Date DATA_DE_HOJE = new Date();
+
+	final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 
 	@Autowired
 	private VendaRepository vendaRepository;
@@ -210,21 +214,21 @@ public class VendaService {
 	 * @return
 	 */
 	private BigDecimal subTotal(ItemVenda item) {
-		long lngSubTotal = 0;
+		double subTotal = 0;
 		if (Util.validar(item)) {
 			if (Util.validar(item.getPrecoUnitario()) 
 					&& (Util.validar(item.getDesconto())) 
 					&& (Util.validar(item.getQuantidade()))) {
-				long lngPrecoTotal = item.getPrecoUnitario().longValue();
-				long lngDesconto = item.getDesconto().longValue();
-				int intQuantidade = item.getQuantidade().intValue();
-				if (lngDesconto >= 0 && lngDesconto <= 1) {
-					lngPrecoTotal = lngPrecoTotal * intQuantidade;
-					lngSubTotal = lngPrecoTotal - (lngPrecoTotal * lngDesconto);
+				double precoTotal = item.getPrecoUnitario().doubleValue();
+				int desconto = (int) item.getDesconto().doubleValue() * PORCENTAGEM;
+				long intQuantidade = item.getQuantidade().longValue();
+				if (desconto >= ZERO && desconto <= PORCENTAGEM) {
+					precoTotal = precoTotal * intQuantidade;
+					subTotal = precoTotal - (precoTotal * (desconto/PORCENTAGEM));
 				}
 			}
 		}
-		return BigDecimal.valueOf(lngSubTotal);
+		return BigDecimal.valueOf(subTotal);
 	}
 	
 	/**
@@ -305,26 +309,26 @@ public class VendaService {
 	 */
 	private Venda totalizar(Venda venda) {
 		if (Util.validar(venda)) {
-			long lngTotal = 0;
+			double dblTotal = 0;
 			if (Util.validar(venda.getItens())) {
-				long total = 0L;
+				double total = 0L;
 				for (ItemVenda item : venda.getItens()) {
 					BigDecimal subTotal = subTotal(item);
 					item.setSubTotal(subTotal);
 					if (Util.validar(item.getSubTotal())) {
-						total = total + item.getSubTotal().longValue();
+						total = total + item.getSubTotal().doubleValue();
 					}
 				}
 				venda.setSubTotal(BigDecimal.valueOf(total));
 			}
 			if (Util.validar(venda.getSubTotal()) && Util.validar(venda.getDescontoTotal())) {
-				long lngSubTotal = venda.getSubTotal().longValue();
-				long lngDesconto = venda.getDescontoTotal().longValue();
-				if (lngDesconto >= 0 && lngDesconto <= 1) {
-					lngTotal = lngSubTotal - (lngSubTotal * lngDesconto);
+				double subTotal = venda.getSubTotal().doubleValue();
+				int desconto = (int) venda.getDescontoTotal().doubleValue() * PORCENTAGEM;
+				if (desconto >= ZERO && desconto <= PORCENTAGEM) {
+					dblTotal = subTotal - (subTotal * (desconto/PORCENTAGEM));
 				}
 			}
-			venda.setTotal(BigDecimal.valueOf(lngTotal));
+			venda.setTotal(BigDecimal.valueOf(dblTotal));
 		}
 		return venda;
 	}

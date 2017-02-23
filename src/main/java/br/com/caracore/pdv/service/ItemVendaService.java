@@ -14,6 +14,10 @@ import br.com.caracore.pdv.util.Util;
 @Service
 public class ItemVendaService {
 
+	final private int ZERO = 0;
+	
+	final private int PORCENTAGEM = 100;
+
 	@Autowired
 	private ItemVendaRepository itemVendaRepository;
 
@@ -23,27 +27,27 @@ public class ItemVendaService {
 
 	public void salvar(ItemVenda itemVenda) {
 		if (Util.validar(itemVenda)) {
-			long lngSubTotal = 0l;
-			long lngPreco = 0l;
-			long lngQtd = 0l;
-			long lngDesconto = 0l;
+			double subTotal = 0L;
+			double preco = 0L;
+			long quantidade = 0L;
+			int desconto = 0;
 			if (Util.validar(itemVenda.getPrecoUnitario())) {
-				lngPreco = itemVenda.getPrecoUnitario().longValue();
+				preco = itemVenda.getPrecoUnitario().doubleValue();
 			}
 			if (Util.validar(itemVenda.getQuantidade())) {
-				lngQtd = itemVenda.getQuantidade().longValue();
+				quantidade = itemVenda.getQuantidade().longValue();
 			}
 			if (Util.validar(itemVenda.getDesconto())) {
-				lngDesconto = itemVenda.getDesconto().longValue();
+				desconto = (int) itemVenda.getDesconto().doubleValue() * PORCENTAGEM;
 			}
 			if (Util.validar(itemVenda.getSubTotal())) {
-				lngSubTotal = itemVenda.getSubTotal().longValue();
+				subTotal = itemVenda.getSubTotal().doubleValue();
 			}
-			if (lngDesconto >= 0 && lngDesconto <= 1) {
-				lngPreco = lngPreco * lngQtd;
-				lngSubTotal = lngPreco - (lngPreco * lngDesconto);
+			if (desconto >= ZERO && desconto <= PORCENTAGEM) {
+				preco = preco * quantidade;
+				subTotal = preco - (preco * (desconto/PORCENTAGEM));
 			}
-			itemVenda.setSubTotal(BigDecimal.valueOf(lngSubTotal));
+			itemVenda.setSubTotal(BigDecimal.valueOf(subTotal));
 		}
 		itemVendaRepository.save(itemVenda);
 	}
