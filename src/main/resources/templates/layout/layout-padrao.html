@@ -66,12 +66,14 @@
 				      
 				          <ul class="aw-menu__list  aw-menu__list--sublist">
 						        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_USUARIO')">
-						          <a th:href="@{/vendas/novo}"><i class="fa  fa-fw  fa-home"></i><span>Cadastro Venda</span></a>
+						          <a th:href="@{/vendas/novo}"><i class="fa  fa-fw  fa-home"></i><span>Vendas</span></a>
 						        </li>
-							
+								
+								<!-- 
 								<li class="aw-menu__item" sec:authorize="hasRole('ROLE_USUARIO')">
 						          <a href="#"><i class="fa  fa-fw  fa-home"></i><span>Pesquisa Vendas</span></a>
-						       	</li>					        
+						       	</li>
+						       	 -->					        
 				          </ul>
 				      
 				        </li>
@@ -83,42 +85,54 @@
 				          </a>
 				      
 				          <ul class="aw-menu__list  aw-menu__list--sublist">
+						        
+						        <!-- 
 						        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_USUARIO')">
 						          <a th:href="@{/clientes/novo}"><i class="fa  fa-fw  fa-home"></i><span>Cadastro Cliente</span></a>
 						        </li>
-						
+						 		-->
+						 		
 						        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_USUARIO')">
-						          <a th:href="@{/clientes}"><i class="fa  fa-fw  fa-home"></i><span>Pesquisa Clientes</span></a>
+						          <a th:href="@{/clientes}"><i class="fa  fa-fw  fa-home"></i><span>Clientes</span></a>
 						        </li>
 				          </ul>
 				      
 				          <ul class="aw-menu__list  aw-menu__list--sublist">
+				          		
+				          		<!-- 
 						        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_USUARIO')">
 						          <a th:href="@{/vendedores/novo}"><i class="fa  fa-fw  fa-home"></i><span>Cadastro Vendedor</span></a>
 						        </li>
+						         -->
 						
 						        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_USUARIO')">
-						          <a th:href="@{/vendedores}"><i class="fa  fa-fw  fa-home"></i><span>Pesquisa Vendedores</span></a>
+						          <a th:href="@{/vendedores}"><i class="fa  fa-fw  fa-home"></i><span>Vendedores</span></a>
 						        </li>
 				          </ul>
 				      
 				          <ul class="aw-menu__list  aw-menu__list--sublist">
+				          
+				          		<!-- 
 						        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_USUARIO')">
 						          <a th:href="@{/produtos/novo}"><i class="fa  fa-fw  fa-home"></i><span>Cadastro Produtos</span></a>
 						        </li>
-						
+						 		-->
+						 		
 						        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_USUARIO')">
-						          <a th:href="@{/produtos}"><i class="fa  fa-fw  fa-home"></i><span>Pesquisa Produtos</span></a>
+						          <a th:href="@{/produtos}"><i class="fa  fa-fw  fa-home"></i><span>Produtos</span></a>
 						        </li>
 				          </ul>
 				      
 				          <ul class="aw-menu__list  aw-menu__list--sublist">
+						        
+						        <!-- 
 						        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_USUARIO')">
 						          <a th:href="@{/usuarios/novo}"><i class="fa  fa-fw  fa-home"></i><span>Cadastro Usuário</span></a>
 						        </li>
-						
+						 		-->
+						 		
 						        <li class="aw-menu__item" sec:authorize="hasRole('ROLE_USUARIO')">
-						          <a th:href="@{/usuarios}"><i class="fa  fa-fw  fa-home"></i><span>Pesquisa Usuários</span></a>
+						          <a th:href="@{/usuarios}"><i class="fa  fa-fw  fa-home"></i><span>Usuários</span></a>
 						        </li>
 				          </ul>
 				        </li>

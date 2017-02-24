@@ -17,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -32,8 +33,8 @@ public class Venda {
 	private Long codigo;
 	
 	@NotNull(message = "Data é obrigatória!")
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "dd/MM/yyyy hh:mm:ss")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date data;
 	
 	@NotNull
@@ -53,8 +54,9 @@ public class Venda {
 	@Enumerated(EnumType.STRING)
 	private StatusVenda status;
 	
-	@DecimalMax(value = "1.00", message = "Desconto não pode ser maior que 1,00")
 	@NumberFormat(pattern = "#0.00")
+	@DecimalMin(value = "0.00",   message = "Desconto não pode ser menor que   0,00")
+	@DecimalMax(value = "100.00", message = "Desconto não pode ser maior que 100,00")
 	private BigDecimal descontoTotal;
 
 	@NumberFormat(pattern = "#,##0.00")

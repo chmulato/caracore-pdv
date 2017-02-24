@@ -14,9 +14,9 @@ import br.com.caracore.pdv.util.Util;
 @Service
 public class ItemVendaService {
 
-	final private int ZERO = 0;
+	final private double ZERO = 0.0d;
 	
-	final private int PORCENTAGEM = 100;
+	final private double PORCENTAGEM = 100.0d;
 
 	@Autowired
 	private ItemVendaRepository itemVendaRepository;
@@ -27,10 +27,10 @@ public class ItemVendaService {
 
 	public void salvar(ItemVenda itemVenda) {
 		if (Util.validar(itemVenda)) {
-			double subTotal = 0L;
-			double preco = 0L;
-			long quantidade = 0L;
-			int desconto = 0;
+			double subTotal = 0d;
+			double preco = 0d;
+			long quantidade = 0l;
+			double desconto = 0d;
 			if (Util.validar(itemVenda.getPrecoUnitario())) {
 				preco = itemVenda.getPrecoUnitario().doubleValue();
 			}
@@ -38,7 +38,7 @@ public class ItemVendaService {
 				quantidade = itemVenda.getQuantidade().longValue();
 			}
 			if (Util.validar(itemVenda.getDesconto())) {
-				desconto = (int) itemVenda.getDesconto().doubleValue() * PORCENTAGEM;
+				desconto = itemVenda.getDesconto().doubleValue();
 			}
 			if (Util.validar(itemVenda.getSubTotal())) {
 				subTotal = itemVenda.getSubTotal().doubleValue();

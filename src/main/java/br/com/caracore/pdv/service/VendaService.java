@@ -21,16 +21,16 @@ import br.com.caracore.pdv.util.Util;
 
 @Service
 public class VendaService {
-
-	final private int ZERO = 0;
-	
-	final private int PORCENTAGEM = 100;
 	
 	final private int QUANTIDADE_UNITARIA = 1;
 
+	final private double ZERO = 0.0d;
+	
+	final private double PORCENTAGEM = 100.0d;
+
 	final private Date DATA_DE_HOJE = new Date();
 
-	final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+	final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
 
 	@Autowired
 	private VendaRepository vendaRepository;
@@ -61,7 +61,7 @@ public class VendaService {
 		if (Util.validar(data)) {
 			strData = DATE_FORMAT.format(data);
 		} else {
-			strData = DATE_FORMAT.format(DATA_DE_HOJE);
+			strData = DATE_FORMAT.format(DATA_DE_HOJE.getTime());
 		}
 		return strData;
 	}
@@ -220,7 +220,7 @@ public class VendaService {
 					&& (Util.validar(item.getDesconto())) 
 					&& (Util.validar(item.getQuantidade()))) {
 				double precoTotal = item.getPrecoUnitario().doubleValue();
-				int desconto = (int) item.getDesconto().doubleValue() * PORCENTAGEM;
+				double desconto = item.getDesconto().doubleValue();
 				long intQuantidade = item.getQuantidade().longValue();
 				if (desconto >= ZERO && desconto <= PORCENTAGEM) {
 					precoTotal = precoTotal * intQuantidade;
@@ -294,6 +294,7 @@ public class VendaService {
 						}
 					}
 				}
+				venda = totalizar(venda);
 				result = venda;
 			}
 		}
@@ -323,7 +324,7 @@ public class VendaService {
 			}
 			if (Util.validar(venda.getSubTotal()) && Util.validar(venda.getDescontoTotal())) {
 				double subTotal = venda.getSubTotal().doubleValue();
-				int desconto = (int) venda.getDescontoTotal().doubleValue() * PORCENTAGEM;
+				double desconto = venda.getDescontoTotal().doubleValue();
 				if (desconto >= ZERO && desconto <= PORCENTAGEM) {
 					dblTotal = subTotal - (subTotal * (desconto/PORCENTAGEM));
 				}
