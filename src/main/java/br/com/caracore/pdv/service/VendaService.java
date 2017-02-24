@@ -51,6 +51,34 @@ public class VendaService {
 	private ItemVendaService itemVendaService;
 	
 	/**
+	 * Método externo para recuperar ultimo item da cesta
+	 * 
+	 * @param venda
+	 * @return
+	 */
+	public ItemVenda recuperarUltimoItemVendaDaCesta(Venda venda) {
+		ItemVenda ultimoItem = null;
+		if (Util.validar(venda) && Util.validar(venda.getCodigo())) {
+			List <ItemVenda> itens = itemVendaService.buscarItens(venda);
+			if (Util.validar(itens)) {
+				long codigo = 0;
+				long ultimoCodigo = 0;
+				for (ItemVenda item : itens) {
+					if (Util.validar(item.getCodigo())) {
+						ultimoCodigo = item.getCodigo().longValue();
+						if (ultimoCodigo > codigo) {
+							ultimoItem = item;
+							codigo = ultimoCodigo;
+						}
+					}
+				}
+			}
+		}
+		return ultimoItem;
+	}
+	
+	
+	/**
 	 * Formatar Data
 	 * 
 	 * @param data

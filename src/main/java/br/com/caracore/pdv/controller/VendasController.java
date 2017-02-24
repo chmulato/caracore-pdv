@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import br.com.caracore.pdv.model.ItemVenda;
 import br.com.caracore.pdv.model.Usuario;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
@@ -88,13 +89,21 @@ public class VendasController {
 	 * @return
 	 */
 	private ProdutoFilter limparFiltro(Venda venda) {
+		String strUltimoCodigo = "";
+		String strUltimaDescricao = "";
 		String strData = "";
+		ItemVenda item = vendaService.recuperarUltimoItemVendaDaCesta(venda);
+		if (Util.validar(item)) {
+			strUltimoCodigo = item.getProduto().getCodigo().toString();
+			strUltimaDescricao = item.getProduto().getDescricao();
+		}
 		if (Util.validar(venda.getData())) {
 			strData = vendaService.formatarData(venda.getData());
 		} else {
 			strData = vendaService.formatarData(null);
 		}
-		ProdutoFilter filtro = new ProdutoFilter("","",strData);
+		
+		ProdutoFilter filtro = new ProdutoFilter(strUltimoCodigo, strUltimaDescricao, strData);
 		return filtro;
 	}
 	

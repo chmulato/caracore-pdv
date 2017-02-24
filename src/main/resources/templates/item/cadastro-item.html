@@ -71,14 +71,14 @@
 				</div>
 
 				<div class="col-sm-3">
-					<div class="form-group">
+					<div class="form-group" th:classappend="${#fields.hasErrors('desconto')} ? has-error">
 						<label for="desconto">Desconto</label>
 						<input id="desconto" type="text" class="form-control  js-moeda" placeholder="%" th:field="*{desconto}" />
 					</div>
 				</div>
 
 				<div class="col-sm-3">
-					<div class="form-group">
+					<div class="form-group" th:classappend="${#fields.hasErrors('quantidade')} ? has-error">
 						<label for="quantidade">Quantidade</label>
 						<input id="quantidade" type="text" class="form-control" placeholder="Quantidade" th:field="*{quantidade}" />
 					</div>
