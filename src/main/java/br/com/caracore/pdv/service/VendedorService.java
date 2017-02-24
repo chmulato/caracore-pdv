@@ -13,6 +13,8 @@ import br.com.caracore.pdv.repository.LojaRepository;
 import br.com.caracore.pdv.repository.UsuarioRepository;
 import br.com.caracore.pdv.repository.VendedorRepository;
 import br.com.caracore.pdv.repository.filter.VendedorFilter;
+import br.com.caracore.pdv.service.exception.GerenteExistenteException;
+import br.com.caracore.pdv.service.exception.UsuarioImpostadoException;
 import br.com.caracore.pdv.util.Util;
 
 @Service
@@ -35,6 +37,10 @@ public class VendedorService {
 	 */
 	public Vendedor verificarGerente(Loja loja) {
 		return buscarDefault(loja);
+	}
+	
+	public Vendedor verificarUsuario(Usuario usuario) {
+		return vendedorRepository.findByUsuario(usuario);
 	}
 	
 	public List<Usuario> buscarUsuarios() {
@@ -66,10 +72,22 @@ public class VendedorService {
 		if (Util.validar(vendedor)) {
 			if (Util.validar(vendedor.getLoja())) {
 				Loja loja = vendedor.getLoja();
-				Vendedor gerente = verificarGerente(loja);
-				if (Util.validar(gerente)) {
-					StringBuffer msg = mensagemErro(loja, gerente);
-					throw new IllegalArgumentException(msg.toString());
+				if (Util.validar(vendedor.getTipo())) {
+					if (vendedor.getTipo().equals(TipoVendedor.DEFAULT)) {
+						Vendedor gerente = verificarGerente(loja);
+						if (Util.validar(gerente)) {
+							StringBuffer msg = mensagemErrorGerente(loja, gerente);
+							throw new GerenteExistenteException(msg.toString());
+						}
+					}
+				}
+			}
+			if (Util.validar(vendedor.getUsuario())) {
+				Usuario usuario = vendedor.getUsuario();
+				Vendedor vendedorExistente = verificarUsuario(usuario);
+				if (Util.validar(vendedorExistente)) {
+					StringBuffer msg = new StringBuffer("Usuário já impostado!");
+					throw new UsuarioImpostadoException(msg.toString());
 				}
 			}
 		}
@@ -96,7 +114,7 @@ public class VendedorService {
 	 * @param gerente
 	 * @return
 	 */
-	private StringBuffer mensagemErro(Loja loja, Vendedor gerente) {
+	private StringBuffer mensagemErrorGerente(Loja loja, Vendedor gerente) {
 		StringBuffer msg = new StringBuffer("Gerente ");
 		msg.append(gerente.getNome().toUpperCase());
 		msg.append(" da loja ");

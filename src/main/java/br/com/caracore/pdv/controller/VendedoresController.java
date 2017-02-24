@@ -21,6 +21,8 @@ import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.model.types.TipoVendedor;
 import br.com.caracore.pdv.repository.filter.VendedorFilter;
 import br.com.caracore.pdv.service.VendedorService;
+import br.com.caracore.pdv.service.exception.GerenteExistenteException;
+import br.com.caracore.pdv.service.exception.UsuarioImpostadoException;
 import br.com.caracore.pdv.util.Util;
 
 @Controller
@@ -49,8 +51,11 @@ public class VendedoresController {
 			vendedorService.salvar(vendedor);
 			attributes.addFlashAttribute("mensagem", "Vendedor salvo com sucesso!");
 			return new ModelAndView("redirect:/vendedores/novo");
-		} catch (IllegalArgumentException ex) {
-			errors.rejectValue("tipo", " Teste", ex.getMessage());
+		} catch (GerenteExistenteException ex) {
+			errors.rejectValue("tipo", " ", ex.getMessage());
+			return novo(vendedor);
+		} catch (UsuarioImpostadoException ex) {
+			errors.rejectValue("usuario", " ", ex.getMessage());
 			return novo(vendedor);
 		}
 	}

@@ -44,7 +44,7 @@
 	
 			<div class="row">
 				<div class="col-sm-4">
-					<div class="form-group">
+					<div class="form-group" th:classappend="${#fields.hasErrors('usuario')} ? has-error">
 						<label for="usuario">Usuário</label>
 						<select id="usuario" class="form-control" th:field="*{usuario}">
 							<option value="">Selecione o usuário</option>
