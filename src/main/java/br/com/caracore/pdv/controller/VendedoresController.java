@@ -6,7 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,13 +41,18 @@ public class VendedoresController {
 	}
 	
 	@PostMapping("/novo")
-	public ModelAndView salvar(@Valid Vendedor vendedor, BindingResult result, RedirectAttributes attributes) {
-		if (result.hasErrors()) {
+	public ModelAndView salvar(@Valid Vendedor vendedor, Errors errors, RedirectAttributes attributes) {
+		if (errors.hasErrors()) {
 			return novo(vendedor);
 		}
-		vendedorService.salvar(vendedor);
-		attributes.addFlashAttribute("mensagem", "Vendedor salvo com sucesso!");
-		return new ModelAndView("redirect:/vendedores/novo");
+		try {
+			vendedorService.salvar(vendedor);
+			attributes.addFlashAttribute("mensagem", "Vendedor salvo com sucesso!");
+			return new ModelAndView("redirect:/vendedores/novo");
+		} catch (IllegalArgumentException ex) {
+			errors.rejectValue("tipo", " Teste", ex.getMessage());
+			return novo(vendedor);
+		}
 	}
 	
 	@GetMapping

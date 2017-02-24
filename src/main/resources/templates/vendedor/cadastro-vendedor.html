@@ -54,7 +54,7 @@
 				</div>
 
 				<div class="col-sm-4">
-					<div class="form-group">
+					<div class="form-group" th:classappend="${#fields.hasErrors('tipo')} ? has-error">
 						<label for="tipo">Tipo</label>
 						<select id="tipo" class="form-control" th:field="*{tipo}">
 							<option value="">Selecione o tipo</option>
