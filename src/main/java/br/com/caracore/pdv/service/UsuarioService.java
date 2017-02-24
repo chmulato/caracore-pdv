@@ -6,8 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.caracore.pdv.model.Usuario;
+import br.com.caracore.pdv.model.types.TipoUsuario;
 import br.com.caracore.pdv.repository.UsuarioRepository;
 import br.com.caracore.pdv.repository.filter.UsuarioFilter;
+import br.com.caracore.pdv.service.exception.AdminExistenteException;
+import br.com.caracore.pdv.service.exception.EmailInvalidoException;
+import br.com.caracore.pdv.service.exception.LoginExistenteException;
+import br.com.caracore.pdv.service.exception.SenhaInvalidaException;
+import br.com.caracore.pdv.util.Util;
 
 @Service
 public class UsuarioService {
@@ -23,6 +29,13 @@ public class UsuarioService {
 			}
 		}
 		return result;
+	}
+	
+	private Usuario buscarAdministrador() {
+		Usuario usuarioAdmin = null;
+		TipoUsuario perfil = TipoUsuario.ADMINISTRADOR;
+		usuarioAdmin = usuarioRepository.findByPerfil(perfil);
+		return usuarioAdmin;
 	}
 	
 	private boolean verificarLogin(String login) {
@@ -65,14 +78,18 @@ public class UsuarioService {
 		String repetirEmail = usuario.getRepetirEmail();
 		String senha = usuario.getSenha();
 		String repetirSenha = usuario.getRepetirSenha();
+		Usuario admin = buscarAdministrador();
+		if (Util.validar(admin)) {
+			throw new AdminExistenteException("Administrador já existente!");
+		}
 		if (verificarLogin(login)) {
-			throw new IllegalArgumentException("Login já existente!");
+			throw new LoginExistenteException("Login já existente!");
 		}
 		if (repetirSenha != null && !repetirSenha.equals(senha)) {
-			throw new IllegalArgumentException("Senha inválida!");
+			throw new SenhaInvalidaException("Senha inválida!");
 		}
 		if (repetirEmail != null && !repetirEmail.equals(email)) {
-			throw new IllegalArgumentException("Email inválido!");
+			throw new EmailInvalidoException("Email inválido!");
 		}
 		return usuarioRepository.save(usuario);
 	}

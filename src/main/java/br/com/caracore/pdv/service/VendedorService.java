@@ -76,8 +76,10 @@ public class VendedorService {
 					if (vendedor.getTipo().equals(TipoVendedor.DEFAULT)) {
 						Vendedor gerente = verificarGerente(loja);
 						if (Util.validar(gerente)) {
-							StringBuffer msg = mensagemErrorGerente(loja, gerente);
-							throw new GerenteExistenteException(msg.toString());
+							if (!gerente.getCodigo().equals(vendedor.getCodigo())) {
+								StringBuffer msg = mensagemErrorGerente(loja, gerente);
+								throw new GerenteExistenteException(msg.toString());
+							}
 						}
 					}
 				}

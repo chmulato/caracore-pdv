@@ -16,12 +16,14 @@ import br.com.caracore.pdv.model.Usuario;
 import br.com.caracore.pdv.model.types.TipoUsuario;
 import br.com.caracore.pdv.repository.filter.UsuarioFilter;
 import br.com.caracore.pdv.service.UsuarioService;
+import br.com.caracore.pdv.service.exception.AdminExistenteException;
+import br.com.caracore.pdv.service.exception.EmailInvalidoException;
+import br.com.caracore.pdv.service.exception.LoginExistenteException;
+import br.com.caracore.pdv.service.exception.SenhaInvalidaException;
 
 @Controller
 @RequestMapping("/usuarios")
 public class UsuariosController {
-	
-	private static final String CADASTRO_VIEW = "usuario/cadastro-usuario";
 
 	@Autowired
 	private UsuarioService usuarioService;
@@ -48,17 +50,26 @@ public class UsuariosController {
 	}
 
 	@PostMapping("/novo")
-	public String salvar(@Validated Usuario usuario, Errors errors, RedirectAttributes attributes) {
+	public ModelAndView salvar(@Validated Usuario usuario, Errors errors, RedirectAttributes attributes) {
 		if (errors.hasErrors()) {
-			return CADASTRO_VIEW;
+			return novo(usuario);
 		}
 		try {
 			usuarioService.salvar(usuario);
 			attributes.addFlashAttribute("mensagem", "Usuário salvo com sucesso!");
-			return "redirect:/usuarios/novo";
-		} catch (IllegalArgumentException ex) {
-			errors.rejectValue("dataVencimento", null, ex.getMessage());
-			return CADASTRO_VIEW;
+			return novo(usuario);
+		} catch (AdminExistenteException ex) {
+			errors.rejectValue("perfil", " ", ex.getMessage());
+			return novo(usuario);
+		} catch (LoginExistenteException ex) {
+			errors.rejectValue("nome", " ", ex.getMessage());
+			return novo(usuario);
+		} catch (SenhaInvalidaException ex) {
+			errors.rejectValue("repetirSenha", " ", ex.getMessage());
+			return novo(usuario);
+		} catch (EmailInvalidoException ex) {
+			errors.rejectValue("repetirEmail", " ", ex.getMessage());
+			return novo(usuario);
 		}
 	}
 	

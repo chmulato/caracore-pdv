@@ -50,7 +50,7 @@ public class VendedoresController {
 		try {
 			vendedorService.salvar(vendedor);
 			attributes.addFlashAttribute("mensagem", "Vendedor salvo com sucesso!");
-			return new ModelAndView("redirect:/vendedores/novo");
+			return novo(vendedor);
 		} catch (GerenteExistenteException ex) {
 			errors.rejectValue("tipo", " ", ex.getMessage());
 			return novo(vendedor);

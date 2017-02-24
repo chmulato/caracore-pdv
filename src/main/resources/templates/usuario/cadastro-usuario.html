@@ -39,14 +39,14 @@
 	
 			<div class="row">
 				<div class="col-sm-6">
-					<div class="form-group">
+					<div class="form-group" th:classappend="${#fields.hasErrors('nome')} ? has-error">
 						<label for="nome">Nome</label>
 						<input id="nome" type="text" class="form-control" th:field="*{nome}"/>
 					</div>
 				</div>
 	
 				<div class="col-sm-6">
-					<div class="form-group">
+					<div class="form-group" th:classappend="${#fields.hasErrors('perfil')} ? has-error">
 						<label for="perfil">Perfil</label>
 						<select id="perfil" class="form-control" th:field="*{perfil}">
 							<option value="">Selecione o perfil</option>
@@ -65,7 +65,7 @@
 				</div>
 			
 				<div class="col-sm-6">
-					<div class="form-group">
+					<div class="form-group" th:classappend="${#fields.hasErrors('repetirSenha')} ? has-error">
 						<label for="repetirSenha">Repetir Senha</label>
 						<input id="repetirSenha" type="password" class="form-control" th:field="*{repetirSenha}"/>
 					</div>
@@ -81,7 +81,7 @@
 				</div>
 		
 				<div class="col-sm-6">
-					<div class="form-group">
+					<div class="form-group" th:classappend="${#fields.hasErrors('repetirEmail')} ? has-error">
 						<label for="repetirEmail">Repetir E-mail</label>
 						<input id="repetirEmail" type="text" class="form-control" th:field="*{repetirEmail}"/>
 					</div>

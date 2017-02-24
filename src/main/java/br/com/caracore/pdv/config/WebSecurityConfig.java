@@ -58,7 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			
 			String usr = usuario.getNome(); 
 			String pwd = usuario.getSenha(); 
-			String roles = usuario.getPerfil(); 
+			String roles = usuario.getPerfil().toString(); 
 			
 			if (roles.equals("ADMINISTRADOR")) {
 				auth.inMemoryAuthentication().withUser(usr).password(pwd).roles("ADMINISTRADOR", "USUARIO", "VISITANTE");

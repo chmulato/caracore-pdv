@@ -1,6 +1,8 @@
 package br.com.caracore.pdv.model;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +14,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
+
+import br.com.caracore.pdv.model.types.TipoUsuario;
 
 @Entity
 public class Usuario {
@@ -33,8 +37,9 @@ public class Usuario {
 	@Transient
 	private String repetirSenha;
 	
-	@NotEmpty(message = "Perfil é obrigatório!")
-	private String perfil;
+	@NotNull(message = "Perfil é obrigatório!")
+	@Enumerated(EnumType.STRING)
+	private TipoUsuario perfil;
 
 	@NotNull(message = "Loja é obrigatória!")
 	@OneToOne(fetch = FetchType.EAGER)
@@ -82,11 +87,11 @@ public class Usuario {
 		this.repetirSenha = repetirSenha;
 	}
 
-	public String getPerfil() {
+	public TipoUsuario getPerfil() {
 		return perfil;
 	}
 
-	public void setPerfil(String perfil) {
+	public void setPerfil(TipoUsuario perfil) {
 		this.perfil = perfil;
 	}
 

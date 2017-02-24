@@ -4,7 +4,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +16,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import br.com.caracore.pdv.model.Produto;
 import br.com.caracore.pdv.repository.filter.ProdutoFilter;
 import br.com.caracore.pdv.service.ProdutoService;
+import br.com.caracore.pdv.service.exception.CodigoExistenteException;
+import br.com.caracore.pdv.service.exception.ProdutoExistenteException;
 
 @Controller
 @RequestMapping("/produtos")
@@ -32,13 +34,21 @@ public class ProdutosController {
 	}
 	
 	@PostMapping("/novo")
-	public ModelAndView salvar(@Valid Produto produto, BindingResult result, RedirectAttributes attributes) {
-		if (result.hasErrors()) {
+	public ModelAndView salvar(@Valid Produto produto, Errors errors, RedirectAttributes attributes) {
+		if (errors.hasErrors()) {
 			return novo(produto);
 		}
-		produtoService.salvar(produto);
-		attributes.addFlashAttribute("mensagem", "Produto salvo com sucesso!");
-		return new ModelAndView("redirect:/produtos/novo");
+		try {
+			produtoService.salvar(produto);
+			attributes.addFlashAttribute("mensagem", "Produto salvo com sucesso!");
+			return novo(produto);
+		} catch (CodigoExistenteException ex) {
+			errors.rejectValue("codigo", " ", ex.getMessage());
+			return novo(produto);
+		} catch (ProdutoExistenteException ex) {
+			errors.rejectValue("descricao", " ", ex.getMessage());
+			return novo(produto);
+		}
 	}
 	
 	@GetMapping
