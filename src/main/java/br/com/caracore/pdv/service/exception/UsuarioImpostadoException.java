@@ -12,5 +12,4 @@ public class UsuarioImpostadoException extends RuntimeException {
 		super(message);
 	}
 
-
 }

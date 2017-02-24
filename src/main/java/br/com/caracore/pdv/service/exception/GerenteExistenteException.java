@@ -12,5 +12,4 @@ public class GerenteExistenteException extends RuntimeException {
 		super(message);
 	}
 
-
 }
