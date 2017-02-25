@@ -69,30 +69,7 @@ public class VendedorService {
 	}
 	
 	public void salvar(Vendedor vendedor) {
-		if (Util.validar(vendedor)) {
-			if (Util.validar(vendedor.getLoja())) {
-				Loja loja = vendedor.getLoja();
-				if (Util.validar(vendedor.getTipo())) {
-					if (vendedor.getTipo().equals(TipoVendedor.DEFAULT)) {
-						Vendedor gerente = verificarGerente(loja);
-						if (Util.validar(gerente)) {
-							if (!gerente.getCodigo().equals(vendedor.getCodigo())) {
-								StringBuffer msg = mensagemErrorGerente(loja, gerente);
-								throw new GerenteExistenteException(msg.toString());
-							}
-						}
-					}
-				}
-			}
-			if (Util.validar(vendedor.getUsuario())) {
-				Usuario usuario = vendedor.getUsuario();
-				Vendedor vendedorExistente = verificarUsuario(usuario);
-				if (Util.validar(vendedorExistente)) {
-					StringBuffer msg = new StringBuffer("Usuário já impostado!");
-					throw new UsuarioImpostadoException(msg.toString());
-				}
-			}
-		}
+		validarVendedor(vendedor);
 		vendedorRepository.save(vendedor);
 	}
 
@@ -107,6 +84,40 @@ public class VendedorService {
 	public List<Vendedor> pesquisar(VendedorFilter filtro) {
 		String nome = filtro.getNome() == null ? "%" : filtro.getNome();
 		return vendedorRepository.findByNomeContainingIgnoreCase(nome);
+	}
+
+	/**
+	 * Método interno para validar vendedor
+	 * 
+	 * @param vendedor
+	 */
+	private void validarVendedor(Vendedor vendedor) {
+		if (Util.validar(vendedor)) {
+			if (Util.validar(vendedor.getLoja())) {
+				Loja loja = vendedor.getLoja();
+				if (Util.validar(vendedor.getTipo())) {
+					if (vendedor.getTipo().equals(TipoVendedor.DEFAULT)) {
+						Vendedor gerente = verificarGerente(loja);
+						if (Util.validar(gerente)) {
+							long codigo = vendedor.getCodigo().longValue();
+							long codigoGerente = gerente.getCodigo().longValue();
+							if (codigo != codigoGerente) {
+								StringBuffer msg = mensagemErrorGerente(loja, gerente);
+								throw new GerenteExistenteException(msg.toString());
+							}
+						}
+					}
+				}
+			}
+			if (Util.validar(vendedor.getUsuario())) {
+				Usuario usuario = vendedor.getUsuario();
+				Vendedor vendedorDB = verificarUsuario(usuario);
+				if (Util.validar(vendedorDB)) {
+					StringBuffer msg = new StringBuffer("Usuário já impostado!");
+					throw new UsuarioImpostadoException(msg.toString());
+				}
+			}
+		}
 	}
 
 	/**

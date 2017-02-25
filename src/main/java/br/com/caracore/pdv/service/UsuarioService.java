@@ -73,6 +73,7 @@ public class UsuarioService {
 	}
 	
 	public Usuario salvar(Usuario usuario) {
+		boolean verificar = false;
 		String login = usuario.getNome();
 		String email = usuario.getEmail();
 		String repetirEmail = usuario.getRepetirEmail();
@@ -82,13 +83,14 @@ public class UsuarioService {
 		if (Util.validar(admin)) {
 			throw new AdminExistenteException("Administrador já existente!");
 		}
-		if (verificarLogin(login)) {
+		verificar = verificarLogin(login);
+		if (verificar) {
 			throw new LoginExistenteException("Login já existente!");
 		}
-		if (repetirSenha != null && !repetirSenha.equals(senha)) {
+		if (!repetirSenha.equals(senha)) {
 			throw new SenhaInvalidaException("Senha inválida!");
 		}
-		if (repetirEmail != null && !repetirEmail.equals(email)) {
+		if (!repetirEmail.equals(email)) {
 			throw new EmailInvalidoException("Email inválido!");
 		}
 		return usuarioRepository.save(usuario);

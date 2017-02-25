@@ -19,11 +19,20 @@ public class ProdutoService {
 	@Autowired
 	private ProdutoRepository produtoRepository;
 
-	public void salvar(Produto produto) {
+	/**
+	 * Método interno para validar nome do produto
+	 * 
+	 * @param produto
+	 */
+	private void validarProduto(Produto produto) {
 		boolean valida = pesquisarDescricao(produto);
 		if (valida) {
 			throw new ProdutoExistenteException("Produto existente!");
 		}
+	}
+
+	public void salvar(Produto produto) {
+		validarProduto(produto);
 		try {
 			produtoRepository.save(produto);
 		} catch (DataIntegrityViolationException e) {
@@ -48,9 +57,11 @@ public class ProdutoService {
 		boolean existe = false;
 		if (Util.validar(produto) && Util.validar(produto.getDescricao())) {
 			String descricao = produto.getDescricao();
-			Produto produtoExistente = produtoRepository.findByDescricaoIgnoreCase(descricao);
-			if (Util.validar(produtoExistente)) {
-				if (!produto.getCodigo().equals(produtoExistente.getCodigo())) {
+			Produto produtoDB = produtoRepository.findByDescricaoIgnoreCase(descricao);
+			if (Util.validar(produtoDB)) {
+				long codigo = produto.getCodigo().longValue();
+				long codigoDB = produtoDB.getCodigo().longValue();
+				if (codigo != codigoDB) {
 					existe = true;
 				}
 			}

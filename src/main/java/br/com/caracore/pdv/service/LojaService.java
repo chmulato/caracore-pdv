@@ -22,14 +22,41 @@ public class LojaService {
 	@Autowired
 	private VendedorRepository vendedorRepository;
 
-	public void salvar(Loja loja) {
-		if ((Util.validar(loja)) && Util.validar(loja.getNome())){
+	/**
+	 * Método interno de validar nome da loja
+	 * 
+	 * @param loja
+	 */
+	private void validarNome(Loja loja) {
+		if ((Util.validar(loja)) && Util.validar(loja.getNome())) {
 			String nome = loja.getNome();
-			Loja lojaJaExistente = pesquisarPorNome(nome);
-			if (Util.validar(lojaJaExistente)) {
-				throw new NomeExistenteException("Loja já existente!");
+			Loja lojaDB = pesquisarPorNome(nome);
+			if (Util.validar(lojaDB)) {
+				if (Util.validar(loja.getCodigo())) {
+					long codigo = loja.getCodigo().longValue();
+					long codigoDB = lojaDB.getCodigo().longValue();
+					if (codigo != codigoDB) {
+						throw new NomeExistenteException("Loja já existente!");
+					}
+				} else {
+					throw new NomeExistenteException("Loja já existente!");
+				}
 			}
 		}
+	}
+
+	/**
+	 * Método interno para recuperar loja por nome
+	 * 
+	 * @param nome
+	 * @return
+	 */
+	private Loja pesquisarPorNome(String nome) {
+		return lojaRepository.findByNomeIgnoreCase(nome);
+	}
+
+	public void salvar(Loja loja) {
+		validarNome(loja);
 		lojaRepository.save(loja);
 	}
 
@@ -41,15 +68,10 @@ public class LojaService {
 		return lojaRepository.findOne(codigo);
 	}
 
-	public Loja pesquisarPorNome(String nome) {
-		return lojaRepository.findByNomeIgnoreCase(nome);
-	}
-
 	public List<Loja> pesquisar(LojaFilter filtro) {
 		String nome = filtro.getNome() == null ? "%" : filtro.getNome();
 		return lojaRepository.findByNomeContainingIgnoreCase(nome);
 	}
-
 	
 	public List<Vendedor> listarVendedores(Loja loja) {
 		return vendedorRepository.findByLoja(loja);
