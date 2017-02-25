@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.caracore.pdv.model.Loja;
 import br.com.caracore.pdv.model.Usuario;
 import br.com.caracore.pdv.model.types.TipoUsuario;
+import br.com.caracore.pdv.repository.LojaRepository;
 import br.com.caracore.pdv.repository.UsuarioRepository;
 import br.com.caracore.pdv.repository.filter.UsuarioFilter;
 import br.com.caracore.pdv.service.exception.AdminExistenteException;
@@ -20,6 +22,9 @@ public class UsuarioService {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+
+	@Autowired
+	private LojaRepository lojaRepository;
 	
 	private Usuario retornarUsuario(List<Usuario> listar) {
 		Usuario result = null;
@@ -79,9 +84,11 @@ public class UsuarioService {
 		String repetirEmail = usuario.getRepetirEmail();
 		String senha = usuario.getSenha();
 		String repetirSenha = usuario.getRepetirSenha();
-		Usuario admin = buscarAdministrador();
-		if (Util.validar(admin)) {
-			throw new AdminExistenteException("Administrador já existente!");
+		if (usuario.getPerfil().equals(TipoUsuario.ADMINISTRADOR)) {
+			Usuario admin = buscarAdministrador();
+			if (Util.validar(admin)) {
+				throw new AdminExistenteException("Administrador já existente!");
+			}
 		}
 		verificar = verificarLogin(login);
 		if (verificar) {
@@ -102,6 +109,14 @@ public class UsuarioService {
 		excluir(usuario.getCodigo());
 	}
 
+	public List<Loja> buscarLojas() {
+		List<Loja> lista = lojaRepository.findAll();
+		if (!Util.validar(lista)) {
+			lista = Util.criarListaDeLojas();
+		}
+		return lista;
+	}
+	
 	public List<Usuario> pesquisarPorLogin(String login) {
 		return usuarioRepository.findByNomeContainingIgnoreCase(login);
 	}

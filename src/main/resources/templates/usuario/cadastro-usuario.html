@@ -38,14 +38,14 @@
 			<input type="hidden" th:field="*{codigo}" />
 	
 			<div class="row">
-				<div class="col-sm-6">
+				<div class="col-sm-4">
 					<div class="form-group" th:classappend="${#fields.hasErrors('nome')} ? has-error">
 						<label for="nome">Nome</label>
 						<input id="nome" type="text" class="form-control" th:field="*{nome}"/>
 					</div>
 				</div>
 	
-				<div class="col-sm-6">
+				<div class="col-sm-4">
 					<div class="form-group" th:classappend="${#fields.hasErrors('perfil')} ? has-error">
 						<label for="perfil">Perfil</label>
 						<select id="perfil" class="form-control" th:field="*{perfil}">
@@ -54,40 +54,56 @@
 						</select>
 					</div>
 				</div>
+
+				<div class="col-sm-4">
+					<div class="form-group" th:classappend="${#fields.hasErrors('loja')} ? has-error">
+						<label for="usuario">Loja</label>
+						<select id="usuario" class="form-control" th:field="*{loja}">
+							<option value="">Selecione a loja</option>
+							<option th:each="loja : ${lojas}" th:value="${loja?.codigo}" th:text="${loja?.nome}"></option>
+						</select>
+					</div>
+				</div>
 			</div>
 	
 			<div class="row">
-				<div class="col-sm-6">
+				<div class="col-sm-4">
 					<div class="form-group">
 						<label for="senha">Senha</label>
 						<input id="senha" type="password" class="form-control" th:field="*{senha}"/>
 					</div>
 				</div>
 			
-				<div class="col-sm-6">
+				<div class="col-sm-4">
 					<div class="form-group" th:classappend="${#fields.hasErrors('repetirSenha')} ? has-error">
 						<label for="repetirSenha">Repetir Senha</label>
 						<input id="repetirSenha" type="password" class="form-control" th:field="*{repetirSenha}"/>
 					</div>
 				</div>
+				
+				<div class="col-sm-4">
+				</div>				
 			</div>
 	
 			<div class="row">
-				<div class="col-sm-6">
+				<div class="col-sm-4">
 					<div class="form-group">
 						<label for="email">E-mail</label>
 						<input id="email" type="text" class="form-control" th:field="*{email}"/>
 					</div>
 				</div>
 		
-				<div class="col-sm-6">
+				<div class="col-sm-4">
 					<div class="form-group" th:classappend="${#fields.hasErrors('repetirEmail')} ? has-error">
 						<label for="repetirEmail">Repetir E-mail</label>
 						<input id="repetirEmail" type="text" class="form-control" th:field="*{repetirEmail}"/>
 					</div>
 				</div>
+
+				<div class="col-sm-4">
+				</div>				
 			</div>
-			
+
 			<div class="form-group">
 				<button class="btn  btn-primary" type="submit">Salvar</button>
 				<a th:href="@{/usuarios}" class="btn  btn-default">Cancelar</a>

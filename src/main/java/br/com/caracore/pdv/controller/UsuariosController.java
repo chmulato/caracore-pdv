@@ -46,6 +46,7 @@ public class UsuariosController {
 		ModelAndView mv = new ModelAndView("usuario/cadastro-usuario");
 		mv.addObject(usuario);
 		mv.addObject("tipos", TipoUsuario.values());
+		mv.addObject("lojas", usuarioService.buscarLojas());
 		return mv;
 	}
 
