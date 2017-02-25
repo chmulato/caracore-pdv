@@ -33,139 +33,123 @@
 			</div>
 			
 			<div class="container-fluid">
-	
 				<form method="get" class="form-vertical  js-form-loading" th:object="${produtoFilter}" th:action="@{/vendas/produto}">
-					<div class="row">
-						<div class="col-sm-4">
+				<div class="row">
+					<div class="col-sm-4">
+						<div class="form-group">
 							<div class="form-group">
-								<div class="form-group">
-									<label for="codigo">Código do produto</label>
-									<input id="codigo" type="text" th:field="*{codigo}" class="form-control" placeholder="Código do produto" />
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="form-group">
-								<div class="form-group">
-									<label for="descricao">Descrição</label>
-									<input id="descricao" type="text" th:field="*{descricao}" class="form-control" readonly="readonly" />
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="form-group">
-								<div class="form-group">
-									<label for="descricao">Data/Hora</label>
-									<input id="descricao" type="text" th:field="*{data}" class="form-control" readonly="readonly" />
-								</div>
+								<label for="codigo">Código do produto</label>
+								<input id="codigo" type="text" th:field="*{codigo}" class="form-control" placeholder="Código do produto" />
 							</div>
 						</div>
 					</div>
-					<button class="btn  btn-primary" type="submit">Buscar</button>
-				</form>
-			
-				<div class="row" style="padding-top: 50px;">
-					
-					<div class="col-xs-12">
-						
-						<form method="post" class="form-horizontal  js-form-loading" th:object="${venda}" th:action="@{/vendas/novo}">
-		
-							<div class="alert  alert-danger  alert-dismissible" role="alert" th:if="${#fields.hasAnyErrors()}">
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-								<th:block th:each="error : ${#fields.detailedErrors()}">
-									<div>
-										<i class="fa  fa-exclamation-circle"></i>
-										<span th:text="${error.message}"></span>
-									</div>
-								</th:block>
+					<div class="col-sm-4">
+						<div class="form-group">
+							<div class="form-group">
+								<label for="descricao">Descrição</label>
+								<input id="descricao" type="text" th:field="*{descricao}" class="form-control" readonly="readonly" />
 							</div>
-							
-							<div class="alert  alert-success" th:if="${!#strings.isEmpty(mensagem)}">
-								<span th:text="${mensagem}"></span>
-							</div>
-			
-							<div class="table-responsive">
-					
-								<input type="hidden" th:field="*{codigo}" />
-								
-								<table id="tabela-produtos" class="table  table-striped  table-bordered  table-hover  table-condensed  js-sticky-table">
-									<thead class="aw-table-header-solid">
-										<tr>
-											<th><input type="checkbox"></th>
-											<th>Código</th>
-											<th>Descrição do produto</th>
-											<th>QTD</th>
-											<th>Preço unitário</th>
-											<th>Desconto</th>
-											<th>Subtotal</th>
-											<th>Ações</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr th:each="item : ${venda?.itens}">
-											<td><input type="checkbox"></td>
-											<td th:text="${item?.produto?.codigo}" class="text-center">1000</td>
-											<td>
-												<a th:href="@{/itens/{codigo}(codigo=${item.codigo})}" th:text="${item?.produto?.descricao}" sec:authorize="hasRole('ROLE_USUARIO')"></a>
-												<span th:text="${item?.produto?.descricao}" sec:authorize="not hasRole('ROLE_USUARIO')"></span>
-											</td>
-											<td th:text="${item.quantidade}" class="text-center">1</td>
-											<td th:text="|R$${{item.precoUnitario}}|" class="text-right">R$ 1.999,99</td>
-											<td th:text="|${{item.desconto}}%|" class="text-right">0,00 %</td>
-											<td th:text="|R$${{item.subTotal}}|" class="text-right">R$ 1.999,99</td>
-											<td class="text-center" sec:authorize="hasRole('ROLE_USUARIO')">
-												<i class="fa  fa-trash" style="cursor:pointer"
-													data-toggle="modal" data-target="#confirmaExclusaoModal"
-													data:nome="${item?.produto?.descricao}" 
-													data:url-apagar="@{/itens/{codigo}(codigo=${item.codigo})}"></i>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-								
-							</div>
-							
-							<div class="table-responsive">
-							
-								<table id="tabela-resumo" class="table  table-striped  table-bordered  table-hover  table-condensed  js-sticky-table">
-									<thead>
-										<tr>
-											<th>Subtotal</th>
-											<th>Desconto</th>
-											<th>Total</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td th:text="|R$${{venda.subTotal}}|" class="text-right">R$ 5.999,97</td>
-											<td th:text="|R$${{venda.descontoTotal}}|" class="text-right">R$ 0,00</td>
-											<td th:text="|R$${{venda.total}}|" class="text-right">R$ 5.999,97</td>
-										</tr>
-									</tbody>
-								</table>
-								
-							</div>			
-							
-							<div class="col-sm-3">
-								<div class="form-group">
-									<label for="vendedor">Vendedor</label>
-									<select id="vendedor" class="form-control" th:field="*{vendedor}">
-										<option value="">Selecione o vendedor</option>
-										<option th:each="vendedor : ${vendedores}" th:value="${vendedor.codigo}" th:text="${vendedor.nome}"></option>
-									</select>
-								</div>
-							</div>
-
-							<div class="col-sm-9">
-								<button class="btn  btn-primary" type="submit">Receber conta</button>
-							</div>
-						
-						</form>
-					
+						</div>
 					</div>
-				
+					<div class="col-sm-4">
+						<div class="form-group">
+							<div class="form-group">
+								<label for="descricao">Data/Hora</label>
+								<input id="descricao" type="text" th:field="*{data}" class="form-control" readonly="readonly" />
+							</div>
+						</div>
+					</div>
 				</div>
-			
+				<button class="btn  btn-primary" type="submit">Buscar</button>
+				<hr>
+				</form>
+				<form method="post" class="form-horizontal  js-form-loading" th:object="${venda}" th:action="@{/vendas/novo}">
+				<div class="alert  alert-danger  alert-dismissible" role="alert" th:if="${#fields.hasAnyErrors()}">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<th:block th:each="error : ${#fields.detailedErrors()}">
+						<div>
+							<i class="fa  fa-exclamation-circle"></i>
+							<span th:text="${error.message}"></span>
+						</div>
+					</th:block>
+				</div>
+				<div class="alert  alert-success" th:if="${!#strings.isEmpty(mensagem)}">
+					<span th:text="${mensagem}"></span>
+				</div>
+
+				<input type="hidden" th:field="*{codigo}" />
+
+				<div class="table-responsive">
+					<table id="tabela-produtos" class="table  table-striped  table-bordered  table-hover  table-condensed  js-sticky-table">
+						<thead class="aw-table-header-solid">
+							<tr>
+								<th><input type="checkbox"></th>
+								<th>Código</th>
+								<th>Descrição do produto</th>
+								<th>QTD</th>
+								<th>Preço unitário</th>
+								<th>Desconto</th>
+								<th>Subtotal</th>
+								<th>Ações</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="item : ${venda?.itens}">
+								<td><input type="checkbox"></td>
+								<td th:text="${item?.produto?.codigo}" class="text-center">1000</td>
+								<td>
+									<a th:href="@{/itens/{codigo}(codigo=${item.codigo})}" th:text="${item?.produto?.descricao}" sec:authorize="hasRole('ROLE_USUARIO')"></a>
+									<span th:text="${item?.produto?.descricao}" sec:authorize="not hasRole('ROLE_USUARIO')"></span>
+								</td>
+								<td th:text="${item.quantidade}" class="text-center">1</td>
+								<td th:text="|R$${{item.precoUnitario}}|" class="text-right">R$ 1.999,99</td>
+								<td th:text="|${{item.desconto}}%|" class="text-right">0,00 %</td>
+								<td th:text="|R$${{item.subTotal}}|" class="text-right">R$ 1.999,99</td>
+								<td class="text-center" sec:authorize="hasRole('ROLE_USUARIO')">
+									<i class="fa  fa-trash" style="cursor:pointer"
+										data-toggle="modal" data-target="#confirmaExclusaoModal"
+										data:nome="${item?.produto?.descricao}" 
+										data:url-apagar="@{/itens/{codigo}(codigo=${item.codigo})}"></i>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+					
+				<div class="col-sm-4">
+					<div class="form-group">
+						<label for="nome">Subtotal</label>
+						<input id="nome" type="text" class="form-control" th:field="*{subTotal}" readonly="readonly"/>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="form-group">
+						<label for="nome">Desconto</label>
+						<input id="nome" type="text" class="form-control" th:field="*{descontoTotal}"/>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="form-group">
+						<label for="nome">Total</label>
+						<input id="nome" type="text" class="form-control" th:field="*{total}" readonly="readonly"/>
+					</div>
+				</div>
+
+				<div class="col-sm-4">
+					<div class="form-group">
+						<label for="vendedor">Vendedor</label>
+						<select id="vendedor" class="form-control" th:field="*{vendedor}">
+							<option value="">Selecione o vendedor</option>
+							<option th:each="vendedor : ${vendedores}" th:value="${vendedor.codigo}" th:text="${vendedor.nome}"></option>
+						</select>
+					</div>
+				</div>
+				<div class="col-sm-4 btn-venda">
+					<button class="btn  btn-primary" type="submit">Receber conta</button>
+				</div>
+				<div class="col-sm-4">
+				</div>
+				</form>
 			</div>
 
 			<div class="modal  fade" id="confirmaExclusaoModal" tabindex="-1" role="dialog">
