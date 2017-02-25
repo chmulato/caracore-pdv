@@ -10,6 +10,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
 	public List<Produto> findByDescricaoContainingIgnoreCase(String descricao);
 
-	public Produto findByDescricao(String descricao);
+	public Produto findByDescricaoIgnoreCase(String descricao);
 
 }

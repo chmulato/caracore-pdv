@@ -41,7 +41,7 @@ public class ProdutosController {
 		try {
 			produtoService.salvar(produto);
 			attributes.addFlashAttribute("mensagem", "Produto salvo com sucesso!");
-			return novo(produto);
+			return new ModelAndView("redirect:/produtos/novo");
 		} catch (CodigoExistenteException ex) {
 			errors.rejectValue("codigo", " ", ex.getMessage());
 			return novo(produto);

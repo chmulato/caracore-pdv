@@ -57,7 +57,7 @@ public class UsuariosController {
 		try {
 			usuarioService.salvar(usuario);
 			attributes.addFlashAttribute("mensagem", "Usuário salvo com sucesso!");
-			return novo(usuario);
+			return new ModelAndView("redirect:/usuarios/novo");
 		} catch (AdminExistenteException ex) {
 			errors.rejectValue("perfil", " ", ex.getMessage());
 			return novo(usuario);

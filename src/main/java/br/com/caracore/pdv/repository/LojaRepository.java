@@ -9,5 +9,7 @@ import br.com.caracore.pdv.model.Loja;
 public interface LojaRepository extends JpaRepository<Loja, Long> {
 	
 	public List<Loja> findByNomeContainingIgnoreCase(String nome);
+	
+	public Loja findByNomeIgnoreCase(String nome);
 
 }

@@ -4,7 +4,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import br.com.caracore.pdv.model.Loja;
 import br.com.caracore.pdv.repository.filter.LojaFilter;
 import br.com.caracore.pdv.service.LojaService;
+import br.com.caracore.pdv.service.exception.NomeExistenteException;
 
 @Controller
 @RequestMapping("/lojas")
@@ -32,13 +33,18 @@ public class LojasController {
 	}
 	
 	@PostMapping("/novo")
-	public ModelAndView salvar(@Valid Loja loja, BindingResult result, RedirectAttributes attributes) {
-		if (result.hasErrors()) {
+	public ModelAndView salvar(@Valid Loja loja, Errors errors, RedirectAttributes attributes) {
+		if (errors.hasErrors()) {
 			return novo(loja);
 		}
-		lojaService.salvar(loja);
-		attributes.addFlashAttribute("mensagem", "Loja salva com sucesso!");
-		return new ModelAndView("redirect:/lojas/novo");
+		try {
+			lojaService.salvar(loja);
+			attributes.addFlashAttribute("mensagem", "Loja salva com sucesso!");
+			return new ModelAndView("redirect:/lojas/novo");
+		} catch (NomeExistenteException ex) {
+			errors.rejectValue("nome", " ", ex.getMessage());
+			return novo(loja);
+		}
 	}
 	
 	@GetMapping

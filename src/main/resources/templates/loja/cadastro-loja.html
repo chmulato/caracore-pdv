@@ -39,7 +39,7 @@
 	
 			<div class="row">
 				<div class="col-sm-6">
-					<div class="form-group">
+					<div class="form-group" th:classappend="${#fields.hasErrors('nome')} ? has-error">
 						<label for="nome">Nome</label>
 						<input id="nome" type="text" class="form-control" th:field="*{nome}"/>
 					</div>

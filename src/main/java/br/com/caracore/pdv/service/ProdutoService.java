@@ -48,7 +48,7 @@ public class ProdutoService {
 		boolean existe = false;
 		if (Util.validar(produto) && Util.validar(produto.getDescricao())) {
 			String descricao = produto.getDescricao();
-			Produto produtoExistente = produtoRepository.findByDescricao(descricao);
+			Produto produtoExistente = produtoRepository.findByDescricaoIgnoreCase(descricao);
 			if (Util.validar(produtoExistente)) {
 				if (!produto.getCodigo().equals(produtoExistente.getCodigo())) {
 					existe = true;

@@ -10,6 +10,8 @@ import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.repository.LojaRepository;
 import br.com.caracore.pdv.repository.VendedorRepository;
 import br.com.caracore.pdv.repository.filter.LojaFilter;
+import br.com.caracore.pdv.service.exception.NomeExistenteException;
+import br.com.caracore.pdv.util.Util;
 
 @Service
 public class LojaService {
@@ -21,6 +23,13 @@ public class LojaService {
 	private VendedorRepository vendedorRepository;
 
 	public void salvar(Loja loja) {
+		if ((Util.validar(loja)) && Util.validar(loja.getNome())){
+			String nome = loja.getNome();
+			Loja lojaJaExistente = pesquisarPorNome(nome);
+			if (Util.validar(lojaJaExistente)) {
+				throw new NomeExistenteException("Loja já existente!");
+			}
+		}
 		lojaRepository.save(loja);
 	}
 
@@ -30,6 +39,10 @@ public class LojaService {
 
 	public Loja pesquisarPorCodigo(Long codigo) {
 		return lojaRepository.findOne(codigo);
+	}
+
+	public Loja pesquisarPorNome(String nome) {
+		return lojaRepository.findByNomeIgnoreCase(nome);
 	}
 
 	public List<Loja> pesquisar(LojaFilter filtro) {
