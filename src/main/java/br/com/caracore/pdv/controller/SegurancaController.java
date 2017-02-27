@@ -22,6 +22,7 @@ public class SegurancaController {
 	
 	@Autowired
 	public EmailService emailService;
+
 	
 	@RequestMapping("/login")
 	public String login(@AuthenticationPrincipal User user) {
@@ -29,13 +30,6 @@ public class SegurancaController {
 			return "redirect:/vendas/novo";
 		}
 		return "login";
-	}
-
-	@GetMapping("/recupera-senha")
-	public ModelAndView novo(Mail mail) {
-		ModelAndView mv = new ModelAndView("esqueceu-a-senha");
-		mv.addObject(mail);
-		return mv;
 	}
 
 	@RequestMapping("/esqueceu-a-senha")
@@ -47,7 +41,15 @@ public class SegurancaController {
 		mv.addObject(mail);
 		return mv;
 	}
-	
+
+	@GetMapping("/recupera-senha")
+	public ModelAndView novo(Mail mail) {
+		ModelAndView mv = new ModelAndView("esqueceu-a-senha");
+		mail = emailService.validarMail(mail);
+		mv.addObject(mail);
+		return mv;
+	}
+
 	@PostMapping("/recupera-senha")
 	public ModelAndView salvar(@Validated Mail mail, Errors errors, RedirectAttributes attributes) {
 		if (errors.hasErrors()) {

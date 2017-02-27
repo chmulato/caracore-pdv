@@ -23,7 +23,27 @@ public class EmailService {
 
 	@Autowired
 	private UsuarioService usuarioService;
+	
+	/**
+	 * Método externo para validar objeto Mail
+	 * 
+	 * @param mail
+	 * @return
+	 */
+	public Mail validarMail(Mail mail) {
+		if (!Util.validar(mail)) {
+			mail = new Mail();
+			mail.setLogin("");
+			mail.setTo("");
+		}
+		return mail;
+	}
 
+	/**
+	 * Método externo para envio de mensagem eletrônica
+	 * 
+	 * @param msg
+	 */
 	public void send(Mail msg) {
 		
 		String login = "";
@@ -80,6 +100,11 @@ public class EmailService {
 		
 	}
 
+	/**
+	 * Método interno para tratar mensagem de erro de envio de e-mail.
+	 * 
+	 * @param ex
+	 */
 	private void errorMessageException(MailException ex) {
 		ex.printStackTrace();
 		String strError = ex.getMessage();
