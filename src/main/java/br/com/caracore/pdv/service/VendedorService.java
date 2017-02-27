@@ -113,8 +113,14 @@ public class VendedorService {
 				Usuario usuario = vendedor.getUsuario();
 				Vendedor vendedorDB = verificarUsuario(usuario);
 				if (Util.validar(vendedorDB)) {
-					StringBuffer msg = new StringBuffer("Usuário já impostado!");
-					throw new UsuarioImpostadoException(msg.toString());
+					if (Util.validar(vendedor.getCodigo())) {
+						long codigo = vendedor.getCodigo();
+						long codigoDB = vendedorDB.getCodigo();
+						if (codigo != codigoDB) {
+							StringBuffer msg = new StringBuffer("Usuário já impostado!");
+							throw new UsuarioImpostadoException(msg.toString());
+						}
+					}
 				}
 			}
 		}
