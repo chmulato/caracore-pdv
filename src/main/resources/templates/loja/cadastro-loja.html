@@ -52,6 +52,7 @@
 						<tr>
 							<th class="av-table-vinhos-col-codigo">Código</th>
 							<th>Vendedor</th>
+							<th>Tipo</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -61,6 +62,7 @@
 								<a th:href="@{/vendedores/{codigo}(codigo=${vendedor.codigo})}" th:text="${vendedor.nome}" sec:authorize="hasRole('ROLE_USUARIO')"></a>
 								<span th:text="${vendedor.nome}" sec:authorize="not hasRole('ROLE_USUARIO')"></span>
 							</td>
+							<td th:text="#{|tipoVendedor.${vendedor.tipo}|}">Gerente</td>
 						</tr>
 					</tbody>
 				</table>
