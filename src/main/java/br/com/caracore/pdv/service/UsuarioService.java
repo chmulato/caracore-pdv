@@ -103,6 +103,30 @@ public class UsuarioService {
 		return usuarioRepository.save(usuario);
 	}
 	
+	public Usuario buscar(String login) {
+		Usuario usuario = null;
+		usuario = usuarioRepository.findByNome(login);
+		return usuario;
+	}
+	
+	public boolean verificarExistenciaLogin(String login) {
+		boolean existe = false;
+		Usuario usuario = usuarioRepository.findByNome(login);
+		if (Util.validar(usuario)) {
+			existe = true;
+		}
+		return existe;
+	}
+	
+	public boolean verificarExistenciaEmail(String email) {
+		boolean existe = false;
+		List<Usuario> lista = usuarioRepository.findByEmail(email);
+		if (Util.validar(lista)) {
+			existe = true;
+		}
+		return existe;
+	}
+	
 	public void excluirPorLogin(String login) {
 		List<Usuario> listar = pesquisarPorLogin(login);
 		Usuario usuario = retornarUsuario(listar);

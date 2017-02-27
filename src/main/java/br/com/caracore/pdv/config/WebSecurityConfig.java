@@ -24,7 +24,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-				.antMatchers("/","/esqueceu-a-senha").permitAll()
+				.antMatchers("/","/esqueceu-a-senha", "/recupera-senha").permitAll()
 				.antMatchers("/clientes").hasRole("USUARIO")
 				.antMatchers("/clientes/**").hasRole("USUARIO")
 				.antMatchers("/itens").hasRole("USUARIO")
