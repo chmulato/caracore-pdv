@@ -21,7 +21,7 @@
 							</h1>
 						</div>
 						
-						<div class="col-xs-2" sec:authorize="hasRole('ROLE_USUARIO')">
+						<div class="col-xs-2" sec:authorize="hasRole('ROLE_ADMINISTRADOR')">
 							<div class="aw-page-header-controls">
 								<a class="btn btn-primary" th:href="@{/usuarios/novo}">
 									<i class="fa  fa-plus-circle"></i> <span class="hidden-xs  hidden-sm">Novo usuário</span>
@@ -59,19 +59,19 @@
 								<th>Nome</th>
 								<th class="av-table-vinhos-col-tipo">Tipo</th>
 								<th class="av-table-vinhos-col-valor">E-mail</th>
-								<th class="av-table-vinhos-col-icons" sec:authorize="hasRole('ROLE_USUARIO')"></th>
+								<th class="av-table-vinhos-col-icons" sec:authorize="hasRole('ROLE_ADMINISTRADOR')"></th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr th:each="usuario : ${usuarios}">
 								<td th:text="${usuario.codigo}" class="text-center">1</td>
 								<td>
-									<a th:href="@{/usuarios/{codigo}(codigo=${usuario.codigo})}" th:text="${usuario.nome}" sec:authorize="hasRole('ROLE_USUARIO')"></a>
-									<span th:text="${usuario.nome}" sec:authorize="not hasRole('ROLE_USUARIO')"></span>
+									<a th:href="@{/usuarios/{codigo}(codigo=${usuario.codigo})}" th:text="${usuario.nome}" sec:authorize="hasRole('ROLE_ADMINISTRADOR')"></a>
+									<span th:text="${usuario.nome}" sec:authorize="not hasRole('ROLE_ADMINISTRADOR')"></span>
 								</td>
 								<td th:text="#{|tipoPerfil.${usuario.perfil}|}">Administrador</td>
 								<td th:text="${usuario.email}" class="text-right">chmulato@hotmail.com</td>
-								<td class="text-center" sec:authorize="hasRole('ROLE_USUARIO')">
+								<td class="text-center" sec:authorize="hasRole('ROLE_ADMINISTRADOR')">
 									<i class="fa  fa-trash" style="cursor:pointer"
 										data-toggle="modal" data-target="#confirmaExclusaoModal"
 										data:nome="${usuario.nome}" 

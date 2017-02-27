@@ -48,14 +48,15 @@ public class ClientesController {
 	}
 	
 	@GetMapping
-	public ModelAndView pesquisar(ClienteFilter filtroCliente) {
+	public ModelAndView pesquisar(ClienteFilter clienteFilter) {
 		ModelAndView mv = new ModelAndView("cliente/pesquisa-clientes");
-		if (filtroCliente != null) {
-			mv.addObject("clientes", clienteService.pesquisar(filtroCliente));
+		if (clienteFilter != null) {
+			mv.addObject("clientes", clienteService.pesquisar(clienteFilter));
 		} else {
-			filtroCliente = new ClienteFilter();
-			filtroCliente.setNome("%");
+			clienteFilter = new ClienteFilter();
+			clienteFilter.setNome("%");
 		}
+		mv.addObject(clienteFilter);
 		return mv;		
 	}
 	

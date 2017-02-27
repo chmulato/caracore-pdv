@@ -21,7 +21,7 @@
 							</h1>
 						</div>
 						
-						<div class="col-xs-2" sec:authorize="hasRole('ROLE_USUARIO')">
+						<div class="col-xs-2" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR', 'ROLE_USUARIO')">
 							<div class="aw-page-header-controls">
 								<a class="btn btn-primary" th:href="@{/clientes/novo}">
 									<i class="fa  fa-plus-circle"></i> <span class="hidden-xs  hidden-sm">Novo cliente</span>
@@ -57,17 +57,17 @@
 							<tr>
 								<th class="av-table-vinhos-col-codigo">Código</th>
 								<th>Nome</th>
-								<th class="av-table-vinhos-col-icons" sec:authorize="hasRole('ROLE_USUARIO')"></th>
+								<th class="av-table-vinhos-col-icons" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR', 'ROLE_USUARIO')"></th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr th:each="cliente : ${clientes}">
 								<td th:text="${cliente.codigo}" class="text-center">1</td>
 								<td>
-									<a th:href="@{/clientes/{codigo}(codigo=${cliente.codigo})}" th:text="${cliente.nome}" sec:authorize="hasRole('ROLE_USUARIO')"></a>
-									<span th:text="${usuario.nome}" sec:authorize="not hasRole('ROLE_USUARIO')"></span>
+									<a th:href="@{/clientes/{codigo}(codigo=${cliente.codigo})}" th:text="${cliente.nome}" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR', 'ROLE_USUARIO')"></a>
+									<span th:text="${cliente.nome}" sec:authorize="not hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')"></span>
 								</td>
-								<td class="text-center" sec:authorize="hasRole('ROLE_USUARIO')">
+								<td class="text-center" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR', 'ROLE_USUARIO')">
 									<i class="fa  fa-trash" style="cursor:pointer"
 										data-toggle="modal" data-target="#confirmaExclusaoModal"
 										data:nome="${cliente.nome}" 

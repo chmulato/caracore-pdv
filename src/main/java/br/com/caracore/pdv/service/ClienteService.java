@@ -64,8 +64,16 @@ public class ClienteService {
 	}
 
 	public List<Cliente> pesquisar(ClienteFilter filtro) {
-		String nome = filtro.getNome() == null ? "%" : filtro.getNome();
-		return clienteRepository.findByNomeContainingIgnoreCase(nome);
+		List<Cliente> lista = null;
+		String nome = "%";
+		if (Util.validar(filtro) && Util.validar(filtro.getNome())) {
+			nome = filtro.getNome();
+			if (Util.validar(nome)) {
+				nome = filtro.getNome();
+			}
+		}
+		lista = clienteRepository.findByNomeContainingIgnoreCase(nome);
+		return lista;
 	}
 
 }
