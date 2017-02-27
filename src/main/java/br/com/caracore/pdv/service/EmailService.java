@@ -4,6 +4,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -68,13 +69,25 @@ public class EmailService {
 				helper.setFrom(msg.getFROM_CVMULATO_COM_BR());
 				helper.setSubject(msg.getSubject());
 				helper.setText(msg.getBody());
+				javaMailSender.send(mail);
 			} catch (MessagingException ex) {
 				ex.printStackTrace();
 				throw new EmailInvalidoException("Falha ao envial o e-mail!");
-			} finally {
+			} catch (MailException ex) {
+				errorMessageException(ex);
 			}
-			javaMailSender.send(mail);
 		}
 		
+	}
+
+	private void errorMessageException(MailException ex) {
+		ex.printStackTrace();
+		String strError = ex.getMessage();
+		String strPermission = "Permission";
+		if (strError.toLowerCase().contains(strPermission.toLowerCase())) {
+			strError = "Envio de e-mail não é permitido pela rede! Verificar configuração do firewall.";
+			throw new EmailInvalidoException(strError);
+		}			
+		throw new EmailInvalidoException("Erro: " + ex.getMessage());
 	}
 }
