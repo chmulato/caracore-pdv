@@ -17,6 +17,7 @@ import br.com.caracore.pdv.model.Loja;
 import br.com.caracore.pdv.repository.filter.LojaFilter;
 import br.com.caracore.pdv.service.LojaService;
 import br.com.caracore.pdv.service.exception.NomeExistenteException;
+import br.com.caracore.pdv.util.Util;
 
 @Controller
 @RequestMapping("/lojas")
@@ -29,6 +30,9 @@ public class LojasController {
 	public ModelAndView novo(Loja loja) {
 		ModelAndView mv = new ModelAndView("loja/cadastro-loja");
 		mv.addObject(loja);
+		if (Util.validar(loja) && Util.validar(loja.getVendedores())) {
+			mv.addObject("vendedores", loja.getVendedores());
+		}
 		return mv;
 	}
 	

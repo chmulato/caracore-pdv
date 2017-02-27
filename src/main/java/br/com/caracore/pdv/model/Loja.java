@@ -42,12 +42,21 @@ public class Loja {
 		this.nome = nome;
 	}
 
+	public List<Vendedor> getVendedores() {
+		return vendedores;
+	}
+
+	public void setVendedores(List<Vendedor> vendedores) {
+		this.vendedores = vendedores;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+		result = prime * result + ((vendedores == null) ? 0 : vendedores.hashCode());
 		return result;
 	}
 
@@ -69,6 +78,11 @@ public class Loja {
 			if (other.nome != null)
 				return false;
 		} else if (!nome.equals(other.nome))
+			return false;
+		if (vendedores == null) {
+			if (other.vendedores != null)
+				return false;
+		} else if (!vendedores.equals(other.vendedores))
 			return false;
 		return true;
 	}
