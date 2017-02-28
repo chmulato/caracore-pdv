@@ -21,7 +21,7 @@
 							</h1>
 						</div>
 						
-						<div class="col-xs-2" sec:authorize="hasRole('ROLE_USUARIO')">
+						<div class="col-xs-2" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')">
 							<div class="aw-page-header-controls">
 								<a class="btn btn-primary" th:href="@{/produtos/novo}">
 									<i class="fa  fa-plus-circle"></i> <span class="hidden-xs  hidden-sm">Novo produto</span>
@@ -90,7 +90,7 @@
 								<th>Preço unitário</th>
 								<th>Desconto</th>
 								<th>Subtotal</th>
-								<th sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR', 'ROLE_USUARIO')">Ações</th>
+								<th sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')">Ações</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -98,14 +98,14 @@
 								<td><input type="checkbox"></td>
 								<td th:text="${item?.produto?.codigo}" class="text-center">1000</td>
 								<td>
-									<a th:href="@{/itens/{codigo}(codigo=${item.codigo})}" th:text="${item?.produto?.descricao}" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR', 'ROLE_USUARIO')"></a>
-									<span th:text="${item?.produto?.descricao}" sec:authorize="hasRole('ROLE_VISITANTE')"></span>
+									<a th:href="@{/itens/{codigo}(codigo=${item.codigo})}" th:text="${item?.produto?.descricao}" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')"></a>
+									<span th:text="${item?.produto?.descricao}" sec:authorize="not hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')"></span>
 								</td>
 								<td th:text="${item.quantidade}" class="text-center">1</td>
 								<td th:text="|R$${{item.precoUnitario}}|" class="text-right">R$ 1.999,99</td>
 								<td th:text="|${{item.desconto}}%|" class="text-right">0,00 %</td>
 								<td th:text="|R$${{item.subTotal}}|" class="text-right">R$ 1.999,99</td>
-								<td class="text-center" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR', 'ROLE_USUARIO')">
+								<td class="text-center" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')">
 									<i class="fa  fa-trash" style="cursor:pointer"
 										data-toggle="modal" data-target="#confirmaExclusaoModal"
 										data:nome="${item?.produto?.descricao}" 
