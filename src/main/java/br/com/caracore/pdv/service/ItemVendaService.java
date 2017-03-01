@@ -29,23 +29,7 @@ public class ItemVendaService {
 		return itemVendaRepository.findOne(codigo);
 	}
 
-	public void atualizarQuantidade(Long codigo, String quantidade) {
-		if (Util.validar(codigo) && Util.validar(quantidade)) {
-			ItemVenda item = pesquisarPorCodigo(codigo);
-			if (Util.validar(item)) {
-				Integer quant = Integer.valueOf(0);
-				try {
-					quant = new Integer(quantidade);
-				} catch (NumberFormatException ex) {
-					ex.printStackTrace();
-				}
-				item.setQuantidade(quant);
-				salvar(item);
-			}
-		}
-	}
-	
-	public void atualizarDesconto(Long codigo, String desconto, String dinheiro) {
+	public void atualizar(Long codigo, String desconto, String dinheiro, String quantidade) {
 		if (Util.validar(codigo) && Util.validar(desconto)) {
 			ItemVenda item = pesquisarPorCodigo(codigo);
 			if (Util.validar(item)) {
@@ -59,6 +43,16 @@ public class ItemVendaService {
 				item.setDesconto(desc);
 				salvar(item);
 			}
+			if (Util.validar(quantidade)) {
+				Integer quant = Integer.valueOf(0);
+				try {
+					quant = new Integer(quantidade);
+				} catch (NumberFormatException ex) {
+					ex.printStackTrace();
+				}
+				item.setQuantidade(quant);
+			}
+			salvar(item);
 		}
 	}
 	

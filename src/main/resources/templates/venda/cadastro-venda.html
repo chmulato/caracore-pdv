@@ -90,10 +90,8 @@
 								<th>Código</th>
 								<th>Descrição do produto</th>
 								<th class="text-right">QTD</th>
-								<th sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')"></th>
 								<th class="text-right">Preço unitário</th>
 								<th class="text-right">Desconto</th>
-								<th sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')"></th>
 								<th class="text-right">Subtotal</th>
 								<th sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')"></th>
 							</tr>
@@ -106,33 +104,20 @@
 									<a th:href="@{/itens/{codigo}(codigo=${item.codigo})}" th:text="${item?.produto?.descricao}" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')"></a>
 									<span th:text="${item?.produto?.descricao}" sec:authorize="not hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')"></span>
 								</td>
-								<td th:text="${item.quantidade}" class="text-right">
-								</td>
-								<td class="text-left" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')">
-									<a class="btn  btn-link btn-xs" style="cursor:pointer"
-										title="Atualizar quantidade" rel="tooltip"
-										data-toggle="modal" data-target="#atualizaQuantidadeModal"
-										data:nome="${item?.produto?.descricao}" 
-										data:quantidade="${item.quantidade}" 
-										data:url-atualizar="@{/itens/quantidade/{codigo}(codigo=${item.codigo})}">
-										<span class="glyphicon glyphicon-check"></span>
-									</a>
-								</td>
+								<td th:text="${item.quantidade}" class="text-right"></td>
 								<td th:text="|R$${{item.precoUnitario}}|" class="text-right">R$ 1.999,99</td>
-								<td th:text="|${{item.desconto}}%|" class="text-right">
-								</td>
-								<td class="text-left" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')">
-									<a class="btn  btn-link btn-xs" style="cursor:pointer"
-										title="Atualizar desconto" rel="tooltip"
-										data-toggle="modal" data-target="#atualizaDescontoModal"
-										data:nome="${item?.produto?.descricao}" 
-										data:desconto="${item.desconto}" 
-										data:url-atualizar="@{/itens/desconto/{codigo}(codigo=${item.codigo})}">
-										<span class="glyphicon glyphicon-check"></span>
-									</a>
-								</td>
+								<td th:text="|${{item.desconto}}%|" class="text-right"></td>
 								<td th:text="|R$${{item.subTotal}}|" class="text-right">R$ 1.999,99</td>
 								<td class="text-center" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')">
+									<a class="btn  btn-link btn-xs" style="cursor:pointer"
+										title="Atualizar desconto" rel="tooltip"
+										data-toggle="modal" data-target="#atualizaItemVendaModal"
+										data:nome="${item?.produto?.descricao}" 
+										data:desconto="${item.desconto}" 
+										data:quantidade="${item.quantidade}" 
+										data:url-atualizar="@{/itens/{codigo}(codigo=${item.codigo})}">
+										<span class="glyphicon glyphicon-check"></span>
+									</a>
 									<a class="fa fa-trash" style="cursor:pointer"
 										title="Excluir item" rel="tooltip"
 										data-toggle="modal" data-target="#confirmaExclusaoModal"
@@ -181,7 +166,7 @@
 				</form>
 			</div>
 
-			<div class="modal  fade" id="atualizaQuantidadeModal" tabindex="-2" role="dialog">
+			<div class="modal  fade" id="atualizaItemVendaModal" tabindex="-2" role="dialog">
 			  <div class="modal-dialog" role="document">
 			    <div class="modal-content">
 		  			<form th:action="@{/itens}" method="POST">
@@ -191,41 +176,15 @@
 				        	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				        		<span aria-hidden="true">&times;</span>
 				        	</button>
-				        	<h4 class="modal-title" id="updModalQtd">Atualizar quantidade</h4>
+				        	<h4 class="modal-title" id="updModalDesc">Atualizar Item de Venda</h4>
 				      	</div>
 				      	
 				      	<div class="modal-body">
-				        	<span>Atualizar quantidade?</span>
+				        	<span>Atualizar?</span>
 							<div class="form-group">
 								<label for="quantidade">Quantidade</label>
 					        	<input id="quantidade" type="text" class="quantidade" name="quantidade" value="" />
 				        	</div>
-				      	</div>
-				      	
-				      	<div class="modal-footer">
-				        	<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-	       					<button type="submit" class="btn  btn-primary">Atualizar</button>
-				      	</div>
-		     		</form>
-			    </div>
-			  </div>
-			</div>
-
-			<div class="modal  fade" id="atualizaDescontoModal" tabindex="-2" role="dialog">
-			  <div class="modal-dialog" role="document">
-			    <div class="modal-content">
-		  			<form th:action="@{/itens}" method="POST">
- 	  					<input type="hidden" name="_method" value="PUT"/>
-			    
-				      	<div class="modal-header">
-				        	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				        		<span aria-hidden="true">&times;</span>
-				        	</button>
-				        	<h4 class="modal-title" id="updModalDesc">Atualizar desconto</h4>
-				      	</div>
-				      	
-				      	<div class="modal-body">
-				        	<span>Atualizar desconto?</span>
 							<div class="form-group">
 								<label for="desconto">Desconto</label>
 					        	<input id="desconto" type="text" class="desconto js-moeda" placeholder="%" name="desconto" value="" />

@@ -65,32 +65,23 @@ public class ItensController {
 		return "redirect:/vendas/novo";
 	}
 
-	@RequestMapping(value = "/desconto/{codigo}", method = RequestMethod.PUT)
-	public String atualizarDesconto(@PathVariable("codigo") Long codigo, 
+	@RequestMapping(value = "/{codigo}", method = RequestMethod.PUT)
+	public String atualizar(@PathVariable("codigo") Long codigo, 
 			@RequestParam(value="desconto", required=false) String desconto,
 			@RequestParam(value="dinheiro", required=false) String dinheiro,
+			@RequestParam(value="quantidade", required=false) String quantidade,
 			RedirectAttributes attributes) {
 		try {
 			if (Util.validar(codigo) && Util.validar(desconto)) {
-				itemVendaService.atualizarDesconto(codigo, desconto, dinheiro);
+				itemVendaService.atualizar(codigo, desconto, dinheiro, quantidade);
 				attributes.addFlashAttribute("mensagem", "Item atualizado com sucesso!");
 			}
 		} catch (DescontoInvalidoException ex) {
 			attributes.addFlashAttribute("error", "Desconto inválido!");
-		}
-		return "redirect:/vendas/novo";
-	}
-
-	@RequestMapping(value = "/quantidade/{codigo}", method = RequestMethod.PUT)
-	public String atualizarQuantidade(@PathVariable("codigo") Long codigo, @RequestParam(value="quantidade", required=false) String quantidade, RedirectAttributes attributes) {
-		try {
-			if (Util.validar(codigo) && Util.validar(quantidade)) {
-				itemVendaService.atualizarQuantidade(codigo, quantidade);
-				attributes.addFlashAttribute("mensagem", "Item atualizado com sucesso!");
-			}
 		} catch (QuantidadeInvalidaException ex) {
 			attributes.addFlashAttribute("error", "Quantidade inválida!");
 		}
 		return "redirect:/vendas/novo";
 	}
+
 }
