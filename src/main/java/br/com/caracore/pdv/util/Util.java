@@ -49,7 +49,7 @@ public class Util {
 			}  else if ((desconto.charAt(desconto.length() - 3) == '.') && (desconto.length() <= 5 )) {
 			}  else if ((desconto.charAt(desconto.length() - 3) == '.') && (desconto.length() > 5 )) {
 				desconto = desconto.replace(".","x");
-				desconto = desconto.replace(".","");
+				desconto = desconto.replace(",","");
 				desconto = desconto.replace("x",".");
 			}
 			desc = new BigDecimal(desconto);
