@@ -44,31 +44,6 @@ public class ItemVendaService {
 			}
 		}
 	}
-
-	/**
-	 * Método interno para formatar o valor do desconto
-	 * 
-	 * @param desconto
-	 * @return
-	 */
-	private BigDecimal formatarDesconto(String desconto) {
-		BigDecimal desc = BigDecimal.ZERO;
-		if (Util.validar(desconto)) {
-			if (desconto.equals("0")) {
-				desconto = "0.00";
-			} else if (desconto.charAt(desconto.length() - 3) == ',') {
-				desconto = desconto.replace(".","");
-				desconto = desconto.replace(",",".");
-			}  else if ((desconto.charAt(desconto.length() - 3) == '.') && (desconto.length() <= 5 )) {
-			}  else if ((desconto.charAt(desconto.length() - 3) == '.') && (desconto.length() > 5 )) {
-				desconto = desconto.replace(".","x");
-				desconto = desconto.replace(".","");
-				desconto = desconto.replace("x",".");
-			}
-			desc = new BigDecimal(desconto);
-		}
-		return desc;
-	}
 	
 	public void atualizarDesconto(Long codigo, String desconto, String dinheiro) {
 		if (Util.validar(codigo) && Util.validar(desconto)) {
@@ -76,7 +51,7 @@ public class ItemVendaService {
 			if (Util.validar(item)) {
 				BigDecimal desc = BigDecimal.ZERO;
 				try {
-					desc = formatarDesconto(desconto);
+					desc = Util.formatarDesconto(desconto);
 				} catch (NumberFormatException ex) {
 					ex.printStackTrace();
 				}

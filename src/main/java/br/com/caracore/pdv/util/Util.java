@@ -1,5 +1,6 @@
 package br.com.caracore.pdv.util;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +30,31 @@ public class Util {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Método para formatar o valor do desconto
+	 * 
+	 * @param desconto
+	 * @return
+	 */
+	public static BigDecimal formatarDesconto(String desconto) {
+		BigDecimal desc = BigDecimal.ZERO;
+		if (Util.validar(desconto)) {
+			if (desconto.equals("0")) {
+				desconto = "0.00";
+			} else if (desconto.charAt(desconto.length() - 3) == ',') {
+				desconto = desconto.replace(".","");
+				desconto = desconto.replace(",",".");
+			}  else if ((desconto.charAt(desconto.length() - 3) == '.') && (desconto.length() <= 5 )) {
+			}  else if ((desconto.charAt(desconto.length() - 3) == '.') && (desconto.length() > 5 )) {
+				desconto = desconto.replace(".","x");
+				desconto = desconto.replace(".","");
+				desconto = desconto.replace("x",".");
+			}
+			desc = new BigDecimal(desconto);
+		}
+		return desc;
 	}
 
 	public static List<Loja> criarListaDeLojas(){
