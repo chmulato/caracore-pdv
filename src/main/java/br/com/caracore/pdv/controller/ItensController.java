@@ -66,10 +66,13 @@ public class ItensController {
 	}
 
 	@RequestMapping(value = "/desconto/{codigo}", method = RequestMethod.PUT)
-	public String atualizarDesconto(@PathVariable("codigo") Long codigo, @RequestParam(value="desconto", required=false) String desconto, RedirectAttributes attributes) {
+	public String atualizarDesconto(@PathVariable("codigo") Long codigo, 
+			@RequestParam(value="desconto", required=false) String desconto,
+			@RequestParam(value="dinheiro", required=false) String dinheiro,
+			RedirectAttributes attributes) {
 		try {
 			if (Util.validar(codigo) && Util.validar(desconto)) {
-				itemVendaService.atualizarDesconto(codigo, desconto);
+				itemVendaService.atualizarDesconto(codigo, desconto, dinheiro);
 				attributes.addFlashAttribute("mensagem", "Item atualizado com sucesso!");
 			}
 		} catch (DescontoInvalidoException ex) {

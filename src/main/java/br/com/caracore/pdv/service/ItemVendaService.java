@@ -45,22 +45,69 @@ public class ItemVendaService {
 		}
 	}
 
-	public void atualizarDesconto(Long codigo, String desconto) {
+	/**
+	 * Método interno para formatar o valor do desconto
+	 * 
+	 * @param desconto
+	 * @return
+	 */
+	private BigDecimal formatarDesconto(String desconto) {
+		BigDecimal desc = BigDecimal.ZERO;
+		if (Util.validar(desconto)) {
+			if (desconto.equals("0")) {
+				desconto = "0.00";
+			} else if (desconto.charAt(desconto.length() - 3) == ',') {
+				desconto = desconto.replace(".","");
+				desconto = desconto.replace(",",".");
+			}  else if ((desconto.charAt(desconto.length() - 3) == '.') && (desconto.length() <= 5 )) {
+			}  else if ((desconto.charAt(desconto.length() - 3) == '.') && (desconto.length() > 5 )) {
+				desconto = desconto.replace(".","x");
+				desconto = desconto.replace(".","");
+				desconto = desconto.replace("x",".");
+			}
+			desc = new BigDecimal(desconto);
+		}
+		return desc;
+	}
+	
+	public void atualizarDesconto(Long codigo, String desconto, String dinheiro) {
 		if (Util.validar(codigo) && Util.validar(desconto)) {
 			ItemVenda item = pesquisarPorCodigo(codigo);
 			if (Util.validar(item)) {
 				BigDecimal desc = BigDecimal.ZERO;
 				try {
-					desconto = desconto.replace(".","");
-					desconto = desconto.replace(",",".");
-					desc = new BigDecimal(desconto);
+					desc = formatarDesconto(desconto);
 				} catch (NumberFormatException ex) {
 					ex.printStackTrace();
 				}
+				desc = descontoEmDinheiro(dinheiro, item, desc);
 				item.setDesconto(desc);
 				salvar(item);
 			}
 		}
+	}
+	
+	/**
+	 * Método interno para o desconto em dinheiro
+	 * 
+	 * @param dinheiro
+	 * @param item
+	 * @param desc
+	 * @return
+	 */
+	private BigDecimal descontoEmDinheiro(String dinheiro, ItemVenda item, BigDecimal desc) {
+		if (Util.validar(dinheiro)) {
+			double valorTotal = (item.getQuantidade().intValue() * item.getPrecoUnitario().doubleValue());
+			double valorDinheiro = desc.doubleValue();
+			if (valorTotal >= valorDinheiro) {
+				double valorDesconto = valorTotal - valorDinheiro;
+				double descontoReal = PORCENTAGEM - ((valorDesconto / valorTotal) * PORCENTAGEM);
+				desc = new BigDecimal(descontoReal);
+			} else {
+				desc = new BigDecimal(PORCENTAGEM);
+			}
+		}
+		return desc;
 	}
 	
 	public void salvar(ItemVenda itemVenda) {
