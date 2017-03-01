@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -17,6 +18,7 @@ import br.com.caracore.pdv.model.ItemVenda;
 import br.com.caracore.pdv.service.ItemVendaService;
 import br.com.caracore.pdv.service.exception.DescontoInvalidoException;
 import br.com.caracore.pdv.service.exception.QuantidadeInvalidaException;
+import br.com.caracore.pdv.util.Util;
 
 @Controller
 @RequestMapping("/itens")
@@ -60,6 +62,32 @@ public class ItensController {
 	public String apagar(@PathVariable("codigo") Long codigo, RedirectAttributes attributes) {
 		itemVendaService.excluir(codigo);
 		attributes.addFlashAttribute("mensagem", "Item excluído com sucesso!");
+		return "redirect:/vendas/novo";
+	}
+
+	@RequestMapping(value = "/desconto/{codigo}", method = RequestMethod.PUT)
+	public String atualizarDesconto(@PathVariable("codigo") Long codigo, @RequestParam(value="desconto", required=false) String desconto, RedirectAttributes attributes) {
+		try {
+			if (Util.validar(codigo) && Util.validar(desconto)) {
+				itemVendaService.atualizarDesconto(codigo, desconto);
+				attributes.addFlashAttribute("mensagem", "Item atualizado com sucesso!");
+			}
+		} catch (DescontoInvalidoException ex) {
+			attributes.addFlashAttribute("error", "Desconto inválido!");
+		}
+		return "redirect:/vendas/novo";
+	}
+
+	@RequestMapping(value = "/quantidade/{codigo}", method = RequestMethod.PUT)
+	public String atualizarQuantidade(@PathVariable("codigo") Long codigo, @RequestParam(value="quantidade", required=false) String quantidade, RedirectAttributes attributes) {
+		try {
+			if (Util.validar(codigo) && Util.validar(quantidade)) {
+				itemVendaService.atualizarQuantidade(codigo, quantidade);
+				attributes.addFlashAttribute("mensagem", "Item atualizado com sucesso!");
+			}
+		} catch (QuantidadeInvalidaException ex) {
+			attributes.addFlashAttribute("error", "Quantidade inválida!");
+		}
 		return "redirect:/vendas/novo";
 	}
 }

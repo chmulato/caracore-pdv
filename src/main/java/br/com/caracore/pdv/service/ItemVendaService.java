@@ -29,6 +29,40 @@ public class ItemVendaService {
 		return itemVendaRepository.findOne(codigo);
 	}
 
+	public void atualizarQuantidade(Long codigo, String quantidade) {
+		if (Util.validar(codigo) && Util.validar(quantidade)) {
+			ItemVenda item = pesquisarPorCodigo(codigo);
+			if (Util.validar(item)) {
+				Integer quant = Integer.valueOf(0);
+				try {
+					quant = new Integer(quantidade);
+				} catch (NumberFormatException ex) {
+					ex.printStackTrace();
+				}
+				item.setQuantidade(quant);
+				salvar(item);
+			}
+		}
+	}
+
+	public void atualizarDesconto(Long codigo, String desconto) {
+		if (Util.validar(codigo) && Util.validar(desconto)) {
+			ItemVenda item = pesquisarPorCodigo(codigo);
+			if (Util.validar(item)) {
+				BigDecimal desc = BigDecimal.ZERO;
+				try {
+					desconto = desconto.replace(".","");
+					desconto = desconto.replace(",",".");
+					desc = new BigDecimal(desconto);
+				} catch (NumberFormatException ex) {
+					ex.printStackTrace();
+				}
+				item.setDesconto(desc);
+				salvar(item);
+			}
+		}
+	}
+	
 	public void salvar(ItemVenda itemVenda) {
 		if (Util.validar(itemVenda)) {
 			if (Util.validar(itemVenda.getDesconto())) {

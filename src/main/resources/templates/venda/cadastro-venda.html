@@ -76,6 +76,9 @@
 				<div class="alert  alert-success" th:if="${!#strings.isEmpty(mensagem)}">
 					<span th:text="${mensagem}"></span>
 				</div>
+				<div class="alert  alert-danger" th:if="${!#strings.isEmpty(error)}">
+					<span th:text="${error}"></span>
+				</div>
 
 				<input type="hidden" th:field="*{codigo}" />
 
@@ -86,11 +89,13 @@
 								<th><input type="checkbox"></th>
 								<th>Código</th>
 								<th>Descrição do produto</th>
-								<th>QTD</th>
-								<th>Preço unitário</th>
-								<th>Desconto</th>
-								<th>Subtotal</th>
-								<th sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')">Ações</th>
+								<th class="text-right">QTD</th>
+								<th sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')"></th>
+								<th class="text-right">Preço unitário</th>
+								<th class="text-right">Desconto</th>
+								<th sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')"></th>
+								<th class="text-right">Subtotal</th>
+								<th sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')"></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -101,15 +106,39 @@
 									<a th:href="@{/itens/{codigo}(codigo=${item.codigo})}" th:text="${item?.produto?.descricao}" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')"></a>
 									<span th:text="${item?.produto?.descricao}" sec:authorize="not hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')"></span>
 								</td>
-								<td th:text="${item.quantidade}" class="text-center">1</td>
+								<td th:text="${item.quantidade}" class="text-right">
+								</td>
+								<td class="text-left" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')">
+									<a class="btn  btn-link btn-xs" style="cursor:pointer"
+										title="Atualizar quantidade" rel="tooltip"
+										data-toggle="modal" data-target="#atualizaQuantidadeModal"
+										data:nome="${item?.produto?.descricao}" 
+										data:quantidade="${item.quantidade}" 
+										data:url-atualizar="@{/itens/quantidade/{codigo}(codigo=${item.codigo})}">
+										<span class="glyphicon glyphicon-check"></span>
+									</a>
+								</td>
 								<td th:text="|R$${{item.precoUnitario}}|" class="text-right">R$ 1.999,99</td>
-								<td th:text="|${{item.desconto}}%|" class="text-right">0,00 %</td>
+								<td th:text="|${{item.desconto}}%|" class="text-right">
+								</td>
+								<td class="text-left" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')">
+									<a class="btn  btn-link btn-xs" style="cursor:pointer"
+										title="Atualizar desconto" rel="tooltip"
+										data-toggle="modal" data-target="#atualizaDescontoModal"
+										data:nome="${item?.produto?.descricao}" 
+										data:desconto="${item.desconto}" 
+										data:url-atualizar="@{/itens/desconto/{codigo}(codigo=${item.codigo})}">
+										<span class="glyphicon glyphicon-check"></span>
+									</a>
+								</td>
 								<td th:text="|R$${{item.subTotal}}|" class="text-right">R$ 1.999,99</td>
 								<td class="text-center" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')">
-									<i class="fa  fa-trash" style="cursor:pointer"
+									<a class="fa fa-trash" style="cursor:pointer"
+										title="Excluir item" rel="tooltip"
 										data-toggle="modal" data-target="#confirmaExclusaoModal"
 										data:nome="${item?.produto?.descricao}" 
-										data:url-apagar="@{/itens/{codigo}(codigo=${item.codigo})}"></i>
+										data:url-apagar="@{/itens/{codigo}(codigo=${item.codigo})}">
+									</a>
 								</td>
 							</tr>
 						</tbody>
@@ -152,18 +181,77 @@
 				</form>
 			</div>
 
+			<div class="modal  fade" id="atualizaQuantidadeModal" tabindex="-2" role="dialog">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+		  			<form th:action="@{/itens}" method="POST">
+ 	  					<input type="hidden" name="_method" value="PUT"/>
+			    
+				      	<div class="modal-header">
+				        	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				        		<span aria-hidden="true">&times;</span>
+				        	</button>
+				        	<h4 class="modal-title" id="updModalQtd">Atualizar quantidade</h4>
+				      	</div>
+				      	
+				      	<div class="modal-body">
+				        	<span>Atualizar quantidade?</span>
+							<div class="form-group">
+								<label for="quantidade">Quantidade</label>
+					        	<input id="quantidade" type="text" class="quantidade" name="quantidade" value="" />
+				        	</div>
+				      	</div>
+				      	
+				      	<div class="modal-footer">
+				        	<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+	       					<button type="submit" class="btn  btn-primary">Atualizar</button>
+				      	</div>
+		     		</form>
+			    </div>
+			  </div>
+			</div>
+
+			<div class="modal  fade" id="atualizaDescontoModal" tabindex="-2" role="dialog">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+		  			<form th:action="@{/itens}" method="POST">
+ 	  					<input type="hidden" name="_method" value="PUT"/>
+			    
+				      	<div class="modal-header">
+				        	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				        		<span aria-hidden="true">&times;</span>
+				        	</button>
+				        	<h4 class="modal-title" id="updModalDesc">Atualizar desconto</h4>
+				      	</div>
+				      	
+				      	<div class="modal-body">
+				        	<span>Atualizar desconto?</span>
+							<div class="form-group">
+								<label for="desconto">Desconto</label>
+					        	<input id="desconto" type="text" class="desconto js-moeda" placeholder="%" name="desconto" value="" />
+				        	</div>
+				      	</div>
+				      	
+				      	<div class="modal-footer">
+				        	<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+	       					<button type="submit" class="btn  btn-primary">Atualizar</button>
+				      	</div>
+		     		</form>
+			    </div>
+			  </div>
+			</div>
+			
 			<div class="modal  fade" id="confirmaExclusaoModal" tabindex="-1" role="dialog">
 				<div class="modal-dialog" role="document">
 			  		<div class="modal-content">
 			  			<form th:action="@{/itens}" method="POST">
-			  				
 			  				<input type="hidden" name="_method" value="DELETE"/>
 			     			
 			     			<div class="modal-header">
 				       			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				       				<span aria-hidden="true">&times;</span>
 				       			</button>
-				       			<h4 class="modal-title" id="myModalLabel">Excluir item</h4>
+				       			<h4 class="modal-title" id="delModal">Excluir item</h4>
 			     			</div>
 			     			
 			     			<div class="modal-body">
@@ -180,9 +268,5 @@
 			</div>	
 		
 		</section>
-		
-		<th:block layout:fragment="javascript-extra">
-			<script th:src="@{/layout/javascripts/excluir-item-modal.js}"></script>
-		</th:block>
-</body>
+
 </html>
