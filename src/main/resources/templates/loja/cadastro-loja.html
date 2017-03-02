@@ -59,8 +59,8 @@
 						<tr th:each="vendedor : ${vendedores}">
 							<td th:text="${vendedor.codigo}" class="text-center">1</td>
 							<td>
-								<a th:href="@{/vendedores/{codigo}(codigo=${vendedor.codigo})}" th:text="${vendedor.nome}" sec:authorize="hasRole('ROLE_USUARIO')"></a>
-								<span th:text="${vendedor.nome}" sec:authorize="not hasRole('ROLE_USUARIO')"></span>
+								<a th:href="@{/vendedores/{codigo}(codigo=${vendedor.codigo})}" th:text="${vendedor.nome}" sec:authorize="hasRole('ROLE_OPERADOR')"></a>
+								<span th:text="${vendedor.nome}" sec:authorize="not hasRole('ROLE_OPERADOR')"></span>
 							</td>
 							<td th:text="#{|tipoVendedor.${vendedor.tipo}|}">Gerente</td>
 						</tr>

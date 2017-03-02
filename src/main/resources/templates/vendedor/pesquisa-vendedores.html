@@ -21,7 +21,7 @@
 						</h1>
 					</div>
 					
-					<div class="col-xs-2" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')">
+					<div class="col-xs-2" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')">
 						<div class="aw-page-header-controls">
 							<a class="btn btn-primary" th:href="@{/vendedores/novo}">
 								<i class="fa  fa-plus-circle"></i> <span class="hidden-xs  hidden-sm">Novo vendedor</span>
@@ -59,21 +59,21 @@
 							<th class="av-table-vinhos-col-tipo">Nome</th>
 							<th class="av-table-vinhos-col-tipo">Tipo</th>
 							<th class="av-table-vinhos-col-tipo">Loja</th>
-							<th class="av-table-vinhos-col-tipo">Usuário</th>
-							<th class="av-table-vinhos-col-icons" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')"></th>
+							<th class="av-table-vinhos-col-tipo">Operador</th>
+							<th class="av-table-vinhos-col-icons" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')"></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="vendedor : ${vendedores}">
 							<td th:text="${vendedor.codigo}" class="text-center">1</td>
 							<td>
-								<a th:href="@{/vendedores/{codigo}(codigo=${vendedor.codigo})}" th:text="${vendedor.nome}" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')"></a>
-								<span th:text="${vendedor.nome}" sec:authorize="not hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')"></span>
+								<a th:href="@{/vendedores/{codigo}(codigo=${vendedor.codigo})}" th:text="${vendedor.nome}" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')"></a>
+								<span th:text="${vendedor.nome}" sec:authorize="not hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')"></span>
 							</td>
 							<td th:text="#{|tipoVendedor.${vendedor.tipo}|}">Gerente</td>
 							<td th:text="${vendedor?.loja?.nome}" class="text-right">Loja 1</td>
-							<td th:text="${vendedor?.usuario?.nome}" class="text-right">maria</td>
-							<td class="text-center" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')">
+							<td th:text="${vendedor?.operador?.nome}" class="text-right">maria</td>
+							<td class="text-center" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')">
 								<i class="fa  fa-trash" style="cursor:pointer"
 									data-toggle="modal" data-target="#confirmaExclusaoModal"
 									data:nome="${vendedor.nome}" 

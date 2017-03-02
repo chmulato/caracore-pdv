@@ -13,7 +13,7 @@
 				<img alt="Cara Core" th:src="@{/layout/images/logo-gray.png}"/>
 				
 				<div class="aw-simple-panel__message">
-					Informe o seu login de usu&aacute;rio e e-mail abaixo para receber sua senha via na sua caixa postal eletr&ocirc;nica.
+					Informe o seu login de operador e e-mail abaixo para receber sua senha via na sua caixa postal eletr&ocirc;nica.
 				</div>
 
 				<div class="alert  alert-danger  alert-dismissible" role="alert" th:if="${#fields.hasAnyErrors()}">
@@ -32,7 +32,7 @@
 				
 				<div class="aw-simple-panel__box">
 					<div class="form-group  has-feedback" th:classappend="${#fields.hasErrors('login')} ? has-error">
-						<input type="text" class="form-control  input-lg" placeholder="Seu usuário"  autofocus="autofocus" th:field="*{login}" required="required" />
+						<input type="text" class="form-control  input-lg" placeholder="Seu operador"  autofocus="autofocus" th:field="*{login}" required="required" />
 						<span class="glyphicon  glyphicon-envelope  form-control-feedback"></span>
 					</div>
 

@@ -17,14 +17,14 @@
 					<div class="row">
 						<div class="col-xs-10">
 							<h1>
-								Pesquisa de Usuários
+								Pesquisa de Operadores
 							</h1>
 						</div>
 						
 						<div class="col-xs-2" sec:authorize="hasRole('ROLE_ADMINISTRADOR')">
 							<div class="aw-page-header-controls">
-								<a class="btn btn-primary" th:href="@{/usuarios/novo}">
-									<i class="fa  fa-plus-circle"></i> <span class="hidden-xs  hidden-sm">Novo usuário</span>
+								<a class="btn btn-primary" th:href="@{/operadores/novo}">
+									<i class="fa  fa-plus-circle"></i> <span class="hidden-xs  hidden-sm">Novo operador</span>
 								</a>
 							</div>
 						</div>
@@ -38,7 +38,7 @@
 					<span th:text="${mensagem}"></span>
 				</div>
 			
-				<form method="get" class="form-vertical  js-form-loading" th:object="${usuarioFilter}">
+				<form method="get" class="form-vertical  js-form-loading" th:object="${operadorFilter}">
 					<div class="form-group">
 						<div class="input-group">
 							<input id="nome" type="text" th:field="*{nome}" class="form-control" placeholder="Pesquisa pelo nome"/>
@@ -63,23 +63,23 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr th:each="usuario : ${usuarios}">
-								<td th:text="${usuario.codigo}" class="text-center">1</td>
+							<tr th:each="operador : ${operadores}">
+								<td th:text="${operador.codigo}" class="text-center">1</td>
 								<td>
-									<a th:href="@{/usuarios/{codigo}(codigo=${usuario.codigo})}" th:text="${usuario.nome}" sec:authorize="hasRole('ROLE_ADMINISTRADOR')"></a>
-									<span th:text="${usuario.nome}" sec:authorize="not hasRole('ROLE_ADMINISTRADOR')"></span>
+									<a th:href="@{/operadores/{codigo}(codigo=${operador.codigo})}" th:text="${operador.nome}" sec:authorize="hasRole('ROLE_ADMINISTRADOR')"></a>
+									<span th:text="${operador.nome}" sec:authorize="not hasRole('ROLE_ADMINISTRADOR')"></span>
 								</td>
-								<td th:text="#{|tipoPerfil.${usuario.perfil}|}">Administrador</td>
-								<td th:text="${usuario.email}" class="text-right">chmulato@hotmail.com</td>
+								<td th:text="#{|tipoPerfil.${operador.perfil}|}">Administrador</td>
+								<td th:text="${operador.email}" class="text-right">chmulato@hotmail.com</td>
 								<td class="text-center" sec:authorize="hasRole('ROLE_ADMINISTRADOR')">
 									<i class="fa  fa-trash" style="cursor:pointer"
 										data-toggle="modal" data-target="#confirmaExclusaoModal"
-										data:nome="${usuario.nome}" 
-										data:url-apagar="@{/usuarios/{codigo}(codigo=${usuario.codigo})}"></i>
+										data:nome="${operador.nome}" 
+										data:url-apagar="@{/operadores/{codigo}(codigo=${operador.codigo})}"></i>
 								</td>
 							</tr>
-							<tr th:if="${usuarios.empty}">
-								<td colspan="5">Nenhum usuário cadastrado</td>
+							<tr th:if="${operadores.empty}">
+								<td colspan="5">Nenhum operador cadastrado</td>
 							</tr>
 						</tbody>
 					</table>
@@ -89,7 +89,7 @@
 			<div class="modal  fade" id="confirmaExclusaoModal" tabindex="-1" role="dialog">
 				<div class="modal-dialog" role="document">
 			  		<div class="modal-content">
-			  			<form th:action="@{/usuarios}" method="POST">
+			  			<form th:action="@{/operadores}" method="POST">
 			  				
 			  				<input type="hidden" name="_method" value="DELETE"/>
 			     			
@@ -97,7 +97,7 @@
 				       			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				       				<span aria-hidden="true">&times;</span>
 				       			</button>
-				       			<h4 class="modal-title" id="myModalLabel">Excluir usuário</h4>
+				       			<h4 class="modal-title" id="myModalLabel">Excluir operador</h4>
 			     			</div>
 			     			
 			     			<div class="modal-body">

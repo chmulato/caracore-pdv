@@ -9,7 +9,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
-import br.com.caracore.pdv.model.Usuario;
+import br.com.caracore.pdv.model.Operador;
 import br.com.caracore.pdv.service.exception.EmailInvalidoException;
 import br.com.caracore.pdv.service.exception.LoginInvalidoException;
 import br.com.caracore.pdv.util.Mail;
@@ -22,7 +22,7 @@ public class EmailService {
 	private JavaMailSender javaMailSender;
 
 	@Autowired
-	private UsuarioService usuarioService;
+	private OperadorService operadorService;
 	
 	/**
 	 * Método externo para validar objeto Mail
@@ -64,20 +64,20 @@ public class EmailService {
 		login = msg.getLogin();
 		email = msg.getTo();
 
-		Usuario usuario = usuarioService.buscar(login);
-		if (!Util.validar(usuario)) {
+		Operador operador = operadorService.buscar(login);
+		if (!Util.validar(operador)) {
 			throw new LoginInvalidoException("Login Inválido!");
 		}
 
-		if (!usuario.getEmail().equals(email)) {
+		if (!operador.getEmail().equals(email)) {
 			throw new EmailInvalidoException("Email Inválido!");
 		}
 		
-		msg.setSubject("Segue abaixo a senha do usuário: " + usuario.getNome() + ".");
+		msg.setSubject("Segue abaixo a senha do operador: " + operador.getNome() + ".");
 		StringBuffer sb = new StringBuffer();
 		sb.append("\r\n");
-		sb.append(" --> Usuário:     " + usuario.getNome() + "\r\n");
-		sb.append(" --> Sua senha é: " + usuario.getSenha()+ "\r\n");
+		sb.append(" --> Operador:    " + operador.getNome() + "\r\n");
+		sb.append(" --> Sua senha é: " + operador.getSenha()+ "\r\n");
 		msg.setBody(sb.toString());
 		
 		if (Util.validar(msg.getSubject()) && Util.validar(msg.getBody())) {

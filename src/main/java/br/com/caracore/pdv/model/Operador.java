@@ -15,17 +15,17 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import br.com.caracore.pdv.model.types.TipoUsuario;
+import br.com.caracore.pdv.model.types.TipoOperador;
 
 @Entity
-public class Usuario {
+public class Operador {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
 	
-	@NotEmpty(message = "Usuário é obrigatório!")
-	@Size(max = 15, message = "A usuário não pode conter mais de 15 caracteres.")
+	@NotEmpty(message = "Operador é obrigatório!")
+	@Size(max = 15, message = "O operador não pode conter mais de 15 caracteres.")
 	private String nome;
 	
 	@NotEmpty(message = "Senha é obrigatória!")
@@ -39,7 +39,7 @@ public class Usuario {
 	
 	@NotNull(message = "Perfil é obrigatório!")
 	@Enumerated(EnumType.STRING)
-	private TipoUsuario perfil;
+	private TipoOperador perfil;
 
 	@NotNull(message = "Loja é obrigatória!")
 	@OneToOne(fetch = FetchType.EAGER)
@@ -87,11 +87,11 @@ public class Usuario {
 		this.repetirSenha = repetirSenha;
 	}
 
-	public TipoUsuario getPerfil() {
+	public TipoOperador getPerfil() {
 		return perfil;
 	}
 
-	public void setPerfil(TipoUsuario perfil) {
+	public void setPerfil(TipoOperador perfil) {
 		this.perfil = perfil;
 	}
 
@@ -142,7 +142,7 @@ public class Usuario {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Usuario other = (Usuario) obj;
+		Operador other = (Operador) obj;
 		if (codigo == null) {
 			if (other.codigo != null)
 				return false;

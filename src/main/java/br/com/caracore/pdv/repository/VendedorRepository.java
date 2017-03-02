@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.com.caracore.pdv.model.Loja;
-import br.com.caracore.pdv.model.Usuario;
+import br.com.caracore.pdv.model.Operador;
 import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.model.types.TipoVendedor;
 
@@ -17,6 +17,6 @@ public interface VendedorRepository extends JpaRepository<Vendedor, Long> {
 	
     public Vendedor findByTipoAndLoja(TipoVendedor tipo, Loja loja);
     
-    public Vendedor findByUsuario(Usuario usuario);
+    public Vendedor findByOperador(Operador operador);
 
 }

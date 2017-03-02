@@ -1,9 +1,9 @@
 package br.com.caracore.pdv.model.types;
 
-public enum TipoUsuario {
+public enum TipoOperador {
 	
 	ADMINISTRADOR,
-	USUARIO,
+	OPERADOR,
 	VISITANTE
 
 }

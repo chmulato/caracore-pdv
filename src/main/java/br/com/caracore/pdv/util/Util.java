@@ -6,7 +6,7 @@ import java.util.List;
 
 import br.com.caracore.pdv.model.ItemVenda;
 import br.com.caracore.pdv.model.Loja;
-import br.com.caracore.pdv.model.Usuario;
+import br.com.caracore.pdv.model.Operador;
 import br.com.caracore.pdv.model.Vendedor;
 
 public class Util {
@@ -71,10 +71,10 @@ public class Util {
 		return lista;
 	}
 	
-	public static List<Usuario> criarListaDeUsuarios(){
-		Usuario usuario = new Usuario();
-		List<Usuario> lista = new ArrayList<>();
-		lista.add(usuario);
+	public static List<Operador> criarListaDeOperadores(){
+		Operador operador = new Operador();
+		List<Operador> lista = new ArrayList<>();
+		lista.add(operador);
 		return lista;
 	}
 	

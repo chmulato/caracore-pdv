@@ -12,79 +12,79 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import br.com.caracore.pdv.model.Usuario;
-import br.com.caracore.pdv.model.types.TipoUsuario;
-import br.com.caracore.pdv.repository.filter.UsuarioFilter;
-import br.com.caracore.pdv.service.UsuarioService;
+import br.com.caracore.pdv.model.Operador;
+import br.com.caracore.pdv.model.types.TipoOperador;
+import br.com.caracore.pdv.repository.filter.OperadorFilter;
+import br.com.caracore.pdv.service.OperadorService;
 import br.com.caracore.pdv.service.exception.AdminExistenteException;
 import br.com.caracore.pdv.service.exception.EmailInvalidoException;
 import br.com.caracore.pdv.service.exception.LoginExistenteException;
 import br.com.caracore.pdv.service.exception.SenhaInvalidaException;
 
 @Controller
-@RequestMapping("/usuarios")
-public class UsuariosController {
+@RequestMapping("/operadores")
+public class OperadoresController {
 
 	@Autowired
-	private UsuarioService usuarioService;
+	private OperadorService operadorService;
 	
 	@GetMapping
-	public ModelAndView pesquisar(UsuarioFilter filtroUsuario) {
-		ModelAndView mv = new ModelAndView("usuario/pesquisa-usuarios");
-		if (filtroUsuario != null) {
-			mv.addObject("usuarios", usuarioService.pesquisar(filtroUsuario));
+	public ModelAndView pesquisar(OperadorFilter filtroOperador) {
+		ModelAndView mv = new ModelAndView("operador/pesquisa-operadores");
+		if (filtroOperador != null) {
+			mv.addObject("operadores", operadorService.pesquisar(filtroOperador));
 		} else {
-			filtroUsuario = new UsuarioFilter();
-			filtroUsuario.setNome("%");
+			filtroOperador = new OperadorFilter();
+			filtroOperador.setNome("%");
 		}
 		return mv;		
 	}
 	
 	
 	@GetMapping("/novo")
-	public ModelAndView novo(Usuario usuario) {
-		ModelAndView mv = new ModelAndView("usuario/cadastro-usuario");
-		mv.addObject(usuario);
-		mv.addObject("tipos", TipoUsuario.values());
-		mv.addObject("lojas", usuarioService.buscarLojas());
+	public ModelAndView novo(Operador operador) {
+		ModelAndView mv = new ModelAndView("operador/cadastro-operador");
+		mv.addObject(operador);
+		mv.addObject("tipos", TipoOperador.values());
+		mv.addObject("lojas", operadorService.buscarLojas());
 		return mv;
 	}
 
 	@PostMapping("/novo")
-	public ModelAndView salvar(@Validated Usuario usuario, Errors errors, RedirectAttributes attributes) {
+	public ModelAndView salvar(@Validated Operador operador, Errors errors, RedirectAttributes attributes) {
 		if (errors.hasErrors()) {
-			return novo(usuario);
+			return novo(operador);
 		}
 		try {
-			usuarioService.salvar(usuario);
-			attributes.addFlashAttribute("mensagem", "Usuário salvo com sucesso!");
-			return new ModelAndView("redirect:/usuarios/novo");
+			operadorService.salvar(operador);
+			attributes.addFlashAttribute("mensagem", "Operador salvo com sucesso!");
+			return new ModelAndView("redirect:/operadores/novo");
 		} catch (AdminExistenteException ex) {
 			errors.rejectValue("perfil", " ", ex.getMessage());
-			return novo(usuario);
+			return novo(operador);
 		} catch (LoginExistenteException ex) {
 			errors.rejectValue("nome", " ", ex.getMessage());
-			return novo(usuario);
+			return novo(operador);
 		} catch (SenhaInvalidaException ex) {
 			errors.rejectValue("repetirSenha", " ", ex.getMessage());
-			return novo(usuario);
+			return novo(operador);
 		} catch (EmailInvalidoException ex) {
 			errors.rejectValue("repetirEmail", " ", ex.getMessage());
-			return novo(usuario);
+			return novo(operador);
 		}
 	}
 	
 	@GetMapping("/{codigo}")
 	public ModelAndView editar(@PathVariable Long codigo) {
-		Usuario usuario = usuarioService.pesquisarPorId(codigo);
-		return novo(usuario);
+		Operador operador = operadorService.pesquisarPorId(codigo);
+		return novo(operador);
 	}
 	
 	@DeleteMapping("/{codigo}")
 	public String apagar(@PathVariable Long codigo, RedirectAttributes attributes) {
-		usuarioService.excluir(codigo);
-		attributes.addFlashAttribute("mensagem", "Usuário removido com sucesso!");
-		return "redirect:/usuarios";
+		operadorService.excluir(codigo);
+		attributes.addFlashAttribute("mensagem", "Operador removido com sucesso!");
+		return "redirect:/operadores";
 	}
 
 }

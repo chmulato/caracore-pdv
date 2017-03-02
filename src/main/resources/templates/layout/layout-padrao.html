@@ -65,7 +65,7 @@
 				          </a>
 				      
 				          <ul class="aw-menu__list  aw-menu__list--sublist">
-						        <li class="aw-menu__item" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR', 'ROLE_USUARIO', 'ROLE_VISITANTE')">
+						        <li class="aw-menu__item" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR','ROLE_VISITANTE')">
 						          <a th:href="@{/vendas/novo}"><i class="fa  fa-fw  fa-home"></i><span>Vendas</span></a>
 						        </li>
 				          </ul>
@@ -79,32 +79,32 @@
 				          </a>
 				      
 				          <ul class="aw-menu__list  aw-menu__list--sublist">
-						        <li class="aw-menu__item" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR', 'ROLE_USUARIO', 'ROLE_VISITANTE')">
+						        <li class="aw-menu__item" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR','ROLE_VISITANTE')">
 						          <a th:href="@{/clientes}"><i class="fa  fa-fw  fa-home"></i><span>Clientes</span></a>
 						        </li>
 				          </ul>
 				      
 				          <ul class="aw-menu__list  aw-menu__list--sublist">
-						        <li class="aw-menu__item" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR', 'ROLE_USUARIO', 'ROLE_VISITANTE')">
+						        <li class="aw-menu__item" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR','ROLE_VISITANTE')">
 						          <a th:href="@{/lojas}"><i class="fa  fa-fw  fa-home"></i><span>Lojas</span></a>
 						        </li>
 				          </ul>
 				      
 				          <ul class="aw-menu__list  aw-menu__list--sublist">
-						        <li class="aw-menu__item" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR', 'ROLE_USUARIO', 'ROLE_VISITANTE')">
+						        <li class="aw-menu__item" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR','ROLE_VISITANTE')">
 						          <a th:href="@{/vendedores}"><i class="fa  fa-fw  fa-home"></i><span>Vendedores</span></a>
 						        </li>
 				          </ul>
 				      
 				          <ul class="aw-menu__list  aw-menu__list--sublist">
-						        <li class="aw-menu__item" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR', 'ROLE_USUARIO', 'ROLE_VISITANTE')">
+						        <li class="aw-menu__item" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR','ROLE_VISITANTE')">
 						          <a th:href="@{/produtos}"><i class="fa  fa-fw  fa-home"></i><span>Produtos</span></a>
 						        </li>
 				          </ul>
 				      
 				          <ul class="aw-menu__list  aw-menu__list--sublist">
-						        <li class="aw-menu__item" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR', 'ROLE_USUARIO', 'ROLE_VISITANTE')">
-						          <a th:href="@{/usuarios}"><i class="fa  fa-fw  fa-home"></i><span>Usuários</span></a>
+						        <li class="aw-menu__item" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR','ROLE_VISITANTE')">
+						          <a th:href="@{/operadores}"><i class="fa  fa-fw  fa-home"></i><span>Operadores</span></a>
 						        </li>
 				          </ul>
 				        </li>

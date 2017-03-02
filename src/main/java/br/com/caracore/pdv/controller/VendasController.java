@@ -16,7 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.caracore.pdv.model.ItemVenda;
-import br.com.caracore.pdv.model.Usuario;
+import br.com.caracore.pdv.model.Operador;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.repository.filter.ProdutoFilter;
@@ -33,25 +33,25 @@ public class VendasController {
 	@GetMapping("/produto")
 	public ModelAndView pesquisarProduto(ProdutoFilter produtoFilter) {
 		Long codigoProduto = null;
-		Usuario usuario = recuperarUsuario();
+		Operador operador = recuperarOperador();
 		if (Util.validar(produtoFilter)) {
 			if (Util.validar(produtoFilter.getCodigo())) {
 				codigoProduto = Long.valueOf(produtoFilter.getCodigo());
 			}
 		}
-		Venda venda = vendaService.comprar(codigoProduto, usuario);
+		Venda venda = vendaService.comprar(codigoProduto, operador);
 		return novo(venda);
 	}
 	
 	@GetMapping("/novo")
 	public ModelAndView novo(Venda venda) {
 		ModelAndView mv = new ModelAndView("venda/cadastro-venda");
-		Usuario usuario = recuperarUsuario();
+		Operador operador = recuperarOperador();
 		if (!vendaService.validarVendaEmAndamento(venda)) {
-			Vendedor vendedor = vendaService.buscarVendedor(usuario);
+			Vendedor vendedor = vendaService.buscarVendedor(operador);
 			venda = vendaService.recuperarVendaEmAberto(vendedor);
 		}
-		mv.addObject("vendedores", buscarVendedores(usuario));
+		mv.addObject("vendedores", buscarVendedores(operador));
 		mv.addObject(limparFiltro(venda));
 		mv.addObject(venda);
 		return mv;
@@ -68,18 +68,18 @@ public class VendasController {
 	}
 
 	/**
-	 * Método para recuperar usuário logado
+	 * Método para recuperar operador logado
 	 * 
 	 * @return
 	 */
-	private Usuario recuperarUsuario() {
-		Usuario usuario = null;
+	private Operador recuperarOperador() {
+		Operador operador = null;
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth != null && auth.getName() != null) {
 			String login = auth.getName();
-			usuario = vendaService.recuperarUsuario(login);
+			operador = vendaService.recuperarOperador(login);
 		}
-		return usuario;
+		return operador;
 	}
 	
 	/**
@@ -110,11 +110,11 @@ public class VendasController {
 	/**
 	 * Médoto para recuperar lista de vendedores da loja
 	 * 
-	 * @param usuario
+	 * @param operador
 	 * @return
 	 */
-	private List<Vendedor> buscarVendedores(Usuario usuario) {
-		List<Vendedor> vendedores = vendaService.listarVendedoresPorUsuario(usuario);
+	private List<Vendedor> buscarVendedores(Operador operador) {
+		List<Vendedor> vendedores = vendaService.listarVendedoresPorOperador(operador);
 		if (!Util.validar(vendedores)) {
 			vendedores = Util.criarListaDeVendedores();
 		}

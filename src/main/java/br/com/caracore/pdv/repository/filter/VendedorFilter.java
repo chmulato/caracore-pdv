@@ -1,13 +1,13 @@
 package br.com.caracore.pdv.repository.filter;
 
 import br.com.caracore.pdv.model.Loja;
-import br.com.caracore.pdv.model.Usuario;
+import br.com.caracore.pdv.model.Operador;
 
 public class VendedorFilter {
 
 	private String nome;
 	
-	private Usuario usuario;
+	private Operador operador;
 
 	private Loja loja;
 
@@ -19,12 +19,12 @@ public class VendedorFilter {
 		this.nome = nome;
 	}
 
-	public Usuario getUsuario() {
-		return usuario;
+	public Operador getOperador() {
+		return operador;
 	}
 
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
+	public void setOperador(Operador operador) {
+		this.operador = operador;
 	}
 
 	public Loja getLoja() {

@@ -33,7 +33,7 @@ public class Vendedor {
 	
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "USUARIO_ID")
-	private Usuario usuario;
+	private Operador operador;
 
 	@NotNull(message = "Tipo de Vendedor é obrigatório!")
 	@Enumerated(EnumType.STRING)
@@ -66,12 +66,12 @@ public class Vendedor {
 		this.loja = loja;
 	}
 	
-	public Usuario getUsuario() {
-		return usuario;
+	public Operador getOperador() {
+		return operador;
 	}
 
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
+	public void setOperador(Operador operador) {
+		this.operador = operador;
 	}
 
 	public TipoVendedor getTipo() {

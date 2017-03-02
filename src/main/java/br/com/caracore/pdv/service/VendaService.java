@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import br.com.caracore.pdv.model.ItemVenda;
 import br.com.caracore.pdv.model.Loja;
 import br.com.caracore.pdv.model.Produto;
-import br.com.caracore.pdv.model.Usuario;
+import br.com.caracore.pdv.model.Operador;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.model.types.StatusVenda;
@@ -39,7 +39,7 @@ public class VendaService {
 	private ProdutoService produtoService;
 
 	@Autowired
-	private UsuarioService usuarioService;
+	private OperadorService operadorService;
 
 	@Autowired
 	private LojaService lojaService;
@@ -121,19 +121,19 @@ public class VendaService {
 	}
 	
 	/**
-	 * Método para recuperar o vendedor do usuário, 
+	 * Método para recuperar o vendedor do operador, 
 	 * se não encontrar recupera o vendedor padrão da loja
 	 * 
-	 * @param usuario
+	 * @param operador
 	 * @return
 	 */
-	public Vendedor buscarVendedor(Usuario usuario) {
+	public Vendedor buscarVendedor(Operador operador) {
 		Vendedor vendedor = null;
-		if (Util.validar(usuario)) {
-			vendedor = vendedorService.buscarPorUsuario(usuario);
+		if (Util.validar(operador)) {
+			vendedor = vendedorService.buscarPorOperador(operador);
 			if (!Util.validar(vendedor)) {
-				if (Util.validar(usuario.getLoja())) {
-					Loja loja = usuario.getLoja();
+				if (Util.validar(operador.getLoja())) {
+					Loja loja = operador.getLoja();
 					vendedor = vendedorService.buscarDefault(loja);
 				}
 			}
@@ -152,17 +152,17 @@ public class VendaService {
 	}
 
 	/**
-	 * Método externo para recuperar usuario logado
+	 * Método externo para recuperar operador logado
 	 * 
 	 * @param login
 	 * @return
 	 */
-	public Usuario recuperarUsuario(String login) {
-		Usuario usuario = null;
+	public Operador recuperarOperador(String login) {
+		Operador operador = null;
 		if (Util.validar(login)) {
-			usuario = usuarioService.pesquisarPorNome(login); 
+			operador = operadorService.pesquisarPorNome(login); 
 		}
-		return usuario;
+		return operador;
 	}
 	
 	/**
@@ -217,16 +217,16 @@ public class VendaService {
 	}
 	
 	/**
-	 * Método para recuperar lista de vendedores da loja informando o usuário da loja.
-	 * No caso de nenhum usuário for encontrado recupera vendedor gerente
+	 * Método para recuperar lista de vendedores da loja informando o operador da loja.
+	 * No caso de nenhum operador for encontrado recupera vendedor gerente
 	 * 
-	 * @param usuario
+	 * @param operador
 	 * @return
 	 */
-	public List<Vendedor> listarVendedoresPorUsuario(Usuario usuario) {
+	public List<Vendedor> listarVendedoresPorOperador(Operador operador) {
 		List<Vendedor> lista = null;
-		if (Util.validar(usuario) && Util.validar(usuario.getLoja())) {
-			Loja loja = usuario.getLoja();
+		if (Util.validar(operador) && Util.validar(operador.getLoja())) {
+			Loja loja = operador.getLoja();
 			Vendedor vendedor = vendedorService.buscarDefault(loja);
 			if (Util.validar(vendedor)) {
 				lista = listarVendedoresPorLoja(loja);
@@ -284,14 +284,14 @@ public class VendaService {
 	 * Metodo externo para carregar os itens de venda na cesta
 	 * 
 	 * @param codigoProduto
-	 * @param usuario
+	 * @param operador
 	 * @return
 	 */
-	public Venda comprar(Long codigoProduto, Usuario usuario) {
+	public Venda comprar(Long codigoProduto, Operador operador) {
 		Venda result = null;
 		ItemVenda novoItem = carregarItem(codigoProduto);
-		if (Util.validar(usuario)) {
-			Vendedor vendedor = buscarVendedor(usuario);
+		if (Util.validar(operador)) {
+			Vendedor vendedor = buscarVendedor(operador);
 			if (Util.validar(vendedor)) {
 				Venda venda = recuperarVendaEmAberto(vendedor);
 				if (Util.validar(venda)) {

@@ -21,7 +21,7 @@
 							</h1>
 						</div>
 						
-						<div class="col-xs-2" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')">
+						<div class="col-xs-2" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')">
 							<div class="aw-page-header-controls">
 								<a class="btn btn-primary" th:href="@{/produtos/novo}">
 									<i class="fa  fa-plus-circle"></i> <span class="hidden-xs  hidden-sm">Novo produto</span>
@@ -92,8 +92,8 @@
 								<th class="text-right">QTD</th>
 								<th class="text-right">Preço unitário</th>
 								<th class="text-right">Desconto</th>
-								<th class="text-right">Subtotal</th>
-								<th sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')"></th>
+								<th class="text-right">Preço parcial</th>
+								<th sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')"></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -101,16 +101,16 @@
 								<td><input type="checkbox"></td>
 								<td th:text="${item?.produto?.codigo}" class="text-center">1000</td>
 								<td>
-									<a th:href="@{/itens/{codigo}(codigo=${item.codigo})}" th:text="${item?.produto?.descricao}" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')"></a>
-									<span th:text="${item?.produto?.descricao}" sec:authorize="not hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')"></span>
+									<a th:href="@{/itens/{codigo}(codigo=${item.codigo})}" th:text="${item?.produto?.descricao}" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')"></a>
+									<span th:text="${item?.produto?.descricao}" sec:authorize="not hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')"></span>
 								</td>
 								<td th:text="${item.quantidade}" class="text-right"></td>
 								<td th:text="|R$${{item.precoUnitario}}|" class="text-right">R$ 1.999,99</td>
 								<td th:text="|${{item.desconto}}%|" class="text-right"></td>
 								<td th:text="|R$${{item.subTotal}}|" class="text-right">R$ 1.999,99</td>
-								<td class="text-center" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_USUARIO')">
+								<td class="text-center" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')">
 									<a class="btn  btn-link btn-xs" style="cursor:pointer"
-										title="Atualizar desconto" rel="tooltip"
+										title="Atualizar item" rel="tooltip"
 										data-toggle="modal" data-target="#atualizaItemVendaModal"
 										data:nome="${item?.produto?.descricao}" 
 										data:desconto="${item.desconto}" 

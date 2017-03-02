@@ -44,11 +44,11 @@
 	
 			<div class="row">
 				<div class="col-sm-4">
-					<div class="form-group" th:classappend="${#fields.hasErrors('usuario')} ? has-error">
-						<label for="usuario">Usuário</label>
-						<select id="usuario" class="form-control" th:field="*{usuario}">
-							<option value="">Selecione o usuário</option>
-							<option th:each="usuario : ${usuarios}" th:value="${usuario.codigo}" th:text="${usuario.nome}"></option>
+					<div class="form-group" th:classappend="${#fields.hasErrors('operador')} ? has-error">
+						<label for="operador">Operador</label>
+						<select id="operador" class="form-control" th:field="*{operador}">
+							<option value="">Selecione o operador</option>
+							<option th:each="operador : ${operadores}" th:value="${operador.codigo}" th:text="${operador.nome}"></option>
 						</select>
 					</div>
 				</div>

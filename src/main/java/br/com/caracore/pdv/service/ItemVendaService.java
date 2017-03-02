@@ -20,6 +20,8 @@ public class ItemVendaService {
 	
 	final private double PORCENTAGEM = 100.0d;
 
+	final private int QUANTIDADE_MINIMA = 1;
+
 	final private int QUANTIDADE_MAXIMA = 10000;
 
 	@Autowired
@@ -41,7 +43,6 @@ public class ItemVendaService {
 				}
 				desc = descontoEmDinheiro(dinheiro, item, desc);
 				item.setDesconto(desc);
-				salvar(item);
 			}
 			if (Util.validar(quantidade)) {
 				Integer quant = Integer.valueOf(0);
@@ -89,7 +90,7 @@ public class ItemVendaService {
 			}
 			if (Util.validar(itemVenda.getQuantidade())) {
 				int quantidade = itemVenda.getQuantidade().intValue();
-				if (quantidade > QUANTIDADE_MAXIMA) {
+				if ((quantidade < QUANTIDADE_MINIMA) || (quantidade > QUANTIDADE_MAXIMA)) {
 					throw new QuantidadeInvalidaException("Quantidade Inválida!");
 				}
 			}

@@ -6,15 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.caracore.pdv.model.Loja;
-import br.com.caracore.pdv.model.Usuario;
+import br.com.caracore.pdv.model.Operador;
 import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.model.types.TipoVendedor;
 import br.com.caracore.pdv.repository.LojaRepository;
-import br.com.caracore.pdv.repository.UsuarioRepository;
+import br.com.caracore.pdv.repository.OperadorRepository;
 import br.com.caracore.pdv.repository.VendedorRepository;
 import br.com.caracore.pdv.repository.filter.VendedorFilter;
 import br.com.caracore.pdv.service.exception.GerenteExistenteException;
-import br.com.caracore.pdv.service.exception.UsuarioImpostadoException;
+import br.com.caracore.pdv.service.exception.OperadorImpostadoException;
 import br.com.caracore.pdv.util.Util;
 
 @Service
@@ -24,7 +24,7 @@ public class VendedorService {
 	LojaRepository lojaRepository;
 
 	@Autowired
-	UsuarioRepository usuarioRepository;
+	OperadorRepository operadorRepository;
 
 	@Autowired
 	VendedorRepository vendedorRepository;
@@ -39,19 +39,19 @@ public class VendedorService {
 		return buscarDefault(loja);
 	}
 	
-	public Vendedor verificarUsuario(Usuario usuario) {
-		return vendedorRepository.findByUsuario(usuario);
+	public Vendedor verificarOperador(Operador operador) {
+		return vendedorRepository.findByOperador(operador);
 	}
 	
-	public List<Usuario> buscarUsuarios() {
-		List<Usuario> lista = null;
-		lista = usuarioRepository.findAll();
+	public List<Operador> buscarOperadores() {
+		List<Operador> lista = null;
+		lista = operadorRepository.findAll();
 		return lista;
 	}
 	
-	public Vendedor buscarPorUsuario(Usuario usuario) {
+	public Vendedor buscarPorOperador(Operador operador) {
 		Vendedor vendedor = null;
-		vendedor = vendedorRepository.findByUsuario(usuario);
+		vendedor = vendedorRepository.findByOperador(operador);
 		return vendedor;
 	}
 	
@@ -109,16 +109,16 @@ public class VendedorService {
 					}
 				}
 			}
-			if (Util.validar(vendedor.getUsuario())) {
-				Usuario usuario = vendedor.getUsuario();
-				Vendedor vendedorDB = verificarUsuario(usuario);
+			if (Util.validar(vendedor.getOperador())) {
+				Operador operador = vendedor.getOperador();
+				Vendedor vendedorDB = verificarOperador(operador);
 				if (Util.validar(vendedorDB)) {
 					if (Util.validar(vendedor.getCodigo())) {
 						long codigo = vendedor.getCodigo();
 						long codigoDB = vendedorDB.getCodigo();
 						if (codigo != codigoDB) {
-							StringBuffer msg = new StringBuffer("Usuário já impostado!");
-							throw new UsuarioImpostadoException(msg.toString());
+							StringBuffer msg = new StringBuffer("Operador já impostado!");
+							throw new OperadorImpostadoException(msg.toString());
 						}
 					}
 				}

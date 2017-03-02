@@ -1,6 +1,6 @@
 package br.com.caracore.pdv.repository.filter;
 
-public class UsuarioFilter {
+public class OperadorFilter {
 
 	private String nome;
 

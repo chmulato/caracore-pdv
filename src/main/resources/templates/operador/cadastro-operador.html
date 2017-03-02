@@ -12,14 +12,14 @@
 	<div class="page-header">
 		<div class="container-fluid">
 			<h1>
-				Cadastro de Usuário
+				Cadastro de Operador
 			</h1>
 		</div>
 	</div>
 
 	<div class="container-fluid">
 	
-		<form method="post" class="form-vertical  js-form-loading" th:object="${usuario}" th:action="@{/usuarios/novo}">
+		<form method="post" class="form-vertical  js-form-loading" th:object="${operador}" th:action="@{/operadores/novo}">
 	
 			<div class="alert  alert-danger  alert-dismissible" role="alert" th:if="${#fields.hasAnyErrors()}">
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -57,8 +57,8 @@
 
 				<div class="col-sm-4">
 					<div class="form-group" th:classappend="${#fields.hasErrors('loja')} ? has-error">
-						<label for="usuario">Loja</label>
-						<select id="usuario" class="form-control" th:field="*{loja}">
+						<label for="operador">Loja</label>
+						<select id="operador" class="form-control" th:field="*{loja}">
 							<option value="">Selecione a loja</option>
 							<option th:each="loja : ${lojas}" th:value="${loja?.codigo}" th:text="${loja?.nome}"></option>
 						</select>
@@ -106,7 +106,7 @@
 
 			<div class="form-group">
 				<button class="btn  btn-primary" type="submit">Salvar</button>
-				<a th:href="@{/usuarios}" class="btn  btn-default">Cancelar</a>
+				<a th:href="@{/operadores}" class="btn  btn-default">Cancelar</a>
 			</div>
 	
 		</form>

@@ -16,13 +16,13 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.caracore.pdv.model.Loja;
-import br.com.caracore.pdv.model.Usuario;
+import br.com.caracore.pdv.model.Operador;
 import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.model.types.TipoVendedor;
 import br.com.caracore.pdv.repository.filter.VendedorFilter;
 import br.com.caracore.pdv.service.VendedorService;
 import br.com.caracore.pdv.service.exception.GerenteExistenteException;
-import br.com.caracore.pdv.service.exception.UsuarioImpostadoException;
+import br.com.caracore.pdv.service.exception.OperadorImpostadoException;
 import br.com.caracore.pdv.util.Util;
 
 @Controller
@@ -36,7 +36,7 @@ public class VendedoresController {
 	public ModelAndView novo(Vendedor vendedor) {
 		ModelAndView mv = new ModelAndView("vendedor/cadastro-vendedor");
 		mv.addObject(vendedor);
-		mv.addObject("usuarios", buscarUsuarios());
+		mv.addObject("operadores", buscarOperadores());
 		mv.addObject("tipos", TipoVendedor.values());
 		mv.addObject("lojas", buscarLojas());
 		return mv;
@@ -54,8 +54,8 @@ public class VendedoresController {
 		} catch (GerenteExistenteException ex) {
 			errors.rejectValue("tipo", " ", ex.getMessage());
 			return novo(vendedor);
-		} catch (UsuarioImpostadoException ex) {
-			errors.rejectValue("usuario", " ", ex.getMessage());
+		} catch (OperadorImpostadoException ex) {
+			errors.rejectValue("operador", " ", ex.getMessage());
 			return novo(vendedor);
 		}
 	}
@@ -85,12 +85,12 @@ public class VendedoresController {
 		return "redirect:/vendedores";
 	}
 	
-	private List<Usuario> buscarUsuarios() {
-		List<Usuario> usuarios = vendedorService.buscarUsuarios();
-		if (!Util.validar(usuarios)) {
-			usuarios = Util.criarListaDeUsuarios();
+	private List<Operador> buscarOperadores() {
+		List<Operador> operadores = vendedorService.buscarOperadores();
+		if (!Util.validar(operadores)) {
+			operadores = Util.criarListaDeOperadores();
 		}
-		return usuarios;
+		return operadores;
 	}
 	
 	private List<Loja> buscarLojas() {
