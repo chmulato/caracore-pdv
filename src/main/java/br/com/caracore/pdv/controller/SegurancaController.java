@@ -27,7 +27,7 @@ public class SegurancaController {
 	@RequestMapping("/login")
 	public String login(@AuthenticationPrincipal User user) {
 		if (user != null) {
-			return "redirect:/vendas/novo";
+			return "redirect:/vendas/vendedores";
 		}
 		return "login";
 	}

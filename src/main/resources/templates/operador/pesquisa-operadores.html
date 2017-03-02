@@ -55,22 +55,22 @@
 					<table id="tabela-produtos" class="table  table-striped  table-bordered  table-hover  table-condensed  js-sticky-table">
 						<thead class="aw-table-header-solid">
 							<tr>
-								<th class="av-table-vinhos-col-codigo">Código</th>
-								<th>Nome</th>
-								<th class="av-table-vinhos-col-tipo">Tipo</th>
-								<th class="av-table-vinhos-col-valor">E-mail</th>
-								<th class="av-table-vinhos-col-icons" sec:authorize="hasRole('ROLE_ADMINISTRADOR')"></th>
+								<th class="text-center">Código</th>
+								<th class="text-left">Nome</th>
+								<th class="text-left">Tipo</th>
+								<th class="text-left">E-mail</th>
+								<th class="text-left" sec:authorize="hasRole('ROLE_ADMINISTRADOR')"></th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr th:each="operador : ${operadores}">
 								<td th:text="${operador.codigo}" class="text-center">1</td>
-								<td>
+								<td  class="text-left">
 									<a th:href="@{/operadores/{codigo}(codigo=${operador.codigo})}" th:text="${operador.nome}" sec:authorize="hasRole('ROLE_ADMINISTRADOR')"></a>
 									<span th:text="${operador.nome}" sec:authorize="not hasRole('ROLE_ADMINISTRADOR')"></span>
 								</td>
-								<td th:text="#{|tipoPerfil.${operador.perfil}|}">Administrador</td>
-								<td th:text="${operador.email}" class="text-right">chmulato@hotmail.com</td>
+								<td th:text="#{|tipoPerfil.${operador.perfil}|}" class="text-left">Administrador</td>
+								<td th:text="${operador.email}" class="text-left">chmulato@hotmail.com</td>
 								<td class="text-center" sec:authorize="hasRole('ROLE_ADMINISTRADOR')">
 									<i class="fa  fa-trash" style="cursor:pointer"
 										data-toggle="modal" data-target="#confirmaExclusaoModal"

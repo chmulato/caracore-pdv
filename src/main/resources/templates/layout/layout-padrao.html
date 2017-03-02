@@ -66,7 +66,7 @@
 				      
 				          <ul class="aw-menu__list  aw-menu__list--sublist">
 						        <li class="aw-menu__item" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR','ROLE_VISITANTE')">
-						          <a th:href="@{/vendas/novo}"><i class="fa  fa-fw  fa-home"></i><span>Vendas</span></a>
+						          <a th:href="@{/vendas/vendedores}"><i class="fa  fa-fw  fa-home"></i><span>Vendas</span></a>
 						        </li>
 				          </ul>
 				      
@@ -132,5 +132,6 @@
 		<script th:src="@{/layout/javascripts/moeda.js}"></script>
 		<script th:src="@{/layout/javascripts/excluir-item-modal.js}"></script>
 		<script th:src="@{/layout/javascripts/atualizar-item-modal.js}"></script>
+		<script th:src="@{/layout/javascripts/selecionar-vendedor-modal.js}"></script>
 	</body>
 </html>

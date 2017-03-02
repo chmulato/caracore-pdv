@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt" 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:data="http://www.thymeleaf.org/extras/data-attribute"
+	layout:decorate="~{layout/layout-padrao}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	
+	<head>
+		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/pesquisa-itens.css}"/>
+	</head>
+	<body>
+		<section layout:fragment="conteudo">
+		<div class="page-header">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-xs-10">
+						<h1>
+							Selecionar Vendedor
+						</h1>
+					</div>
+				</div>
+			</div>
+		</div>			
+		
+		<div class="container-fluid">
+
+			<form method="get" class="form-vertical  js-form-loading" th:object="${vendedorFilter}" th:action="@{/vendas/vendedores}">
+				<div class="form-group">
+					<div class="input-group">
+						<input id="nome" type="text" th:field="*{nome}" class="form-control" placeholder="Pesquisa pelo nome"/>
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="submit">
+								<span class="glyphicon glyphicon-search"></span>
+							</button>
+						</span>
+					</div>
+				</div>
+			</form>
+
+			<div class="table-responsive">
+				<table id="tabela-vendedores" class="table  table-striped  table-bordered  table-hover  table-condensed  js-sticky-table">
+					<thead class="aw-table-header-solid">
+						<tr>
+							<th class="text-center"></th>
+							<th class="text-left">Nome</th>
+							<th class="text-left">Loja</th>
+							<th class="text-left">Tipo</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="vendedor : ${vendedores}">
+							<td class="text-center">
+								<a class="btn  btn-link btn-xs" style="cursor:pointer"
+									title="Selecionar vendedor" rel="tooltip"
+									data-toggle="modal" data-target="#selecionaVendedorModal"
+									data:nome="${vendedor.nome}" 
+									data:url-selecionar="@{/vendas/vendedor/{codigo}(codigo=${vendedor.codigo})}">
+									<span class="glyphicon glyphicon-ok"></span>
+								</a>
+							</td>
+							<td class="text-left">
+								<span th:text="${vendedor.nome}"></span>
+							</td>
+							<td th:text="${vendedor?.loja?.nome}" class="text-left">Loja 1</td>
+							<td th:text="#{|tipoVendedor.${vendedor.tipo}|}" class="text-left">Gerente</td>
+						</tr>
+						<tr th:if="${vendedores.empty}" class="text-center">
+							<td colspan="4">Nenhum vendedor cadastrado</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div class="modal  fade" id="selecionaVendedorModal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+		  		<div class="modal-content">
+		  			<form th:action="@{/vendas}" method="GET">
+		     			<div class="modal-header">
+			       			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			       				<span aria-hidden="true">&times;</span>
+			       			</button>
+			       			<h4 class="modal-title" id="myModalVendedor">Selecionar vendedor</h4>
+		     			</div>
+		     			<div class="modal-body">
+		       				<span>Tem certeza?</span>
+		     			</div>
+		     			<div class="modal-footer">
+		       				<button type="button" class="btn  btn-default" data-dismiss="modal">Cancelar</button>
+		       				<button type="submit" class="btn  btn-primary">Selecionar</button>
+		     			</div>
+		     		</form>
+		  		</div>
+			</div>
+		</div>	
+		
+	</section>
+	
+</body>
+</html>

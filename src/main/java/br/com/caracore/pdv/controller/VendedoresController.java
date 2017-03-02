@@ -77,7 +77,7 @@ public class VendedoresController {
 		Vendedor vendedor = vendedorService.pesquisarPorId(codigo);
 		return novo(vendedor);
 	}
-	
+
 	@RequestMapping(value = "/{codigo}", method = RequestMethod.DELETE)
 	public String apagar(@PathVariable("codigo") Long codigo, RedirectAttributes attributes) {
 		vendedorService.excluir(codigo);

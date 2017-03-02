@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -20,6 +21,7 @@ import br.com.caracore.pdv.model.Operador;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.repository.filter.ProdutoFilter;
+import br.com.caracore.pdv.repository.filter.VendedorFilter;
 import br.com.caracore.pdv.service.VendaService;
 import br.com.caracore.pdv.util.Util;
 
@@ -45,10 +47,15 @@ public class VendasController {
 	
 	@GetMapping("/novo")
 	public ModelAndView novo(Venda venda) {
+		Vendedor vendedor = null; 	
 		ModelAndView mv = new ModelAndView("venda/cadastro-venda");
 		Operador operador = recuperarOperador();
 		if (!vendaService.validarVendaEmAndamento(venda)) {
-			Vendedor vendedor = vendaService.buscarVendedor(operador);
+			if (Util.validar(venda) && Util.validar(venda.getVendedor())) {
+				vendedor = venda.getVendedor();
+			} else {
+				vendedor = vendaService.buscarVendedor(operador);
+			}
 			venda = vendaService.recuperarVendaEmAberto(vendedor);
 		}
 		mv.addObject("vendedores", buscarVendedores(operador));
@@ -56,6 +63,29 @@ public class VendasController {
 		mv.addObject(venda);
 		return mv;
 	}
+	
+	@GetMapping("/vendedores")
+	public ModelAndView pesquisar(VendedorFilter filtroVendedor) {
+		ModelAndView mv = new ModelAndView("venda/seleciona-vendedor");
+		if (filtroVendedor != null) {
+			mv.addObject("vendedores", vendaService.pesquisar(filtroVendedor));
+		} else {
+			filtroVendedor = new VendedorFilter();
+			filtroVendedor.setNome("%");
+		}
+		return mv;		
+	}
+	
+	@GetMapping("/vendedor/{codigo}")
+	public ModelAndView selecionar(@PathVariable Long codigo) {
+		ModelAndView mv = new ModelAndView("venda/cadastro-venda");
+		Vendedor vendedor = vendaService.selecionarPorId(codigo);
+		Venda venda = new Venda();
+		venda.setVendedor(vendedor);
+		mv.addObject(vendedor);
+		return novo(venda);
+	}
+	
 	
 	@PostMapping("/novo")
 	public ModelAndView salvar(@Valid Venda venda, BindingResult result, RedirectAttributes attributes) {

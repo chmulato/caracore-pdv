@@ -17,6 +17,7 @@ import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.model.types.StatusVenda;
 import br.com.caracore.pdv.repository.VendaRepository;
+import br.com.caracore.pdv.repository.filter.VendedorFilter;
 import br.com.caracore.pdv.util.Util;
 
 @Service
@@ -49,6 +50,23 @@ public class VendaService {
 
 	@Autowired
 	private ItemVendaService itemVendaService;
+
+
+	public List<Vendedor> pesquisar(VendedorFilter filtro) {
+		return vendedorService.pesquisar(filtro);
+	}
+
+	/**
+	 * Método externo para selecionar vendedor 
+	 * 
+	 * @param codigo
+	 * @return
+	 */
+	public Vendedor selecionarPorId(Long codigo) {
+		Vendedor vendedor = null;
+		vendedor = vendedorService.pesquisarPorId(codigo);
+		return vendedor;
+	}
 	
 	/**
 	 * Método externo para recuperar ultimo item da cesta
@@ -102,6 +120,7 @@ public class VendaService {
 	 */
 	public Venda recuperarVendaEmAberto(Vendedor vendedor) {
 		Venda result = new Venda();
+		result.setVendedor(vendedor);
 		List<Venda> lista = vendaRepository.findByVendedorAndDataAndStatus(vendedor, DATA_DE_HOJE, StatusVenda.EM_ABERTO);
 		if (Util.validar(lista)) {
 			if (lista.size() == QUANTIDADE_UNITARIA) {

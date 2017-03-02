@@ -37,7 +37,7 @@ public class PDVApplication {
 
 		@Override
 		public void addViewControllers(ViewControllerRegistry registry) {
-			registry.addRedirectViewController("/", "/vendas/novo");
+			registry.addRedirectViewController("/", "/vendas/vendedores");
 		}
 
 	}
