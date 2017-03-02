@@ -7,6 +7,7 @@ import java.util.List;
 import br.com.caracore.pdv.model.ItemVenda;
 import br.com.caracore.pdv.model.Loja;
 import br.com.caracore.pdv.model.Operador;
+import br.com.caracore.pdv.model.Produto;
 import br.com.caracore.pdv.model.Vendedor;
 
 public class Util {
@@ -61,6 +62,13 @@ public class Util {
 		Loja loja = new Loja();
 		List<Loja> lista = new ArrayList<>();
 		lista.add(loja);
+		return lista;
+	}
+
+	public static List<Produto> criarListaDeProdutos(){
+		Produto produto = new Produto();
+		List<Produto> lista = new ArrayList<>();
+		lista.add(produto);
 		return lista;
 	}
 

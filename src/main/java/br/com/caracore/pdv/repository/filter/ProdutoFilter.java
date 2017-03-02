@@ -4,19 +4,19 @@ public class ProdutoFilter {
 
 	private String codigo;
 	
+	private String codigoBarra;
+
 	private String descricao;
-	
-	private String data;
 
 	public ProdutoFilter() {
 		super();
 	}
 
-	public ProdutoFilter(String codigo, String descricao, String data) {
+	public ProdutoFilter(String codigo, String codigoBarra, String descricao) {
 		super();
 		this.codigo = codigo;
+		this.codigoBarra = codigoBarra;
 		this.descricao = descricao;
-		this.data = data;
 	}
 
 	public String getCodigo() {
@@ -27,6 +27,14 @@ public class ProdutoFilter {
 		this.codigo = codigo;
 	}
 
+	public String getCodigoBarra() {
+		return codigoBarra;
+	}
+
+	public void setCodigoBarra(String codigoBarra) {
+		this.codigoBarra = codigoBarra;
+	}
+
 	public String getDescricao() {
 		return descricao;
 	}
@@ -34,12 +42,5 @@ public class ProdutoFilter {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-	
-	public String getData() {
-		return data;
-	}
 
-	public void setData(String data) {
-		this.data = data;
-	}
 }

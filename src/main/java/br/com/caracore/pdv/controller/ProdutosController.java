@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import br.com.caracore.pdv.model.Produto;
 import br.com.caracore.pdv.repository.filter.ProdutoFilter;
 import br.com.caracore.pdv.service.ProdutoService;
+import br.com.caracore.pdv.service.exception.CodigoBarraExistenteException;
 import br.com.caracore.pdv.service.exception.CodigoExistenteException;
 import br.com.caracore.pdv.service.exception.ProdutoExistenteException;
 
@@ -45,6 +46,9 @@ public class ProdutosController {
 		} catch (CodigoExistenteException ex) {
 			errors.rejectValue("codigo", " ", ex.getMessage());
 			return novo(produto);
+		} catch (CodigoBarraExistenteException ex) {
+			errors.rejectValue("codigoBarra", " ", ex.getMessage());
+			return novo(produto);
 		} catch (ProdutoExistenteException ex) {
 			errors.rejectValue("descricao", " ", ex.getMessage());
 			return novo(produto);
@@ -56,9 +60,11 @@ public class ProdutosController {
 		ModelAndView mv = new ModelAndView("produto/pesquisa-produtos");
 		if (filtroProduto != null) {
 			mv.addObject("produtos", produtoService.pesquisar(filtroProduto));
+			mv.addObject("produtoFilter", new ProdutoFilter("", "", ""));
 		} else {
 			filtroProduto = new ProdutoFilter();
 			filtroProduto.setDescricao("%");
+			filtroProduto.setCodigoBarra("%");
 		}
 		return mv;		
 	}

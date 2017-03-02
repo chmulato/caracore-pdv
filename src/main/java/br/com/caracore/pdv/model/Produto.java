@@ -18,6 +18,8 @@ public class Produto {
 	@Id
 	@NotNull(message = "Código é obrigatório!")
 	private Long codigo;
+
+	private String codigoBarra;
 	
 	@NotEmpty(message = "Descrição do produto/serviço é obrigatório!")
 	@Size(max = 30, message = "A descrição não pode conter mais de 30 caracteres.")
@@ -35,6 +37,14 @@ public class Produto {
 
 	public void setCodigo(Long codigo) {
 		this.codigo = codigo;
+	}
+
+	public String getCodigoBarra() {
+		return codigoBarra;
+	}
+
+	public void setCodigoBarra(String codigoBarra) {
+		this.codigoBarra = codigoBarra;
 	}
 
 	public String getDescricao() {
@@ -58,6 +68,7 @@ public class Produto {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+		result = prime * result + ((codigoBarra == null) ? 0 : codigoBarra.hashCode());
 		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
 		result = prime * result + ((valor == null) ? 0 : valor.hashCode());
 		return result;
@@ -76,6 +87,11 @@ public class Produto {
 			if (other.codigo != null)
 				return false;
 		} else if (!codigo.equals(other.codigo))
+			return false;
+		if (codigoBarra == null) {
+			if (other.codigoBarra != null)
+				return false;
+		} else if (!codigoBarra.equals(other.codigoBarra))
 			return false;
 		if (descricao == null) {
 			if (other.descricao != null)

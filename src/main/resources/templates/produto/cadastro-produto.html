@@ -42,6 +42,12 @@
 						<input id="codigo" type="text" class="form-control" th:field="*{codigo}" />
 					</div>
 				</div>
+				<div class="col-sm-4">
+					<div class="form-group" th:classappend="${#fields.hasErrors('codigoBarra')} ? has-error">
+						<label for="codigoBarra">Código de barra</label>
+						<input id="codigoBarra" type="text" class="form-control" th:field="*{codigoBarra}" />
+					</div>
+				</div>
 			</div>
 	
 			<div class="row">
@@ -65,7 +71,6 @@
 			<div class="form-group">
 				<button class="btn  btn-primary" type="submit">Salvar</button>
 				<a th:href="@{/produtos}" class="btn  btn-default">Cancelar</a>
-				<a th:href="@{/vendas/novo}" class="btn  btn-primary">Vendas</a>
 			</div>
 	
 		</form>

@@ -282,19 +282,23 @@ public class VendaService {
 	 * Metodo interno para adicionar item de produto na cesta de compras
 	 * 
 	 * @param codigoProduto
+	 * @param codigoBarra
 	 * @return
 	 */
-	private ItemVenda carregarItem(Long codigoProduto) {
+	private ItemVenda carregarItem(Long codigoProduto, String codigoBarra) {
+		Produto produto = null;
 		ItemVenda item = new ItemVenda();
 		if (Util.validar(codigoProduto)) {
-			Produto produto = produtoService.pesquisarPorCodigo(codigoProduto);
-			if (Util.validar(produto)) {
-				item.setDesconto(BigDecimal.ZERO);
-				item.setProduto(produto);
-				item.setPrecoUnitario(produto.getValor());
-				item.setQuantidade(Integer.valueOf(QUANTIDADE_UNITARIA));
-				item.setSubTotal(subTotal(item));
-			}
+			produto = produtoService.pesquisarPorCodigo(codigoProduto);
+		} else if (Util.validar(codigoBarra)) {
+			produto = produtoService.pesquisarPorCodigoBarra(codigoBarra);
+		}
+		if (Util.validar(produto)) {
+			item.setDesconto(BigDecimal.ZERO);
+			item.setProduto(produto);
+			item.setPrecoUnitario(produto.getValor());
+			item.setQuantidade(Integer.valueOf(QUANTIDADE_UNITARIA));
+			item.setSubTotal(subTotal(item));
 		}
 		return item;
 	}
@@ -306,9 +310,9 @@ public class VendaService {
 	 * @param operador
 	 * @return
 	 */
-	public Venda comprar(Long codigoProduto, Operador operador) {
+	public Venda comprar(Long codigoProduto, String codigoBarra, Operador operador) {
 		Venda result = null;
-		ItemVenda novoItem = carregarItem(codigoProduto);
+		ItemVenda novoItem = carregarItem(codigoProduto, codigoBarra);
 		if (Util.validar(operador)) {
 			Vendedor vendedor = buscarVendedor(operador);
 			if (Util.validar(vendedor)) {

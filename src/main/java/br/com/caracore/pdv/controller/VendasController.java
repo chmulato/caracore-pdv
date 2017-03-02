@@ -35,29 +35,25 @@ public class VendasController {
 	@GetMapping("/produto")
 	public ModelAndView pesquisarProduto(ProdutoFilter produtoFilter) {
 		Long codigoProduto = null;
+		String codigoBarra = null;
 		Operador operador = recuperarOperador();
 		if (Util.validar(produtoFilter)) {
 			if (Util.validar(produtoFilter.getCodigo())) {
 				codigoProduto = Long.valueOf(produtoFilter.getCodigo());
 			}
+			if (Util.validar(produtoFilter.getCodigoBarra())) {
+				codigoBarra = produtoFilter.getCodigoBarra();
+			}
 		}
-		Venda venda = vendaService.comprar(codigoProduto, operador);
+		Venda venda = vendaService.comprar(codigoProduto, codigoBarra, operador);
 		return novo(venda);
 	}
 	
 	@GetMapping("/novo")
 	public ModelAndView novo(Venda venda) {
-		Vendedor vendedor = null; 	
 		ModelAndView mv = new ModelAndView("venda/cadastro-venda");
 		Operador operador = recuperarOperador();
-		if (!vendaService.validarVendaEmAndamento(venda)) {
-			if (Util.validar(venda) && Util.validar(venda.getVendedor())) {
-				vendedor = venda.getVendedor();
-			} else {
-				vendedor = vendaService.buscarVendedor(operador);
-			}
-			venda = vendaService.recuperarVendaEmAberto(vendedor);
-		}
+		venda = buscarVendaEmAberto(venda, operador);
 		mv.addObject("vendedores", buscarVendedores(operador));
 		mv.addObject(limparFiltro(venda));
 		mv.addObject(venda);
@@ -98,6 +94,26 @@ public class VendasController {
 	}
 
 	/**
+	 * Método interno para recuperar a venda
+	 * 
+	 * @param venda
+	 * @param operador
+	 * @return
+	 */
+	private Venda buscarVendaEmAberto(Venda venda, Operador operador) {
+		Vendedor vendedor = null; 	
+		if (!vendaService.validarVendaEmAndamento(venda)) {
+			if (Util.validar(venda) && Util.validar(venda.getVendedor())) {
+				vendedor = venda.getVendedor();
+			} else {
+				vendedor = vendaService.buscarVendedor(operador);
+			}
+			venda = vendaService.recuperarVendaEmAberto(vendedor);
+		}
+		return venda;
+	}
+
+	/**
 	 * Método para recuperar operador logado
 	 * 
 	 * @return
@@ -120,20 +136,17 @@ public class VendasController {
 	 */
 	private ProdutoFilter limparFiltro(Venda venda) {
 		String strUltimoCodigo = "";
+		String strUltimoCodigoBarra = "";
 		String strUltimaDescricao = "";
-		String strData = "";
 		ItemVenda item = vendaService.recuperarUltimoItemVendaDaCesta(venda);
-		if (Util.validar(item)) {
+		if (Util.validar(item) && (Util.validar(item.getProduto()))) {
 			strUltimoCodigo = item.getProduto().getCodigo().toString();
+			if(Util.validar(item.getProduto().getCodigoBarra())) {
+				strUltimoCodigoBarra = item.getProduto().getCodigoBarra().toString();
+			}
 			strUltimaDescricao = item.getProduto().getDescricao();
-		}
-		if (Util.validar(venda.getData())) {
-			strData = vendaService.formatarData(venda.getData());
-		} else {
-			strData = vendaService.formatarData(null);
-		}
-		
-		ProdutoFilter filtro = new ProdutoFilter(strUltimoCodigo, strUltimaDescricao, strData);
+		}	
+		ProdutoFilter filtro = new ProdutoFilter(strUltimoCodigo, strUltimoCodigoBarra, strUltimaDescricao);
 		return filtro;
 	}
 	
