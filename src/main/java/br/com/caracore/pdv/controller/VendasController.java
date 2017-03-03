@@ -35,17 +35,21 @@ public class VendasController {
 	@GetMapping("/produto")
 	public ModelAndView pesquisarProduto(ProdutoFilter produtoFilter) {
 		Long codigoProduto = null;
+		Integer quantidade = null;
 		String codigoBarra = null;
 		Operador operador = recuperarOperador();
 		if (Util.validar(produtoFilter)) {
 			if (Util.validar(produtoFilter.getCodigo())) {
 				codigoProduto = Long.valueOf(produtoFilter.getCodigo());
 			}
+			if (Util.validar(produtoFilter.getQuantidade())) {
+				quantidade = produtoFilter.getQuantidade();
+			}
 			if (Util.validar(produtoFilter.getCodigoBarra())) {
 				codigoBarra = produtoFilter.getCodigoBarra();
 			}
 		}
-		Venda venda = vendaService.comprar(codigoProduto, codigoBarra, operador);
+		Venda venda = vendaService.comprar(codigoProduto, quantidade, codigoBarra, operador);
 		return novo(venda);
 	}
 	
@@ -136,6 +140,7 @@ public class VendasController {
 	 */
 	private ProdutoFilter limparFiltro(Venda venda) {
 		String strUltimoCodigo = "";
+		Integer quantidade = Integer.valueOf(1);
 		String strUltimoCodigoBarra = "";
 		String strUltimaDescricao = "";
 		ItemVenda item = vendaService.recuperarUltimoItemVendaDaCesta(venda);
@@ -146,7 +151,7 @@ public class VendasController {
 			}
 			strUltimaDescricao = item.getProduto().getDescricao();
 		}	
-		ProdutoFilter filtro = new ProdutoFilter(strUltimoCodigo, strUltimoCodigoBarra, strUltimaDescricao);
+		ProdutoFilter filtro = new ProdutoFilter(strUltimoCodigo, quantidade, strUltimoCodigoBarra, strUltimaDescricao);
 		return filtro;
 	}
 	

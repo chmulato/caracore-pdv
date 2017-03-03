@@ -24,6 +24,8 @@ import br.com.caracore.pdv.service.exception.ProdutoExistenteException;
 @RequestMapping("/produtos")
 public class ProdutosController {
 	
+	private final int QUANTIDADE_UNITARIA = 1;
+	
 	@Autowired
 	private ProdutoService produtoService;
 	
@@ -60,7 +62,7 @@ public class ProdutosController {
 		ModelAndView mv = new ModelAndView("produto/pesquisa-produtos");
 		if (filtroProduto != null) {
 			mv.addObject("produtos", produtoService.pesquisar(filtroProduto));
-			mv.addObject("produtoFilter", new ProdutoFilter("", "", ""));
+			mv.addObject("produtoFilter", new ProdutoFilter("", Integer.valueOf(QUANTIDADE_UNITARIA), "", ""));
 		} else {
 			filtroProduto = new ProdutoFilter();
 			filtroProduto.setDescricao("%");
