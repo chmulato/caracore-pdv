@@ -46,12 +46,19 @@
 					<div class="col-sm-2">
 						<div class="form-group">
 							<div class="form-group">
+								<button class="btn  btn-primary btn-venda" type="submit">Buscar</button>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="form-group">
+							<div class="form-group">
 								<label for="codigoBarra">Cód. Barra</label>
 								<input id="codigoBarra" type="text" th:field="*{codigoBarra}" class="form-control" placeholder="Código de barra" />
 							</div>
 						</div>
 					</div>
-					<div class="col-sm-6">
+					<div class="col-sm-4">
 						<div class="form-group">
 							<div class="form-group">
 								<label for="descricao">Descrição</label>
@@ -60,7 +67,6 @@
 						</div>
 					</div>
 				</div>
-				<button class="btn  btn-primary" type="submit">Buscar</button>
 				<hr>
 				</form>
 				<form method="post" class="form-horizontal  js-form-loading" th:object="${venda}" th:action="@{/vendas/novo}">
