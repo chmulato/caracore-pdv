@@ -68,14 +68,14 @@
 							<th class="text-center">Código</th>
 							<th class="text-left">Código Barra</th>
 							<th class="text-left">Descrição</th>
-							<th class="text-left">Valor de Venda</th>
+							<th class="text-right">Valor de Venda</th>
 							<th class="text-left" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')"></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="produto : ${produtos}">
 							<td th:text="${produto.codigo}" class="text-center">1</td>
-							<td th:text="${produto?.codigoBarra}" class="text-center">1</td>
+							<td th:text="${produto?.codigoBarra}" class="text-left">1</td>
 							<td class="text-left">
 								<a th:href="@{/produtos/{codigo}(codigo=${produto.codigo})}" th:text="${produto.descricao}" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')"></a>
 								<span th:text="${produto.descricao}" sec:authorize="not hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')"></span>
