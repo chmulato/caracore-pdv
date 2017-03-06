@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt" 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:data="http://www.thymeleaf.org/extras/data-attribute"
+	layout:decorate="~{layout/layout-padrao}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	
+	<head>
+		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/pesquisa-itens.css}"/>
+	</head>
+	<body>
+		<section layout:fragment="conteudo">
+			
+			<div class="page-header">
+				
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-xs-10">
+							<h1>
+								Forma de Pagamento
+							</h1>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			
+			<div class="container-fluid">
+			
+				<form method="post" class="form-vertical  js-form-loading" th:object="${pagamento}" th:action="@{/vendas/pagamento}">
+
+					<div class="alert  alert-danger  alert-dismissible" role="alert" th:if="${#fields.hasAnyErrors()}">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<th:block th:each="error : ${#fields.detailedErrors()}">
+							<div>
+								<i class="fa  fa-exclamation-circle"></i>
+								<span th:text="${error.message}"></span>
+							</div>
+						</th:block>
+					</div>
+					
+					<div class="alert  alert-success" th:if="${!#strings.isEmpty(mensagem)}">
+						<span th:text="${mensagem}"></span>
+					</div>
+
+					<input type="hidden" th:field="*{codigoVenda}" />
+
+					<div class="row">
+						<div class="col-sm-2">
+							<div class="form-group" th:classappend="${#fields.hasErrors('totalApagar')} ? has-error">
+								<label for="total">Total a Pagar</label>
+								<input id="total" type="text" th:field="*{totalApagar}" class="form-control js-moeda" readonly="readonly" />
+							</div>
+						</div>
+
+						<div class="col-sm-2">
+							<div class="form-group" th:classappend="${#fields.hasErrors('desconto')} ? has-error">
+								<label for="outro">Desconto (%)</label>
+								<input id="outro" type="text" th:field="*{desconto}" class="form-control js-moeda" placeholder="%" />
+							</div>
+						</div>
+					</div>
+	
+					<hr>
+	
+					<div class="row">
+						<div class="col-sm-2">
+							<div class="form-group" th:classappend="${#fields.hasErrors('dinheiro')} ? has-error">
+								<label for="dinheiro">Dinheiro</label>
+								<input id="dinheiro" type="text" th:field="*{dinheiro}" class="form-control js-moeda" placeholder="R$" />
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-2">
+							<div class="form-group" th:classappend="${#fields.hasErrors('cartao')} ? has-error">
+								<label for="cartao">Cartão</label>
+								<input id="cartao" type="text" th:field="*{cartao}" class="form-control js-moeda" placeholder="R$" />
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-2">
+							<div class="form-group" th:classappend="${#fields.hasErrors('cheque')} ? has-error">
+								<label for="cheque">Cheque</label>
+								<input id="cheque" type="text" th:field="*{cheque}" class="form-control js-moeda" placeholder="R$" />
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-2">
+							<div class="form-group" th:classappend="${#fields.hasErrors('outros')} ? has-error">
+								<label for="outro">Outros</label>
+								<input id="outro" type="text" th:field="*{outros}" class="form-control js-moeda" placeholder="R$" />
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-2">
+							<div class="form-group" th:classappend="${#fields.hasErrors('valorDesconto')} ? has-error">
+								<label for="outro">Valor do Desconto</label>
+								<input id="outro" type="text" th:field="*{valorDesconto}" class="form-control js-moeda" placeholder="R$" />
+							</div>
+						</div>
+					</div>
+
+					<hr>
+					
+					<div class="row">
+						<div class="col-sm-2">
+							<div class="form-group" th:classappend="${#fields.hasErrors('totalPago')} ? has-error">
+								<label for="outro">Total Pago</label>
+								<input id="outro" type="text" th:field="*{totalPago}" class="form-control js-moeda" placeholder="R$" />
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-2">
+							<div class="form-group">
+								<a th:href="@{/vendas/novo}" class="btn  btn-default">Retornar</a>
+								<button class="btn  btn-primary" type="submit">Pagar</button>
+							</div>
+						</div>
+					</div>
+				</form>
+				
+			</div>
+
+		</section>
+
+</html>

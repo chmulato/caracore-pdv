@@ -11,13 +11,14 @@ import org.springframework.stereotype.Service;
 
 import br.com.caracore.pdv.model.ItemVenda;
 import br.com.caracore.pdv.model.Loja;
-import br.com.caracore.pdv.model.Produto;
 import br.com.caracore.pdv.model.Operador;
+import br.com.caracore.pdv.model.Produto;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.model.types.StatusVenda;
 import br.com.caracore.pdv.repository.VendaRepository;
 import br.com.caracore.pdv.repository.filter.VendedorFilter;
+import br.com.caracore.pdv.service.exception.DescontoInvalidoException;
 import br.com.caracore.pdv.util.Util;
 
 @Service
@@ -203,17 +204,45 @@ public class VendaService {
 	}
 
 	/**
+	 * Método para atualizar o desconto total da compra
+	 * 
+	 * @param codigo
+	 * @param desconto
+	 */
+	public void salvarDescontoTotal(Long codigo, BigDecimal desconto) {
+		if ((Util.validar(codigo)) && (Util.validar(desconto))) {
+			if ((desconto.doubleValue() < ZERO) || (desconto.doubleValue() > PORCENTAGEM)) {
+				throw new DescontoInvalidoException("Desconto inválido!");
+			}
+			Venda venda = vendaRepository.findOne(codigo);
+			if (Util.validar(venda)) {
+				venda.setDescontoTotal(desconto);
+				vendaRepository.save(venda);
+			}
+		}
+	}
+	
+	/**
 	 * Método externo para salvar vendas. Salva a data atualizada de hoje 
 	 * 
 	 * @param venda
 	 * @return
 	 */
 	public Venda salvar(Venda venda) {
+		setarDataHoje(venda);
+		venda = vendaRepository.save(venda);
+		return venda;
+	}
+
+	/**
+	 * Método interno para setar a data de hoje
+	 * 
+	 * @param venda
+	 */
+	private void setarDataHoje(Venda venda) {
 		if (Util.validar(venda)) {
 			venda.setData(DATA_DE_HOJE);
 		}
-		venda = vendaRepository.save(venda);
-		return venda;
 	}
 
 	/**

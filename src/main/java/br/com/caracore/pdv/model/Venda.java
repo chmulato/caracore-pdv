@@ -52,7 +52,7 @@ public class Venda {
 	@Enumerated(EnumType.STRING)
 	private StatusVenda status;
 	
-	@NumberFormat(pattern = "#0.00")
+	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal descontoTotal;
 
 	@NumberFormat(pattern = "#,##0.00")
@@ -133,6 +133,17 @@ public class Venda {
 		this.total = total;
 	}
 
+	public Boolean validarDesconto() {
+		Boolean validar = Boolean.TRUE;
+		if (descontoTotal != null) {
+			double desc = descontoTotal.doubleValue();
+			if ((desc < 0) || (desc > 100)) {
+				validar = Boolean.FALSE;
+			}
+		}
+		return validar;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,8 @@ import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.repository.filter.ProdutoFilter;
 import br.com.caracore.pdv.repository.filter.VendedorFilter;
 import br.com.caracore.pdv.service.VendaService;
+import br.com.caracore.pdv.service.exception.DescontoInvalidoException;
+import br.com.caracore.pdv.util.Pagamento;
 import br.com.caracore.pdv.util.Util;
 
 @Controller
@@ -86,7 +89,6 @@ public class VendasController {
 		return novo(venda);
 	}
 	
-	
 	@PostMapping("/novo")
 	public ModelAndView salvar(@Valid Venda venda, BindingResult result, RedirectAttributes attributes) {
 		if (result.hasErrors()) {
@@ -95,6 +97,41 @@ public class VendasController {
 		vendaService.salvar(venda);
 		attributes.addFlashAttribute("mensagem", "Venda salva com sucesso!");
 		return new ModelAndView("redirect:/vendas/novo");
+	}
+	
+	@PostMapping("/pagamento")
+	public ModelAndView formaPagamento(@Valid Pagamento pagamento, Errors errors, RedirectAttributes attributes) {
+		ModelAndView mv = new ModelAndView("venda/forma-pagamento");
+		mv.addObject(pagamento);
+		return mv;
+	}
+
+	@PostMapping("/forma-pagamento")
+	public ModelAndView formaPagamento(@Valid Venda venda, Errors errors, RedirectAttributes attributes) {
+		ModelAndView mv = new ModelAndView("venda/forma-pagamento");
+		if (errors.hasErrors()) {
+			if (!Util.validar(venda.getCodigo())) {
+				attributes.addFlashAttribute("error", "Cesta vazia! Selecione um produto.");
+				return new ModelAndView("redirect:/vendas/novo");
+			}
+			if (!Util.validar(venda.getVendedor())) {
+				attributes.addFlashAttribute("error", "Selecione o vendedor.");
+				return new ModelAndView("redirect:/vendas/novo");
+			}
+			if (!venda.validarDesconto()) {
+				attributes.addFlashAttribute("error", "Desconto inválido.");
+				return new ModelAndView("redirect:/vendas/novo");
+			}
+		}
+		try {
+			vendaService.salvarDescontoTotal(venda.getCodigo(), venda.getDescontoTotal());
+			Pagamento pagamento = new Pagamento(venda.getCodigo(), venda.getSubTotal(), venda.getDescontoTotal());
+			mv.addObject(pagamento);
+			return mv;
+		} catch (DescontoInvalidoException ex) {
+			attributes.addFlashAttribute("error", "Desconto inválido.");
+			return new ModelAndView("redirect:/vendas/novo");
+		}
 	}
 
 	/**

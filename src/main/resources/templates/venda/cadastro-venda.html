@@ -69,7 +69,7 @@
 				</div>
 				<hr>
 				</form>
-				<form method="post" class="form-horizontal  js-form-loading" th:object="${venda}" th:action="@{/vendas/novo}">
+				<form method="post" class="form-horizontal  js-form-loading" th:object="${venda}" th:action="@{/vendas/forma-pagamento}">
 					<div class="alert  alert-danger  alert-dismissible" role="alert" th:if="${#fields.hasAnyErrors()}">
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 						<th:block th:each="error : ${#fields.detailedErrors()}">
@@ -138,20 +138,20 @@
 					
 					<div class="col-sm-4">
 						<div class="form-group">
-							<label for="nome">Subtotal</label>
-							<input id="nome" type="text" class="form-control" th:field="*{subTotal}" readonly="readonly"/>
+							<label for="nome">Sub Total</label>
+							<input id="nome" type="text" class="form-control" th:field="*{subTotal}" readonly="readonly" />
 						</div>
 					</div>
 					<div class="col-sm-4">
 						<div class="form-group">
-							<label for="nome">Desconto</label>
-							<input id="nome" type="text" class="form-control" th:field="*{descontoTotal}"/>
+							<label for="descontoTotal">Desconto Total</label>
+							<input id="descontoTotal" type="text" class="form-control js-moeda" placeholder="%" th:field="*{descontoTotal}"/>
 						</div>
 					</div>
 					<div class="col-sm-4">
 						<div class="form-group">
-							<label for="nome">Total</label>
-							<input id="nome" type="text" class="form-control" th:field="*{total}" readonly="readonly"/>
+							<label for="total">Total</label>
+							<input id="total" type="text" class="form-control" th:field="*{total}" readonly="readonly" />
 						</div>
 					</div>
 
@@ -171,7 +171,7 @@
 						</div>
 					</div>
 					<div class="col-sm-4 btn-venda">
-						<button class="btn  btn-primary" type="submit">Receber conta</button>
+						<button class="btn  btn-primary" type="submit">Receber pagamento</button>
 					</div>
 				</form>
 			</div>
