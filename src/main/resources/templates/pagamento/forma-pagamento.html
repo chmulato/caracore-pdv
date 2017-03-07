@@ -29,7 +29,7 @@
 			
 			<div class="container-fluid">
 			
-				<form method="post" class="form-vertical  js-form-loading" th:object="${pagamento}" th:action="@{/vendas/pagamento}">
+				<form method="post" class="form-vertical  js-form-loading" th:object="${pagamento}" th:action="@{/pagamentos/pagamento}">
 
 					<div class="alert  alert-danger  alert-dismissible" role="alert" th:if="${#fields.hasAnyErrors()}">
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -45,7 +45,7 @@
 						<span th:text="${mensagem}"></span>
 					</div>
 
-					<input type="hidden" th:field="*{codigoVenda}" />
+					<input type="hidden" th:field="*{venda}" />
 
 					<div class="row">
 						<div class="col-sm-2">

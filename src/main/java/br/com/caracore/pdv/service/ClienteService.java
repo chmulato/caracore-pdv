@@ -17,7 +17,6 @@ public class ClienteService {
 	@Autowired
 	private ClienteRepository clienteRepository;
 
-
 	/**
 	 * Método interno para pesquisar cliente por nome
 	 * 
@@ -50,6 +49,17 @@ public class ClienteService {
 		}
 	}
 
+	/**
+	 * Método externo para pesquisar o cliente DEFAULT
+	 * ou seja, não informado 
+	 * 
+	 * @param strDefault
+	 * @return
+	 */
+	public Cliente pesquisarClienteDefault(String strDefault) {
+		return pesquisarPorNome(strDefault);
+	}
+	
 	public void salvar(Cliente cliente) {
 		validarNome(cliente);
 		clienteRepository.save(cliente);

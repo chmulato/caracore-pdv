@@ -61,6 +61,14 @@ public class Venda {
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal total;
 
+	@ManyToOne
+	@JoinColumn(name = "PAGAMENTO_ID")
+	private Pagamento pagamento;
+
+	public Venda() {
+		super();
+	}
+
 	public Long getCodigo() {
 		return codigo;
 	}
@@ -132,18 +140,33 @@ public class Venda {
 	public void setTotal(BigDecimal total) {
 		this.total = total;
 	}
+	
+	public Pagamento getPagamento() {
+		return pagamento;
+	}
 
+	public void setPagamento(Pagamento pagamento) {
+		this.pagamento = pagamento;
+	}
+
+	/**
+	 * Método para validar o desconto
+	 * 
+	 * @return
+	 */
 	public Boolean validarDesconto() {
+		final double ZERO = 0d;
+		final double PORCENTAGEM = 100d;
 		Boolean validar = Boolean.TRUE;
 		if (descontoTotal != null) {
 			double desc = descontoTotal.doubleValue();
-			if ((desc < 0) || (desc > 100)) {
+			if ((desc < ZERO) || (desc > PORCENTAGEM)) {
 				validar = Boolean.FALSE;
 			}
 		}
 		return validar;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -153,6 +176,7 @@ public class Venda {
 		result = prime * result + ((data == null) ? 0 : data.hashCode());
 		result = prime * result + ((descontoTotal == null) ? 0 : descontoTotal.hashCode());
 		result = prime * result + ((itens == null) ? 0 : itens.hashCode());
+		result = prime * result + ((pagamento == null) ? 0 : pagamento.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime * result + ((subTotal == null) ? 0 : subTotal.hashCode());
 		result = prime * result + ((total == null) ? 0 : total.hashCode());
@@ -193,6 +217,11 @@ public class Venda {
 			if (other.itens != null)
 				return false;
 		} else if (!itens.equals(other.itens))
+			return false;
+		if (pagamento == null) {
+			if (other.pagamento != null)
+				return false;
+		} else if (!pagamento.equals(other.pagamento))
 			return false;
 		if (status != other.status)
 			return false;

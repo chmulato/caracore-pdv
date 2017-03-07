@@ -32,6 +32,15 @@ public class Cliente {
 		this.nome = nome;
 	}
 
+	public Cliente() {
+		super();
+	}
+
+	public Cliente(String nome) {
+		super();
+		this.nome = nome;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

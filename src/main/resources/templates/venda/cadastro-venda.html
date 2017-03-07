@@ -69,7 +69,7 @@
 				</div>
 				<hr>
 				</form>
-				<form method="post" class="form-horizontal  js-form-loading" th:object="${venda}" th:action="@{/vendas/forma-pagamento}">
+				<form method="post" class="form-horizontal  js-form-loading" th:object="${venda}" th:action="@{/pagamentos/forma-pagamento}">
 					<div class="alert  alert-danger  alert-dismissible" role="alert" th:if="${#fields.hasAnyErrors()}">
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 						<th:block th:each="error : ${#fields.detailedErrors()}">
