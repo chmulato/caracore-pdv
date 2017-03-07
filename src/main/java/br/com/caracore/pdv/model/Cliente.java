@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -12,9 +13,44 @@ public class Cliente {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
+
+	private Long cpf;
 	
 	@Size(max = 30, message = "Cliente não pode conter mais de 30 caracteres.")
 	private String nome;
+
+	@Transient
+	private Long codigoPagamento;
+	
+	public Cliente() {
+		super();
+	}
+
+	public Cliente(String nome) {
+		super();
+		this.nome = nome;
+	}
+	
+	public Cliente(Long cpf, String nome) {
+		super();
+		this.cpf = cpf;
+		this.nome = nome;
+	}
+
+	public Cliente(String cpf, String nome) {
+		super();
+		Long _cpf = Long.valueOf(0l);
+		try {
+			if ((cpf != null) && (!cpf.equals(""))) {
+				cpf = cpf.replace(".", "");
+				_cpf = Long.valueOf(cpf);
+			}
+		} catch (NumberFormatException ex) {
+			ex.printStackTrace();
+		}
+		this.cpf = _cpf;
+		this.nome = nome;
+	}
 
 	public Long getCodigo() {
 		return codigo;
@@ -22,6 +58,14 @@ public class Cliente {
 
 	public void setCodigo(Long codigo) {
 		this.codigo = codigo;
+	}
+
+	public Long getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(Long cpf) {
+		this.cpf = cpf;
 	}
 
 	public String getNome() {
@@ -32,13 +76,12 @@ public class Cliente {
 		this.nome = nome;
 	}
 
-	public Cliente() {
-		super();
+	public Long getCodigoPagamento() {
+		return codigoPagamento;
 	}
 
-	public Cliente(String nome) {
-		super();
-		this.nome = nome;
+	public void setCodigoPagamento(Long codigoPagamento) {
+		this.codigoPagamento = codigoPagamento;
 	}
 
 	@Override
@@ -46,6 +89,7 @@ public class Cliente {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+		result = prime * result + ((cpf == null) ? 0 : cpf.hashCode());
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
 		return result;
 	}
@@ -64,6 +108,11 @@ public class Cliente {
 				return false;
 		} else if (!codigo.equals(other.codigo))
 			return false;
+		if (cpf == null) {
+			if (other.cpf != null)
+				return false;
+		} else if (!cpf.equals(other.cpf))
+			return false;
 		if (nome == null) {
 			if (other.nome != null)
 				return false;
@@ -71,5 +120,4 @@ public class Cliente {
 			return false;
 		return true;
 	}
-
 }

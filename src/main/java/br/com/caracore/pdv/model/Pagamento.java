@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.NumberFormat;
@@ -57,6 +58,9 @@ public class Pagamento {
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal totalPago;
 
+	@Transient
+	private Long cpf;
+	
 	/**
 	 * Método interno para calcular o valor de desconto
 	 * 
@@ -184,6 +188,14 @@ public class Pagamento {
 
 	public void setTotalPago(BigDecimal totalPago) {
 		this.totalPago = totalPago;
+	}
+
+	public Long getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(Long cpf) {
+		this.cpf = cpf;
 	}
 
 	@Override

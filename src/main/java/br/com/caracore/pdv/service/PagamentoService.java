@@ -19,6 +19,16 @@ public class PagamentoService {
 
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+
+	/**
+	 * Método externo para pesquisar pagamento por código Id
+	 * 
+	 * @param codigo
+	 * @return
+	 */
+	public Pagamento pesquisarPorCodigo(Long codigo) {
+		return pagamentoRepository.findOne(codigo);
+	}
 	
 	/**
 	 * Método externo para pesquisar pagamento por venda
@@ -47,6 +57,15 @@ public class PagamentoService {
 		}
 		pagamento.setCliente(cliente);
 		pagamentoRepository.save(pagamento);
+	}
+	
+	/**
+	 * Método externo para salvar cliente na tela de pagamento
+	 * 
+	 * @param cliente
+	 */
+	public Cliente salvarCliente(Cliente cliente) {
+		return clienteService.salvar(cliente);
 	}
 
 }

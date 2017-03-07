@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import br.com.caracore.pdv.model.Cliente;
 import br.com.caracore.pdv.repository.ClienteRepository;
 import br.com.caracore.pdv.repository.filter.ClienteFilter;
+import br.com.caracore.pdv.service.exception.CpfExistenteException;
+import br.com.caracore.pdv.service.exception.CpfInvalidoException;
 import br.com.caracore.pdv.service.exception.NomeExistenteException;
 import br.com.caracore.pdv.util.Util;
 
@@ -25,6 +27,28 @@ public class ClienteService {
 	 */
 	private Cliente pesquisarPorNome(String nome) {
 		return clienteRepository.findByNomeIgnoreCase(nome);
+	}
+
+	/**
+	 * Método interno para validar cpf do cliente
+	 * 
+	 * @param cliente
+	 */
+	private void validarCpf(Cliente cliente) {
+		if (Util.validar(cliente) && Util.validar(cliente.getCpf())) {
+			Cliente clienteDB = pesquisarPorCpf(String.valueOf(cliente.getCpf()));
+			if (Util.validar(clienteDB)) {
+				if (Util.validar(cliente.getCodigo())) {
+					long codigo = cliente.getCodigo().longValue();
+					long codigoDB = clienteDB.getCodigo().longValue();
+					if (codigo != codigoDB) {
+						throw new CpfExistenteException("Cpf já existente!");
+					}
+				} else {
+					throw new CpfExistenteException("Cpf já existente!");
+				}
+			}
+		}
 	}
 
 	/**
@@ -59,16 +83,53 @@ public class ClienteService {
 	public Cliente pesquisarClienteDefault(String strDefault) {
 		return pesquisarPorNome(strDefault);
 	}
+
+	/**
+	 * Método externo para pesquisar cliente por CPF
+	 * 
+	 * @param strCpf
+	 * @return
+	 */
+	public Cliente pesquisarPorCpf(String strCpf) {
+		Long cpf = Long.valueOf(0l);
+		try {
+			if (Util.validar(strCpf)) {
+				strCpf = strCpf.replaceAll(".", "");
+				cpf = Long.valueOf(strCpf).longValue();
+			}
+		} catch (NumberFormatException ex) {
+			throw new CpfInvalidoException("Cpf inválido!");
+		}
+		return clienteRepository.findByCpf(cpf);
+	}
 	
-	public void salvar(Cliente cliente) {
+	/**
+	 * Método externo para salvar cliente
+	 * 
+	 * @param cliente
+	 * @return
+	 */
+	public Cliente salvar(Cliente cliente) {
+		validarCpf(cliente);
 		validarNome(cliente);
-		clienteRepository.save(cliente);
+		return clienteRepository.save(cliente);
 	}
 
+	/**
+	 * Método para excluir cliente pelo código Id
+	 * 
+	 * @param codigo
+	 */
 	public void excluir(Long codigo) {
 		clienteRepository.delete(codigo);;
 	}
 
+	/**
+	 * Método externo para pesquisar cliente pelo código Id
+	 * 
+	 * @param codigo
+	 * @return
+	 */
 	public Cliente pesquisarPorCodigo(Long codigo) {
 		return clienteRepository.findOne(codigo);
 	}
