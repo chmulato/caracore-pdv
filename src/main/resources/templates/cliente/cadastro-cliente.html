@@ -41,7 +41,8 @@
 				<div class="col-sm-6">
 					<div class="form-group" th:classappend="${#fields.hasErrors('cpf')} ? has-error">
 						<label for="cpf">Cpf</label>
-						<input id="cpf" type="text" name="cpf" class="form-control" th:field="*{cpf}"/>
+						<input id="cpf" type="text" name="cpf" class="form-control" th:field="*{cpf}" th:if="${cliente?.cpf != null}" readonly="readonly" />
+						<input id="cpf" type="text" name="cpf" class="form-control" th:field="*{cpf}" th:if="${cliente?.cpf == null}" />
 					</div>
 				</div>
 			</div>

@@ -12,6 +12,7 @@ import br.com.caracore.pdv.util.Util;
 @Entity
 public class Cliente {
 
+	@Transient
 	final private String CLIENTE_NAO_INFORMADO = "NAO_INFORMADO";
 	
 	@Id

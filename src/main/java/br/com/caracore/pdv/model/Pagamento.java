@@ -8,7 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.NumberFormat;
@@ -58,7 +57,6 @@ public class Pagamento {
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal totalPago;
 
-	@Transient
 	private String cpf;
 	
 	/**
@@ -206,6 +204,7 @@ public class Pagamento {
 		result = prime * result + ((cheque == null) ? 0 : cheque.hashCode());
 		result = prime * result + ((cliente == null) ? 0 : cliente.hashCode());
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+		result = prime * result + ((cpf == null) ? 0 : cpf.hashCode());
 		result = prime * result + ((desconto == null) ? 0 : desconto.hashCode());
 		result = prime * result + ((dinheiro == null) ? 0 : dinheiro.hashCode());
 		result = prime * result + ((outros == null) ? 0 : outros.hashCode());
@@ -245,6 +244,11 @@ public class Pagamento {
 				return false;
 		} else if (!codigo.equals(other.codigo))
 			return false;
+		if (cpf == null) {
+			if (other.cpf != null)
+				return false;
+		} else if (!cpf.equals(other.cpf))
+			return false;
 		if (desconto == null) {
 			if (other.desconto != null)
 				return false;
@@ -282,5 +286,4 @@ public class Pagamento {
 			return false;
 		return true;
 	}
-	
 }

@@ -19,6 +19,7 @@ import br.com.caracore.pdv.service.ClienteService;
 import br.com.caracore.pdv.service.exception.CpfExistenteException;
 import br.com.caracore.pdv.service.exception.CpfInvalidoException;
 import br.com.caracore.pdv.service.exception.NomeExistenteException;
+import br.com.caracore.pdv.service.exception.ViolacaoIntegridadeException;
 
 @Controller
 @RequestMapping("/clientes")
@@ -76,8 +77,12 @@ public class ClientesController {
 	
 	@RequestMapping(value = "/{codigo}", method = RequestMethod.DELETE)
 	public String apagar(@PathVariable("codigo") Long codigo, RedirectAttributes attributes) {
-		clienteService.excluir(codigo);
-		attributes.addFlashAttribute("mensagem", "Cliente removido com sucesso!");
+		try {
+			clienteService.excluir(codigo);
+			attributes.addFlashAttribute("mensagem", "Cliente removido com sucesso!");
+		} catch (ViolacaoIntegridadeException ex) {
+			attributes.addFlashAttribute("error", ex.getMessage());
+		}
 		return "redirect:/clientes";
 	}
 

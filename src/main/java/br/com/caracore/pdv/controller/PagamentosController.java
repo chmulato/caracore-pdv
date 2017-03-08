@@ -48,14 +48,14 @@ public class PagamentosController {
 			RedirectAttributes attributes) {
 		Pagamento pagamento = null;
 		Cliente cliente = null;
-		ModelAndView mv = new ModelAndView("redirect:/pagamento/forma-pagamento");
+		ModelAndView mv = new ModelAndView("redirect:/pagamentos/forma-pagamento");
 		try {
 			if (Util.validar(codigoPagamento)) {
 				pagamento = pagamentoService.pesquisarPorCodigo(codigoPagamento);
 				cliente = new Cliente(cpf, nome);
 				cliente = pagamentoService.salvarCliente(cliente);
-				pagamento.setCpf(cpf);
-				pagamento.setCliente(cliente);
+				pagamento.setCpf(cliente.getCpf());
+				pagamentoService.salvar(pagamento, cliente);
 				attributes.addFlashAttribute("mensagem", "Cliente cadastrado com sucesso!");
 			}
 		} catch (CpfInvalidoException ex) {

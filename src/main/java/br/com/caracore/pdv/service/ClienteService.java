@@ -3,6 +3,7 @@ package br.com.caracore.pdv.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import br.com.caracore.pdv.model.Cliente;
@@ -11,6 +12,7 @@ import br.com.caracore.pdv.repository.filter.ClienteFilter;
 import br.com.caracore.pdv.service.exception.CpfExistenteException;
 import br.com.caracore.pdv.service.exception.CpfInvalidoException;
 import br.com.caracore.pdv.service.exception.NomeExistenteException;
+import br.com.caracore.pdv.service.exception.ViolacaoIntegridadeException;
 import br.com.caracore.pdv.util.Util;
 
 @Service
@@ -118,7 +120,11 @@ public class ClienteService {
 	 * @param codigo
 	 */
 	public void excluir(Long codigo) {
-		clienteRepository.delete(codigo);;
+		try {
+			clienteRepository.delete(codigo);
+		} catch (DataIntegrityViolationException ex) {
+			throw new ViolacaoIntegridadeException("Relacionamento encontrado! Cliente não pode ser excluído.");
+		}
 	}
 
 	/**
