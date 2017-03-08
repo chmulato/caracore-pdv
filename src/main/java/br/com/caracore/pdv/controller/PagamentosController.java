@@ -43,7 +43,7 @@ public class PagamentosController {
 	@PostMapping("/cliente")
 	public ModelAndView salvarCliente(
 			@RequestParam(value="codigoPagamento", required=false) Long codigoPagamento, 
-			@RequestParam(value="cpf", required=false) Long cpf,
+			@RequestParam(value="cpf", required=false) String cpf,
 			@RequestParam(value="nome", required=false) String nome,
 			RedirectAttributes attributes) {
 		Pagamento pagamento = null;

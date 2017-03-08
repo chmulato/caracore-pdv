@@ -59,7 +59,7 @@ public class Pagamento {
 	private BigDecimal totalPago;
 
 	@Transient
-	private Long cpf;
+	private String cpf;
 	
 	/**
 	 * Método interno para calcular o valor de desconto
@@ -190,11 +190,11 @@ public class Pagamento {
 		this.totalPago = totalPago;
 	}
 
-	public Long getCpf() {
+	public String getCpf() {
 		return cpf;
 	}
 
-	public void setCpf(Long cpf) {
+	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
 

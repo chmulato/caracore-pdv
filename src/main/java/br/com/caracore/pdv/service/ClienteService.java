@@ -9,6 +9,7 @@ import br.com.caracore.pdv.model.Cliente;
 import br.com.caracore.pdv.repository.ClienteRepository;
 import br.com.caracore.pdv.repository.filter.ClienteFilter;
 import br.com.caracore.pdv.service.exception.CpfExistenteException;
+import br.com.caracore.pdv.service.exception.CpfInvalidoException;
 import br.com.caracore.pdv.service.exception.NomeExistenteException;
 import br.com.caracore.pdv.util.Util;
 
@@ -34,6 +35,12 @@ public class ClienteService {
 	 * @param cliente
 	 */
 	private void validarCpf(Cliente cliente) {
+		if (Util.validar(cliente) && Util.validar(cliente.getCpf())) {
+			String strCpf = String.valueOf(cliente.getCpf());
+			if (!Util.isCPF(strCpf)) {
+				throw new CpfInvalidoException("Cpf inválido!");
+			}
+		}
 		if (Util.validar(cliente) && Util.validar(cliente.getCpf())) {
 			Cliente clienteDB = pesquisarPorCpf(cliente.getCpf());
 			if (Util.validar(clienteDB)) {
@@ -89,7 +96,7 @@ public class ClienteService {
 	 * @param strCpf
 	 * @return
 	 */
-	public Cliente pesquisarPorCpf(Long cpf) {
+	public Cliente pesquisarPorCpf(String cpf) {
 		return clienteRepository.findByCpf(cpf);
 	}
 	

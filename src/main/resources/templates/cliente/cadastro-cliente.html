@@ -35,26 +35,26 @@
 				<span th:text="${mensagem}"></span>
 			</div>
 	
-			<input type="hidden" th:field="*{codigo}" />
-	
-			<div class="row">
-				<div class="col-sm-6">
-					<div class="form-group" th:classappend="${#fields.hasErrors('nome')} ? has-error">
-						<label for="nome">Nome</label>
-						<input id="nome" type="text" class="form-control" th:field="*{nome}"/>
-					</div>
-				</div>
-			</div>
+			<input type="hidden" name="codigo" th:field="*{codigo}" />
 
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="form-group" th:classappend="${#fields.hasErrors('cpf')} ? has-error">
 						<label for="cpf">Cpf</label>
-						<input id="cpf" type="text" class="form-control" th:field="*{cpf}"/>
+						<input id="cpf" type="text" name="cpf" class="form-control" th:field="*{cpf}"/>
 					</div>
 				</div>
 			</div>
 	
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group" th:classappend="${#fields.hasErrors('nome')} ? has-error">
+						<label for="nome">Nome</label>
+						<input id="nome" type="text" name="nome" class="form-control" th:field="*{nome}"/>
+					</div>
+				</div>
+			</div>
+
 			<div class="form-group">
 				<button class="btn  btn-primary" type="submit" th:if="${!cliente.isDefault}" >Salvar</button>
 				<a th:href="@{/clientes}" class="btn  btn-default">Cancelar</a>

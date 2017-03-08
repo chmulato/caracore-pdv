@@ -16,6 +16,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import br.com.caracore.pdv.model.Cliente;
 import br.com.caracore.pdv.repository.filter.ClienteFilter;
 import br.com.caracore.pdv.service.ClienteService;
+import br.com.caracore.pdv.service.exception.CpfExistenteException;
+import br.com.caracore.pdv.service.exception.CpfInvalidoException;
 import br.com.caracore.pdv.service.exception.NomeExistenteException;
 
 @Controller
@@ -41,6 +43,12 @@ public class ClientesController {
 			clienteService.salvar(cliente);
 			attributes.addFlashAttribute("mensagem", "Cliente salvo com sucesso!");
 			return new ModelAndView("redirect:/clientes/novo");
+		} catch (CpfInvalidoException ex) {
+			errors.rejectValue("cpf", " ", ex.getMessage());
+			return novo(cliente);
+		} catch (CpfExistenteException ex) {
+			errors.rejectValue("cpf", " ", ex.getMessage());
+			return novo(cliente);
 		} catch (NomeExistenteException ex) {
 			errors.rejectValue("nome", " ", ex.getMessage());
 			return novo(cliente);

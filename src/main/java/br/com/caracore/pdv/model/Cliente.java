@@ -18,7 +18,7 @@ public class Cliente {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
 
-	private Long cpf;
+	private String cpf;
 	
 	@Size(max = 30, message = "Cliente não pode conter mais de 30 caracteres.")
 	private String nome;
@@ -41,24 +41,17 @@ public class Cliente {
 		this.nome = nome;
 	}
 	
-	public Cliente(Long cpf, String nome) {
-		super();
-		this.cpf = cpf;
-		this.nome = nome;
-	}
-
 	public Cliente(String cpf, String nome) {
 		super();
-		Long _cpf = Long.valueOf(0l);
 		try {
 			if ((cpf != null) && (!cpf.equals(""))) {
+				cpf = cpf.replace("-", "");
 				cpf = cpf.replace(".", "");
-				_cpf = Long.valueOf(cpf);
 			}
 		} catch (NumberFormatException ex) {
 			ex.printStackTrace();
 		}
-		this.cpf = _cpf;
+		this.cpf = cpf;
 		this.nome = nome;
 	}
 
@@ -70,11 +63,19 @@ public class Cliente {
 		this.codigo = codigo;
 	}
 
-	public Long getCpf() {
+	public String getCpf() {
 		return cpf;
 	}
 
-	public void setCpf(Long cpf) {
+	public void setCpf(String cpf) {
+		try {
+			if ((cpf != null) && (!cpf.equals(""))) {
+				cpf = cpf.replace("-", "");
+				cpf = cpf.replace(".", "");
+			}
+		} catch (NumberFormatException ex) {
+			ex.printStackTrace();
+		}
 		this.cpf = cpf;
 	}
 
