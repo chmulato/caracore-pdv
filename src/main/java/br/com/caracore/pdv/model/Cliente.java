@@ -7,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
+import br.com.caracore.pdv.util.Util;
+
 @Entity
 public class Cliente {
 
@@ -21,6 +23,9 @@ public class Cliente {
 
 	@Transient
 	private Long codigoPagamento;
+	
+	@Transient
+	private String cpfFormatado;
 	
 	public Cliente() {
 		super();
@@ -82,6 +87,17 @@ public class Cliente {
 
 	public void setCodigoPagamento(Long codigoPagamento) {
 		this.codigoPagamento = codigoPagamento;
+	}
+
+	public String getCpfFormatado() {
+		if (cpf != null) {
+			cpfFormatado = Util.formatString(String.valueOf(cpf), "###.###.###-##");
+		}
+		return cpfFormatado;
+	}
+
+	public void setCpfFormatado(String cpfFormatado) {
+		this.cpfFormatado = cpfFormatado;
 	}
 
 	@Override
