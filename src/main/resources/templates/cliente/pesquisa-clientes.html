@@ -55,18 +55,20 @@
 					<table id="tabela-produtos" class="table  table-striped  table-bordered  table-hover  table-condensed  js-sticky-table">
 						<thead class="aw-table-header-solid">
 							<tr>
-								<th class="av-table-vinhos-col-codigo">Código</th>
-								<th>Nome</th>
-								<th class="av-table-vinhos-col-icons" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')"></th>
+								<th class="text-center">Código</th>
+								<th class="text-left">Nome</th>
+								<th class="text-center">Cpf</th>
+								<th class="text-center" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')"></th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr th:each="cliente : ${clientes}">
 								<td th:text="${cliente.codigo}" class="text-center">1</td>
-								<td>
+								<td class="text-left">
 									<a th:href="@{/clientes/{codigo}(codigo=${cliente.codigo})}" th:text="${cliente.nome}" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR', 'ROLE_OPERADOR')"></a>
 									<span th:text="${cliente.nome}" sec:authorize="not hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')"></span>
 								</td>
+								<td th:text="${cliente.cpf}" class="text-center">849O17O59xx</td>
 								<td class="text-center" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR', 'ROLE_OPERADOR')">
 									<i class="fa  fa-trash" style="cursor:pointer"
 										data-toggle="modal" data-target="#confirmaExclusaoModal"
