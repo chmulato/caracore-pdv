@@ -12,6 +12,8 @@ import br.com.caracore.pdv.util.Util;
 @Entity
 public class Cliente {
 
+	final private String CLIENTE_NAO_INFORMADO = "NAO_INFORMADO";
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
@@ -26,6 +28,9 @@ public class Cliente {
 	
 	@Transient
 	private String cpfFormatado;
+	
+	@Transient
+	private boolean isDefault;
 	
 	public Cliente() {
 		super();
@@ -98,6 +103,21 @@ public class Cliente {
 
 	public void setCpfFormatado(String cpfFormatado) {
 		this.cpfFormatado = cpfFormatado;
+	}
+
+	public Boolean getIsDefault() {
+		Boolean result = Boolean.FALSE;
+		if (Util.validar(nome)) {
+			if (nome.equals(CLIENTE_NAO_INFORMADO)) {
+				result = Boolean.TRUE;
+			}
+		}
+		isDefault = result;
+		return isDefault;
+	}
+
+	public void setIsDefault(Boolean isDefault) {
+		this.isDefault = isDefault;
 	}
 
 	@Override

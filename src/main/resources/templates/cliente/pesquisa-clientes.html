@@ -73,7 +73,7 @@
 									<i class="fa  fa-trash" style="cursor:pointer"
 										data-toggle="modal" data-target="#confirmaExclusaoModal"
 										data:nome="${cliente.nome}" 
-										data:url-apagar="@{/clientes/{codigo}(codigo=${cliente.codigo})}"></i>
+										data:url-apagar="@{/clientes/{codigo}(codigo=${cliente.codigo})}" th:if="${!cliente.isDefault}"></i>
 								</td>
 							</tr>
 							<tr th:if="${clientes.empty}">

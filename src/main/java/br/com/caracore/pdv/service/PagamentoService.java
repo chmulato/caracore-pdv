@@ -12,7 +12,7 @@ import br.com.caracore.pdv.util.Util;
 @Service
 public class PagamentoService {
 
-	final private String CLIENTE_NAO_INFORMADO = "DEFAULT";
+	final private String CLIENTE_NAO_INFORMADO = "NAO_INFORMADO";
 	
 	@Autowired
 	private ClienteService clienteService;
