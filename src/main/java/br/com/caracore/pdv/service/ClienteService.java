@@ -1,5 +1,6 @@
 package br.com.caracore.pdv.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -148,6 +149,28 @@ public class ClienteService {
 		}
 		lista = clienteRepository.findByNomeContainingIgnoreCase(nome);
 		return lista;
+	}
+	
+	/**
+	 * Método externo para listar clientes
+	 * 
+	 * @return
+	 */
+	public List<Cliente> listar() {
+		List<Cliente> result = null;
+		List<Cliente> lista = clienteRepository.findAll();
+		if (Util.validar(lista)) {
+			result = new ArrayList<>();
+			for (Cliente cliente : lista) {
+				if (!Util.validar(cliente.getCpf())) {
+					cliente.setCpf("0");
+				}
+				if (!cliente.equals("NAO_INFORMADO")) {
+					result.add(cliente);
+				}
+			}
+		}
+		return result;
 	}
 
 }

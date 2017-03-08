@@ -5,3 +5,5 @@ $('.js-moeda').maskNumber({
 	decimal: ',',
 	thousands: '.'
 });
+$("#pesquisa_cliente").easyAutocomplete(options);
+
