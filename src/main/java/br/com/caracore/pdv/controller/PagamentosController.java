@@ -20,6 +20,7 @@ import br.com.caracore.pdv.service.VendaService;
 import br.com.caracore.pdv.service.exception.CpfInvalidoException;
 import br.com.caracore.pdv.service.exception.DescontoInvalidoException;
 import br.com.caracore.pdv.service.exception.NomeExistenteException;
+import br.com.caracore.pdv.service.exception.ValorInvalidoException;
 import br.com.caracore.pdv.util.Util;
 
 @Controller
@@ -72,16 +73,36 @@ public class PagamentosController {
 		
 	@PostMapping("/pagamento")
 	public ModelAndView pagamento(@Valid Pagamento pagamento, Errors errors, RedirectAttributes attributes) {
-		ModelAndView mv = new ModelAndView("pagamento/forma-pagamento");
-		Cliente cliente = null;
-		if (Util.validar(pagamento.getCpf())) {
-			String cpf = pagamento.getCpf();
-			pagamento.setCpf(Util.removerFormatoCpf(cpf));
-			cliente = pagamentoService.buscarCliente(cpf);
+		if (errors.hasErrors()) {
+			return pesquisarPagamento(pagamento, attributes);
 		}
-		pagamentoService.salvar(pagamento, cliente);
+		ModelAndView mv = new ModelAndView("redirect:/pagamentos/forma-pagamento");
+		Cliente cliente = null;		
+		try {
+			if (Util.validar(pagamento.getCpf())) {
+				String cpf = pagamento.getCpf();
+				pagamento.setCpf(Util.removerFormatoCpf(cpf));
+				cliente = pagamentoService.buscarCliente(cpf);
+			}
+			pagamentoService.salvar(pagamento, cliente);
+			attributes.addFlashAttribute("mensagem", "Pago com sucesso!");
+			mv.addObject(pagamento);
+			return mv;
+		} catch (DescontoInvalidoException ex) {
+			errors.rejectValue("desconto", " ", ex.getMessage());
+			attributes.addFlashAttribute("error", "Corrigir o desconto!");
+		} catch (CpfInvalidoException ex) {
+			errors.rejectValue("cpf", " ", ex.getMessage());
+			attributes.addFlashAttribute("error", "Corrigir CPF!");
+		} catch (ValorInvalidoException ex) {
+			errors.rejectValue("dinheiro", " ", ex.getMessage());
+			errors.rejectValue("cartao", " ", ex.getMessage());
+			errors.rejectValue("cheque", " ", ex.getMessage());
+			errors.rejectValue("outros", " ", ex.getMessage());
+			attributes.addFlashAttribute("error", "Corrigir valores!");
+		}
 		mv.addObject(pagamento);
-		return mv;
+		return pesquisarPagamento(pagamento, attributes);
 	}
 
 	@PostMapping("/forma-pagamento")

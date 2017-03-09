@@ -80,7 +80,7 @@
 
 					<div class="row">
 						<div class="col-sm-2">
-							<div class="form-group">
+							<div class="form-group" th:classappend="${#fields.hasErrors('cpf')} ? has-error">
 								<label for="cpf">Cpf</label>
 								<input id="cpf" type="text" th:field="*{cpf}" class="form-control" />
 							</div>
@@ -99,16 +99,16 @@
 
 					<div class="row">
 						<div class="col-sm-2">
-							<div class="form-group" th:classappend="${#fields.hasErrors('totalApagar')} ? has-error">
-								<label for="total">Total a Pagar</label>
-								<input id="total" type="text" th:field="*{totalApagar}" class="form-control js-moeda" readonly="readonly" />
+							<div class="form-group">
+								<label for="totalApagar">Total a Pagar</label>
+								<input id="totalApagar" type="text" th:field="*{totalApagar}" class="form-control js-moeda" readonly="readonly" />
 							</div>
 						</div>
 
 						<div class="col-sm-2">
 							<div class="form-group" th:classappend="${#fields.hasErrors('desconto')} ? has-error">
-								<label for="outro">Desconto (%)</label>
-								<input id="outro" type="text" th:field="*{desconto}" class="form-control js-moeda" placeholder="%" />
+								<label for="desconto">Desconto (%)</label>
+								<input id="desconto" type="text" th:field="*{desconto}" class="form-control js-moeda" placeholder="%" />
 							</div>
 						</div>
 					</div>
@@ -119,7 +119,7 @@
 						<div class="col-sm-2">
 							<div class="form-group" th:classappend="${#fields.hasErrors('dinheiro')} ? has-error">
 								<label for="dinheiro">Dinheiro</label>
-								<input id="dinheiro" type="text" th:field="*{dinheiro}" class="form-control js-moeda" placeholder="R$" />
+								<input id="dinheiro" type="text" th:field="*{dinheiro}" class="form-control js-moeda js-somar-valor" placeholder="R$" />
 							</div>
 						</div>
 					</div>
@@ -128,7 +128,7 @@
 						<div class="col-sm-2">
 							<div class="form-group" th:classappend="${#fields.hasErrors('cartao')} ? has-error">
 								<label for="cartao">Cartão</label>
-								<input id="cartao" type="text" th:field="*{cartao}" class="form-control js-moeda" placeholder="R$" />
+								<input id="cartao" type="text" th:field="*{cartao}" class="form-control js-moeda js-somar-valor" placeholder="R$" />
 							</div>
 						</div>
 					</div>
@@ -137,7 +137,7 @@
 						<div class="col-sm-2">
 							<div class="form-group" th:classappend="${#fields.hasErrors('cheque')} ? has-error">
 								<label for="cheque">Cheque</label>
-								<input id="cheque" type="text" th:field="*{cheque}" class="form-control js-moeda" placeholder="R$" />
+								<input id="cheque" type="text" th:field="*{cheque}" class="form-control js-moeda js-somar-valor" placeholder="R$" />
 							</div>
 						</div>
 					</div>
@@ -146,16 +146,16 @@
 						<div class="col-sm-2">
 							<div class="form-group" th:classappend="${#fields.hasErrors('outros')} ? has-error">
 								<label for="outro">Outros</label>
-								<input id="outro" type="text" th:field="*{outros}" class="form-control js-moeda" placeholder="R$" />
+								<input id="outro" type="text" th:field="*{outros}" class="form-control js-moeda js-somar-valor" placeholder="R$" />
 							</div>
 						</div>
 					</div>
 
 					<div class="row">
 						<div class="col-sm-2">
-							<div class="form-group" th:classappend="${#fields.hasErrors('valorDesconto')} ? has-error">
-								<label for="outro">Valor do Desconto</label>
-								<input id="outro" type="text" th:field="*{valorDesconto}" class="form-control js-moeda" placeholder="R$" />
+							<div class="form-group">
+								<label for="valorDesconto">Valor do Desconto</label>
+								<input id="valorDdesconto" type="text" th:field="*{valorDesconto}" class="form-control js-moeda" placeholder="R$" />
 							</div>
 						</div>
 					</div>
@@ -164,9 +164,9 @@
 					
 					<div class="row">
 						<div class="col-sm-2">
-							<div class="form-group" th:classappend="${#fields.hasErrors('totalPago')} ? has-error">
+							<div class="form-group">
 								<label for="outro">Total Pago</label>
-								<input id="outro" type="text" th:field="*{totalPago}" class="form-control js-moeda" placeholder="R$" />
+								<input id="outro" type="text" th:field="*{totalPago}" class="form-control js-moeda js-total-da-soma" placeholder="R$" readonly="readonly" />
 							</div>
 						</div>
 					</div>
