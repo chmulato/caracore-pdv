@@ -165,7 +165,7 @@ public class ClienteService {
 				if (!Util.validar(cliente.getCpf())) {
 					cliente.setCpf("0");
 				}
-				if (!cliente.equals("NAO_INFORMADO")) {
+				if (!cliente.getNome().equals("NAO_INFORMADO")) {
 					result.add(cliente);
 				}
 			}

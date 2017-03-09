@@ -10,24 +10,20 @@
 	<head>
 		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/pesquisa-itens.css}"/>
 		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/easy-autocomplete.min.css}"/>
-		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/easy-autocomplete.themes.min.css}"/>
 		<script th:inline="javascript">
 		        var options = {
 		        	    url: /*[[@{/clientes/clientes}]]*/ 'http://localhost:8080/clientes/clientes',
-		        	    getValue: "nome",
-		        	    template: {
-		        	        type: "description",
-		        	        fields: {
-		        	            description: "cpf"
-		        	        }
+		        	    getValue: function(element) {
+		        	        return element.nome;
 		        	    },
+
 		        	    list: {
-		        	        match: {
-		        	            enabled: true
-		        	        }
-		        	    },
-		        	    theme: "round"
-		        	};
+		        	        onSelectItemEvent: function() {
+		        	            var selectedItemValue = $("#pesquisa_cliente").getSelectedItemData().cpf;
+		        	            $("#cpf_modal").val(selectedItemValue).trigger("change");
+		        	        }		        	    
+		        	    }
+		        };
 			</script>
 		</head>
 	<body>

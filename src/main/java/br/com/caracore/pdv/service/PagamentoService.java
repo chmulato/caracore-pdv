@@ -44,6 +44,7 @@ public class PagamentoService {
 	 * Método  externo para salvar pagamento
 	 * 
 	 * @param pagamento
+	 * @param cliente
 	 */
 	public void salvar(Pagamento pagamento, Cliente cliente) {
 		if ((Util.validar(pagamento)) && (Util.validar(cliente))) {

@@ -9,5 +9,7 @@ $('#cadastrarClienteModal').on('show.bs.modal', function(event) {
 
 	  $('#pagamento').val(pagamento);
 	  
-	  modal.find('.modal-body span').html('Deseja cadastrar cliente?');
+	  // remove estilo
+	  document.getElementsByClassName('easy-autocomplete')[0].style = "none";
+	  modal.find('.modal-body span').html('Deseja cadastrar Cliente/CPF?');
 	});		
