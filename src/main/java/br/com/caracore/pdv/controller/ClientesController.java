@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -33,14 +32,6 @@ public class ClientesController {
 	@Autowired
 	private ClienteService clienteService;
 
-	@RequestMapping(value = "/clientes", method = RequestMethod.GET, produces = {
-			MediaType.APPLICATION_JSON_VALUE
-	})
-	public ResponseEntity<List<Cliente>> listar() {
-		List<Cliente> clientes = clienteService.listar();
-		return ResponseEntity.status(HttpStatus.OK).body(clientes);
-	}
-	
 	@GetMapping("/novo")
 	public ModelAndView novo(Cliente cliente) {
 		ModelAndView mv = new ModelAndView("cliente/cadastro-cliente");
@@ -97,6 +88,12 @@ public class ClientesController {
 			attributes.addFlashAttribute("error", ex.getMessage());
 		}
 		return "redirect:/clientes";
+	}
+
+	@GetMapping("/clientes")
+	public ResponseEntity<List<Cliente>> listar() {
+		List<Cliente> clientes = clienteService.listar();
+		return ResponseEntity.status(HttpStatus.OK).body(clientes);
 	}
 
 }

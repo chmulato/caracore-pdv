@@ -70,8 +70,15 @@ public class PagamentosController {
 	}
 		
 	@PostMapping("/pagamento")
-	public ModelAndView formaPagamento(@Valid Pagamento pagamento, Errors errors, RedirectAttributes attributes) {
+	public ModelAndView pagamento(@Valid Pagamento pagamento, Errors errors, RedirectAttributes attributes) {
 		ModelAndView mv = new ModelAndView("pagamento/forma-pagamento");
+		Cliente cliente = null;
+		if (Util.validar(pagamento.getCpf())) {
+			String cpf = pagamento.getCpf();
+			pagamento.setCpf(Util.removerFormatoCpf(cpf));
+			cliente = pagamentoService.buscarCliente(cpf);
+		}
+		pagamentoService.salvar(pagamento, cliente);
 		mv.addObject(pagamento);
 		return mv;
 	}

@@ -56,6 +56,10 @@
 							</div>
 						</th:block>
 					</div>
+
+					<div class="alert  alert-danger" th:if="${!#strings.isEmpty(error)}">
+						<span th:text="${error}"></span>
+					</div>
 					
 					<div class="alert  alert-success" th:if="${!#strings.isEmpty(mensagem)}">
 						<span th:text="${mensagem}"></span>
@@ -72,7 +76,7 @@
 
 					<div class="row">
 						<div class="col-sm-2">
-							<div class="form-group" th:classappend="${#fields.hasErrors('cpf')} ? has-error">
+							<div class="form-group">
 								<label for="cpf">Cpf</label>
 								<input id="cpf" type="text" th:field="*{cpf}" class="form-control" />
 							</div>

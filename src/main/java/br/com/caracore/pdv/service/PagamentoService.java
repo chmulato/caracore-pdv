@@ -69,4 +69,14 @@ public class PagamentoService {
 		return clienteService.salvar(cliente);
 	}
 
+	/**
+	 * Método externo para recuperar cliente por cpf
+	 * 
+	 * @param cpf
+	 */
+	public Cliente buscarCliente(String cpf) {
+		cpf = Util.removerFormatoCpf(cpf);
+		return clienteService.pesquisarPorCpf(cpf);
+	}
+	
 }

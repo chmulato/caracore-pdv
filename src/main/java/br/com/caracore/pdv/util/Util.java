@@ -146,6 +146,24 @@ public class Util {
 		return string;
 	}
 
+	/**
+	 * Método para remover formato do cpf
+	 * 
+	 * @param cpf
+	 * @return
+	 */
+	public static String removerFormatoCpf(String cpf) {
+		try {
+			if ((cpf != null) && (!cpf.equals(""))) {
+				cpf = cpf.replace("-", "");
+				cpf = cpf.replace(".", "");
+			}
+		} catch (NumberFormatException ex) {
+			ex.printStackTrace();
+		}
+		return cpf;
+	}
+
 	public static List<Loja> criarListaDeLojas() {
 		Loja loja = new Loja();
 		List<Loja> lista = new ArrayList<>();
