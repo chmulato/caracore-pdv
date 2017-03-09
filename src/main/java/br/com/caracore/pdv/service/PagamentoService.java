@@ -7,12 +7,15 @@ import br.com.caracore.pdv.model.Cliente;
 import br.com.caracore.pdv.model.Pagamento;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.repository.PagamentoRepository;
+import br.com.caracore.pdv.service.exception.CpfExistenteException;
 import br.com.caracore.pdv.util.Util;
 
 @Service
 public class PagamentoService {
 
 	final private String CLIENTE_NAO_INFORMADO = "NAO_INFORMADO";
+	
+	final private boolean CPF_JA_CADASTRADO = true;
 	
 	@Autowired
 	private ClienteService clienteService;
@@ -64,9 +67,16 @@ public class PagamentoService {
 	 * Método externo para salvar cliente na tela de pagamento
 	 * 
 	 * @param cliente
+	 * @return
 	 */
 	public Cliente salvarCliente(Cliente cliente) {
-		return clienteService.salvar(cliente);
+		try {
+			cliente = clienteService.salvar(cliente);
+		} catch (CpfExistenteException ex) {
+			cliente = clienteService.pesquisarPorCpf(cliente.getCpf());
+			cliente.setThereIs(CPF_JA_CADASTRADO);
+		}
+		return cliente;
 	}
 
 	/**

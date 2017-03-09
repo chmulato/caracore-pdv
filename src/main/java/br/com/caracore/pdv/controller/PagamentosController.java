@@ -17,7 +17,6 @@ import br.com.caracore.pdv.model.Pagamento;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.service.PagamentoService;
 import br.com.caracore.pdv.service.VendaService;
-import br.com.caracore.pdv.service.exception.CpfExistenteException;
 import br.com.caracore.pdv.service.exception.CpfInvalidoException;
 import br.com.caracore.pdv.service.exception.DescontoInvalidoException;
 import br.com.caracore.pdv.service.exception.NomeExistenteException;
@@ -56,12 +55,14 @@ public class PagamentosController {
 				cliente = pagamentoService.salvarCliente(cliente);
 				pagamento.setCpf(cliente.getCpf());
 				pagamentoService.salvar(pagamento, cliente);
-				attributes.addFlashAttribute("mensagem", "Cliente cadastrado com sucesso!");
+				if (cliente.isThereIs()) {
+					attributes.addFlashAttribute("info", "CPF já cadastrado!");
+				} else {
+					attributes.addFlashAttribute("mensagem", "Cliente cadastrado com sucesso!");
+				}
 			}
 		} catch (CpfInvalidoException ex) {
 			attributes.addFlashAttribute("error", "CPF inválido!");
-		} catch (CpfExistenteException ex) {
-			attributes.addFlashAttribute("error", "CPF já cadastrado!");
 		} catch (NomeExistenteException ex) {
 			attributes.addFlashAttribute("error", "Nome já existente!");
 		}

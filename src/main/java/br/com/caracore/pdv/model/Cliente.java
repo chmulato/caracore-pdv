@@ -32,6 +32,9 @@ public class Cliente {
 	
 	@Transient
 	private boolean isDefault;
+
+	@Transient
+	private boolean thereIs;
 	
 	public Cliente() {
 		super();
@@ -44,15 +47,7 @@ public class Cliente {
 	
 	public Cliente(String cpf, String nome) {
 		super();
-		try {
-			if ((cpf != null) && (!cpf.equals(""))) {
-				cpf = cpf.replace("-", "");
-				cpf = cpf.replace(".", "");
-			}
-		} catch (NumberFormatException ex) {
-			ex.printStackTrace();
-		}
-		this.cpf = cpf;
+		this.cpf = Util.removerFormatoCpf(cpf);
 		this.nome = nome;
 	}
 
@@ -69,15 +64,7 @@ public class Cliente {
 	}
 
 	public void setCpf(String cpf) {
-		try {
-			if ((cpf != null) && (!cpf.equals(""))) {
-				cpf = cpf.replace("-", "");
-				cpf = cpf.replace(".", "");
-			}
-		} catch (NumberFormatException ex) {
-			ex.printStackTrace();
-		}
-		this.cpf = cpf;
+		this.cpf = Util.removerFormatoCpf(cpf);
 	}
 
 	public String getNome() {
@@ -120,6 +107,14 @@ public class Cliente {
 
 	public void setIsDefault(Boolean isDefault) {
 		this.isDefault = isDefault;
+	}
+
+	public boolean isThereIs() {
+		return thereIs;
+	}
+
+	public void setThereIs(boolean thereIs) {
+		this.thereIs = thereIs;
 	}
 
 	@Override
