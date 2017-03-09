@@ -19,6 +19,7 @@ import br.com.caracore.pdv.model.types.StatusVenda;
 import br.com.caracore.pdv.repository.VendaRepository;
 import br.com.caracore.pdv.repository.filter.VendedorFilter;
 import br.com.caracore.pdv.service.exception.DescontoInvalidoException;
+import br.com.caracore.pdv.service.exception.ProdutoNaoCadastradoException;
 import br.com.caracore.pdv.util.Util;
 
 @Service
@@ -332,6 +333,8 @@ public class VendaService {
 				item.setQuantidade(Integer.valueOf(QUANTIDADE_UNITARIA));
 			}
 			item.setSubTotal(subTotal(item));
+		} else {
+			throw new ProdutoNaoCadastradoException("Produto não cadastrado!");
 		}
 		return item;
 	}

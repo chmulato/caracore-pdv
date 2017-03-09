@@ -23,6 +23,7 @@ import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.repository.filter.ProdutoFilter;
 import br.com.caracore.pdv.repository.filter.VendedorFilter;
 import br.com.caracore.pdv.service.VendaService;
+import br.com.caracore.pdv.service.exception.ProdutoNaoCadastradoException;
 import br.com.caracore.pdv.util.Util;
 
 @Controller
@@ -33,7 +34,7 @@ public class VendasController {
 	private VendaService vendaService;
 	
 	@GetMapping("/produto")
-	public ModelAndView pesquisarProduto(ProdutoFilter produtoFilter) {
+	public ModelAndView pesquisarProduto(ProdutoFilter produtoFilter, BindingResult result, RedirectAttributes attributes) {
 		Long codigoProduto = null;
 		Integer quantidade = null;
 		String codigoBarra = null;
@@ -49,8 +50,14 @@ public class VendasController {
 				codigoBarra = produtoFilter.getCodigoBarra();
 			}
 		}
-		Venda venda = vendaService.comprar(codigoProduto, quantidade, codigoBarra, operador);
-		return novo(venda);
+		Venda venda = null;
+		try {
+			venda = vendaService.comprar(codigoProduto, quantidade, codigoBarra, operador);
+			return novo(venda);
+		} catch (ProdutoNaoCadastradoException ex) {
+			attributes.addFlashAttribute("error", ex.getMessage());
+			return new ModelAndView("redirect:/vendas/novo");
+		}
 	}
 	
 	@GetMapping("/novo")
