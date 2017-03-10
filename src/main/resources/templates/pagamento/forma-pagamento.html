@@ -123,7 +123,7 @@
 
 						<div class="col-sm-2">
 							<div class="form-group">
-								<label for="outro">Total A Pagar</label>
+								<label for="outro">Total A pagar</label>
 								<input id="outro" type="text" th:field="*{totalApagar}" class="form-control js-moeda js-pagar-total-a-pagar" placeholder="R$" readonly="readonly" />
 							</div>
 						</div>
@@ -172,20 +172,29 @@
 					<div class="row">
 						<div class="col-sm-2">
 							<div class="form-group">
-								<label for="totalPago">Total pago</label>
+								<label for="totalPago">A Pagar</label>
 								<input id="totalPago" type="text" name="totalPago" class="form-control js-moeda js-total-da-soma" placeholder="R$" readonly="readonly" />
 							</div>
 						</div>
 
 						<div class="col-sm-2">
 							<div class="form-group">
-								<a th:href="@{/vendas/novo}" class="btn  btn-default btn-venda">Retornar</a>
-								<button class="btn  btn-primary btn-venda" type="submit">Pagar</button>
+								<label for="saldo">Saldo</label>
+								<input id="saldo" type="text" name="saldo" class="form-control js-moeda js-saldo" placeholder="R$" readonly="readonly" />
 							</div>
 						</div>
 					</div>
 
 					<hr>
+
+					<div class="row">
+						<div class="col-sm-2">
+							<div class="form-group">
+								<a th:href="@{/vendas/novo}" class="btn  btn-default">Retornar</a>
+								<button class="btn  btn-primary" type="submit">Pagar</button>
+							</div>
+						</div>
+					</div>
 
 				</form>
 				

@@ -1,21 +1,38 @@
 $("#pesquisa_cliente").easyAutocomplete(options);
+
 $(document).on("change", ".js-somar-valor", function() {
-    var sum = 0;
+    var soma = 0;
+    var saldo = 0;
+    var totalAPagar = 0;
+    
+    totalAPagar  = $(".js-pagar-total-a-pagar").val().replace('.','').replace(',','.');
+    
     $(".js-somar-valor").each(function() {
-    	sum += +$(this).val().replace('.','').replace(',','.');
+    	soma += +$(this).val().replace('.','').replace(',','.');
     });
-    sum = parseFloat(Math.round(sum * 100) / 100).toFixed(2);
-    sum = sum.replace('.','');
-    sum = sum.replace(',','');
-    $(".js-total-da-soma").val(formatReal(sum));
+    
+    saldo = totalAPagar - soma;
+    
+    saldo = parseFloat(Math.round(saldo * 100) / 100).toFixed(2);
+    saldo = saldo.replace('.','');
+    saldo = saldo.replace(',','');
+    
+    soma = parseFloat(Math.round(soma * 100) / 100).toFixed(2);
+    soma = soma.replace('.','');
+    soma = soma.replace(',','');
+    $(".js-total-da-soma").val(formatReal(soma));
+    $(".js-saldo").val(formatReal(saldo));
 });
+
 $(document).on("change", ".js-pagar-desconto", function() {
     var subTotal = 0;
     var desconto = 0;
     var totalAPagar = 0;
     var valorDesconto = 0;
+    
 	subTotal  = $(".js-pagar-sub-total").val().replace('.','').replace(',','.');
 	desconto = $(".js-pagar-desconto").val().replace('.','').replace(',','.');
+	
 	if ((desconto >= 0) && (desconto <= 100)) {
 		valorDesconto = (subTotal * desconto)/100;
 		totalAPagar = subTotal - valorDesconto;
