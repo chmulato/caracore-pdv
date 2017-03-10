@@ -163,6 +163,8 @@ public class Venda {
 			if ((desc < ZERO) || (desc > PORCENTAGEM)) {
 				validar = Boolean.FALSE;
 			}
+		} else {
+			validar = Boolean.FALSE;
 		}
 		return validar;
 	}

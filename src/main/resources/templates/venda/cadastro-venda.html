@@ -139,19 +139,19 @@
 					<div class="col-sm-4">
 						<div class="form-group">
 							<label for="nome">Sub Total</label>
-							<input id="nome" type="text" class="form-control" th:field="*{subTotal}" readonly="readonly" />
+							<input id="nome" type="text" class="form-control js-calcular-sub-total" th:field="*{subTotal}" readonly="readonly" />
 						</div>
 					</div>
 					<div class="col-sm-4">
 						<div class="form-group">
 							<label for="descontoTotal">Desconto Total</label>
-							<input id="descontoTotal" type="text" class="form-control js-moeda" placeholder="%" th:field="*{descontoTotal}"/>
+							<input id="descontoTotal" type="text" class="form-control js-moeda js-calcular-desconto" placeholder="%" th:field="*{descontoTotal}"/>
 						</div>
 					</div>
 					<div class="col-sm-4">
 						<div class="form-group">
 							<label for="total">Total</label>
-							<input id="total" type="text" class="form-control" th:field="*{total}" readonly="readonly" />
+							<input id="total" type="text" class="form-control js-calcular-total" th:field="*{total}" readonly="readonly" />
 						</div>
 					</div>
 

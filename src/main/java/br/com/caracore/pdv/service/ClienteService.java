@@ -100,7 +100,7 @@ public class ClienteService {
 	 * @return
 	 */
 	public Cliente pesquisarPorCpf(String cpf) {
-		return clienteRepository.findByCpf(cpf);
+		return clienteRepository.findByCpfContainingIgnoreCase(cpf);
 	}
 	
 	/**

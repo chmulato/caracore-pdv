@@ -126,8 +126,14 @@ public class PagamentosController {
 			Cliente cliente = new Cliente();
 			vendaService.salvarDescontoTotal(venda.getCodigo(), venda.getDescontoTotal());
 			Pagamento pagamento = pagamentoService.pesquisarPorVenda(venda);
+			if ((Util.validar(pagamento) && (Util.validar(pagamento.getCpf())))) {
+				String cpf = pagamento.getCpf();
+				cliente = pagamentoService.buscarCliente(cpf);
+			}
 			if (!Util.validar(pagamento)) {
-				pagamento = new Pagamento(cliente, venda, venda.getSubTotal(), venda.getDescontoTotal());
+				pagamento = new Pagamento(cliente, venda, venda.getSubTotal(), venda.getTotal(), venda.getDescontoTotal());
+			} else {
+				pagamento.atualizarPagamento(pagamento.getCliente(), venda, venda.getSubTotal(), venda.getTotal(), venda.getDescontoTotal());
 			}
 			pagamentoService.salvar(pagamento, cliente);
 			mv.addObject(pagamento);

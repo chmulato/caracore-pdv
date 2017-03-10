@@ -30,10 +30,10 @@ public class Pagamento {
 	@ManyToOne
 	@JoinColumn(name = "VENDA_ID")
 	private Venda venda;
-	
-	@NotNull(message = "Total a pagar é obrigatório!")
+
+	@NotNull(message = "Sub Total é obrigatório!")
 	@NumberFormat(pattern = "#,##0.00")
-	private BigDecimal totalApagar;
+	private BigDecimal subTotal;
 	
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal dinheiro;
@@ -53,11 +53,31 @@ public class Pagamento {
 
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal valorDesconto;
-
+	
+	@NotNull(message = "Total a pagar é obrigatório!")
 	@NumberFormat(pattern = "#,##0.00")
-	private BigDecimal totalPago;
+	private BigDecimal totalApagar;
 
 	private String cpf;
+	
+	/**
+	 * Método interno para calcular o valor a pagar
+	 * 
+	 * @param total
+	 * @param valorDesconto
+	 * @return
+	 */
+	private BigDecimal totalAPagar(BigDecimal total, BigDecimal valorDesconto) {
+		double valor = 0L;
+		if ((total != null) && (valorDesconto != null)) {
+			double _total = total.doubleValue();
+			double _valorDesconto = valorDesconto.doubleValue();
+			if (_total >= _valorDesconto) {
+				valor = total.doubleValue() - valorDesconto.doubleValue();
+			}
+		}
+		return BigDecimal.valueOf(valor);
+	}
 	
 	/**
 	 * Método interno para calcular o valor de desconto
@@ -80,6 +100,24 @@ public class Pagamento {
 		return new BigDecimal(valorDesconto);
 	}
 
+	/**
+	 * Setar variaveis para inicialização das mesmas
+	 * 
+	 * @param cliente
+	 * @param venda
+	 * @param subTotal
+	 * @param descontoTotal
+	 */
+	private void setVariaveis(Cliente cliente, Venda venda, BigDecimal subTotal, BigDecimal descontoTotal) {
+		BigDecimal valorDesconto = valorDesconto(subTotal, descontoTotal);
+		this.cliente = cliente;
+		this.venda = venda;
+		this.subTotal = subTotal;
+		this.desconto = descontoTotal;
+		this.valorDesconto = valorDesconto;
+		this.totalApagar = totalAPagar(subTotal, valorDesconto);
+	}
+
 	public Pagamento() {
 		super();
 	}
@@ -87,17 +125,26 @@ public class Pagamento {
 	/**
 	 * Construtor inicial da classe Pagamento
 	 * 
+	 * @param cliente
 	 * @param venda
 	 * @param totalApagar
 	 * @param descontoTotal
 	 */
-	public Pagamento(Cliente cliente, Venda venda, BigDecimal totalApagar, BigDecimal descontoTotal) {
+	public Pagamento(Cliente cliente, Venda venda, BigDecimal subTotal, BigDecimal totalApagar, BigDecimal descontoTotal) {
 		super();
-		this.cliente = cliente;
-		this.venda = venda;
-		this.totalApagar = totalApagar;
-		this.desconto = descontoTotal;
-		this.valorDesconto = valorDesconto(totalApagar, descontoTotal);
+		setVariaveis(cliente, venda, subTotal, descontoTotal);
+	}
+
+	/**
+	 * Atualizar pagamento
+	 * 
+	 * @param cliente
+	 * @param venda
+	 * @param totalApagar
+	 * @param descontoTotal
+	 */
+	public void atualizarPagamento(Cliente cliente, Venda venda, BigDecimal subTotal, BigDecimal totalApagar, BigDecimal descontoTotal) {
+		setVariaveis(cliente, venda, subTotal, descontoTotal);
 	}
 	
 	public Long getCodigo() {
@@ -180,12 +227,12 @@ public class Pagamento {
 		this.valorDesconto = valorDesconto;
 	}
 
-	public BigDecimal getTotalPago() {
-		return totalPago;
+	public BigDecimal getSubTotal() {
+		return subTotal;
 	}
 
-	public void setTotalPago(BigDecimal totalPago) {
-		this.totalPago = totalPago;
+	public void setSubTotal(BigDecimal subTotal) {
+		this.subTotal = subTotal;
 	}
 
 	public String getCpf() {
@@ -200,6 +247,7 @@ public class Pagamento {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((subTotal == null) ? 0 : subTotal.hashCode());
 		result = prime * result + ((cartao == null) ? 0 : cartao.hashCode());
 		result = prime * result + ((cheque == null) ? 0 : cheque.hashCode());
 		result = prime * result + ((cliente == null) ? 0 : cliente.hashCode());
@@ -209,7 +257,6 @@ public class Pagamento {
 		result = prime * result + ((dinheiro == null) ? 0 : dinheiro.hashCode());
 		result = prime * result + ((outros == null) ? 0 : outros.hashCode());
 		result = prime * result + ((totalApagar == null) ? 0 : totalApagar.hashCode());
-		result = prime * result + ((totalPago == null) ? 0 : totalPago.hashCode());
 		result = prime * result + ((valorDesconto == null) ? 0 : valorDesconto.hashCode());
 		result = prime * result + ((venda == null) ? 0 : venda.hashCode());
 		return result;
@@ -224,6 +271,11 @@ public class Pagamento {
 		if (getClass() != obj.getClass())
 			return false;
 		Pagamento other = (Pagamento) obj;
+		if (subTotal == null) {
+			if (other.subTotal != null)
+				return false;
+		} else if (!subTotal.equals(other.subTotal))
+			return false;
 		if (cartao == null) {
 			if (other.cartao != null)
 				return false;
@@ -264,20 +316,15 @@ public class Pagamento {
 				return false;
 		} else if (!outros.equals(other.outros))
 			return false;
-		if (totalApagar == null) {
-			if (other.totalApagar != null)
-				return false;
-		} else if (!totalApagar.equals(other.totalApagar))
-			return false;
-		if (totalPago == null) {
-			if (other.totalPago != null)
-				return false;
-		} else if (!totalPago.equals(other.totalPago))
-			return false;
 		if (valorDesconto == null) {
 			if (other.valorDesconto != null)
 				return false;
 		} else if (!valorDesconto.equals(other.valorDesconto))
+			return false;
+		if (totalApagar == null) {
+			if (other.totalApagar != null)
+				return false;
+		} else if (!totalApagar.equals(other.totalApagar))
 			return false;
 		if (venda == null) {
 			if (other.venda != null)
