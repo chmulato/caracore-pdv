@@ -179,22 +179,20 @@
 
 						<div class="col-sm-2">
 							<div class="form-group">
-								<label for="saldo">Saldo</label>
-								<input id="saldo" type="text" name="saldo" class="form-control js-moeda js-saldo" placeholder="R$" readonly="readonly" />
+								<label for="troco">Troco</label>
+								<input id="troco" type="text" th:field="*{troco}" class="form-control js-moeda js-troco" placeholder="R$" readonly="readonly" />
+							</div>
+						</div>
+
+						<div class="col-sm-2">
+							<div class="form-group">
+								<a th:href="@{/vendas/novo}" class="btn  btn-default  btn-venda">Retornar</a>
+								<button class="btn  btn-primary  btn-venda" type="submit">Pagar</button>
 							</div>
 						</div>
 					</div>
 
 					<hr>
-
-					<div class="row">
-						<div class="col-sm-2">
-							<div class="form-group">
-								<a th:href="@{/vendas/novo}" class="btn  btn-default">Retornar</a>
-								<button class="btn  btn-primary" type="submit">Pagar</button>
-							</div>
-						</div>
-					</div>
 
 				</form>
 				

@@ -2,7 +2,7 @@ $("#pesquisa_cliente").easyAutocomplete(options);
 
 $(document).on("change", ".js-somar-valor", function() {
     var soma = 0;
-    var saldo = 0;
+    var troco = 0;
     var totalAPagar = 0;
     
     totalAPagar  = $(".js-pagar-total-a-pagar").val().replace('.','').replace(',','.');
@@ -11,23 +11,23 @@ $(document).on("change", ".js-somar-valor", function() {
     	soma += +$(this).val().replace('.','').replace(',','.');
     });
     
-    saldo = totalAPagar - soma;
+    troco = totalAPagar - soma;
     
-    saldo = parseFloat(Math.round(saldo * 100) / 100).toFixed(2);
-    saldo = saldo.replace('.','');
-    saldo = saldo.replace(',','');
+    troco = parseFloat(Math.round(troco * 100) / 100).toFixed(2);
+    troco = troco.replace('.','');
+    troco = troco.replace(',','');
     
     soma = parseFloat(Math.round(soma * 100) / 100).toFixed(2);
 	  // modificar estilo
-    if (saldo < 0) {
-    	document.getElementsByClassName('js-saldo')[0].style = "border-color: red;";
+    if (troco > 0) {
+    	document.getElementsByClassName('js-troco')[0].style = "border-color: red;";
     } else {
-    	document.getElementsByClassName('js-saldo')[0].style = "none";
+    	document.getElementsByClassName('js-troco')[0].style = "border-color: green;";
     }
     soma = soma.replace('.','');
     soma = soma.replace(',','');
     $(".js-total-da-soma").val(formatReal(soma));
-    $(".js-saldo").val(formatReal(saldo));
+    $(".js-troco").val(formatReal(troco * (-1)));
 });
 
 $(document).on("change", ".js-pagar-desconto", function() {

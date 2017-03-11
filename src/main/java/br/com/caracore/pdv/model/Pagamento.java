@@ -58,6 +58,9 @@ public class Pagamento {
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal totalApagar;
 
+	@NumberFormat(pattern = "#,##0.00")
+	private BigDecimal troco;
+
 	private String cpf;
 	
 	/**
@@ -235,6 +238,14 @@ public class Pagamento {
 		this.subTotal = subTotal;
 	}
 
+	public BigDecimal getTroco() {
+		return troco;
+	}
+
+	public void setTroco(BigDecimal troco) {
+		this.troco = troco;
+	}
+
 	public String getCpf() {
 		return cpf;
 	}
@@ -247,7 +258,6 @@ public class Pagamento {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((subTotal == null) ? 0 : subTotal.hashCode());
 		result = prime * result + ((cartao == null) ? 0 : cartao.hashCode());
 		result = prime * result + ((cheque == null) ? 0 : cheque.hashCode());
 		result = prime * result + ((cliente == null) ? 0 : cliente.hashCode());
@@ -256,7 +266,9 @@ public class Pagamento {
 		result = prime * result + ((desconto == null) ? 0 : desconto.hashCode());
 		result = prime * result + ((dinheiro == null) ? 0 : dinheiro.hashCode());
 		result = prime * result + ((outros == null) ? 0 : outros.hashCode());
+		result = prime * result + ((subTotal == null) ? 0 : subTotal.hashCode());
 		result = prime * result + ((totalApagar == null) ? 0 : totalApagar.hashCode());
+		result = prime * result + ((troco == null) ? 0 : troco.hashCode());
 		result = prime * result + ((valorDesconto == null) ? 0 : valorDesconto.hashCode());
 		result = prime * result + ((venda == null) ? 0 : venda.hashCode());
 		return result;
@@ -271,11 +283,6 @@ public class Pagamento {
 		if (getClass() != obj.getClass())
 			return false;
 		Pagamento other = (Pagamento) obj;
-		if (subTotal == null) {
-			if (other.subTotal != null)
-				return false;
-		} else if (!subTotal.equals(other.subTotal))
-			return false;
 		if (cartao == null) {
 			if (other.cartao != null)
 				return false;
@@ -316,15 +323,25 @@ public class Pagamento {
 				return false;
 		} else if (!outros.equals(other.outros))
 			return false;
-		if (valorDesconto == null) {
-			if (other.valorDesconto != null)
+		if (subTotal == null) {
+			if (other.subTotal != null)
 				return false;
-		} else if (!valorDesconto.equals(other.valorDesconto))
+		} else if (!subTotal.equals(other.subTotal))
 			return false;
 		if (totalApagar == null) {
 			if (other.totalApagar != null)
 				return false;
 		} else if (!totalApagar.equals(other.totalApagar))
+			return false;
+		if (troco == null) {
+			if (other.troco != null)
+				return false;
+		} else if (!troco.equals(other.troco))
+			return false;
+		if (valorDesconto == null) {
+			if (other.valorDesconto != null)
+				return false;
+		} else if (!valorDesconto.equals(other.valorDesconto))
 			return false;
 		if (venda == null) {
 			if (other.venda != null)

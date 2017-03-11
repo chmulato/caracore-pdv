@@ -55,7 +55,7 @@ public class PagamentosController {
 				cliente = new Cliente(cpf, nome);
 				cliente = pagamentoService.salvarCliente(cliente);
 				pagamento.setCpf(cliente.getCpf());
-				pagamentoService.salvar(pagamento, cliente);
+				pagamento = pagamentoService.salvar(pagamento, cliente);
 				if (cliente.isThereIs()) {
 					attributes.addFlashAttribute("info", "CPF já cadastrado!");
 				} else {
@@ -77,14 +77,12 @@ public class PagamentosController {
 			return pesquisarPagamento(pagamento, attributes);
 		}
 		ModelAndView mv = new ModelAndView("redirect:/pagamentos/forma-pagamento");
-		Cliente cliente = null;		
 		try {
 			if (Util.validar(pagamento.getCpf())) {
 				String cpf = pagamento.getCpf();
 				pagamento.setCpf(Util.removerFormatoCpf(cpf));
-				cliente = pagamentoService.buscarCliente(cpf);
 			}
-			pagamentoService.salvar(pagamento, cliente);
+			pagamento = pagamentoService.salvar(pagamento);
 			attributes.addFlashAttribute("mensagem", "Pago com sucesso!");
 			mv.addObject(pagamento);
 			return mv;
@@ -135,7 +133,7 @@ public class PagamentosController {
 			} else {
 				pagamento.atualizarPagamento(pagamento.getCliente(), venda, venda.getSubTotal(), venda.getTotal(), venda.getDescontoTotal());
 			}
-			pagamentoService.salvar(pagamento, cliente);
+			pagamento = pagamentoService.salvar(pagamento, cliente);
 			mv.addObject(pagamento);
 			return mv;
 		} catch (DescontoInvalidoException ex) {
