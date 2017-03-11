@@ -18,6 +18,12 @@ $(document).on("change", ".js-somar-valor", function() {
     saldo = saldo.replace(',','');
     
     soma = parseFloat(Math.round(soma * 100) / 100).toFixed(2);
+	  // modificar estilo
+    if (saldo < 0) {
+    	document.getElementsByClassName('js-saldo')[0].style = "border-color: red;";
+    } else {
+    	document.getElementsByClassName('js-saldo')[0].style = "none";
+    }
     soma = soma.replace('.','');
     soma = soma.replace(',','');
     $(".js-total-da-soma").val(formatReal(soma));
