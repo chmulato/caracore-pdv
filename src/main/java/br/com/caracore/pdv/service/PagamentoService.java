@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import br.com.caracore.pdv.model.Cliente;
 import br.com.caracore.pdv.model.Pagamento;
 import br.com.caracore.pdv.model.Venda;
+import br.com.caracore.pdv.model.types.StatusVenda;
 import br.com.caracore.pdv.repository.PagamentoRepository;
 import br.com.caracore.pdv.service.exception.CpfExistenteException;
 import br.com.caracore.pdv.service.exception.CpfInvalidoException;
@@ -32,6 +33,9 @@ public class PagamentoService {
 
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+
+	@Autowired
+	private VendaService vendaService;
 
 	/**
 	 * Método interno para validar cpf e se o cpf informado corresponde ao
@@ -162,10 +166,21 @@ public class PagamentoService {
 	 * @param pagamento
 	 * @return
 	 */
-	public Pagamento salvar(Pagamento pagamento) {
+	public Pagamento pagar(Pagamento pagamento) {
 		validarCpfDeCliente(pagamento);
 		validarPagamento(pagamento);
-		return pagamentoRepository.save(pagamento);
+		pagamento = pagamentoRepository.save(pagamento);
+		if ((Util.validar(pagamento)) && (Util.validar(pagamento.getVenda()))) {
+			if (Util.validar(pagamento.getVenda().getCodigo())) {
+				Long codigoVenda = pagamento.getVenda().getCodigo();
+				Venda venda = vendaService.pesquisarPorId(codigoVenda);
+				if ((Util.validar(venda)) && (Util.validar(venda.getDescontoTotal()))) {
+					BigDecimal desconto = pagamento.getDesconto();
+					vendaService.salvarDescontoEStatus(codigoVenda, desconto, StatusVenda.FINALIZADO);
+				}
+			}
+		}
+		return pagamento;
 	}
 
 	/**

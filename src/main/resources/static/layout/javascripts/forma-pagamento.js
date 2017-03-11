@@ -11,7 +11,7 @@ $(document).on("change", ".js-somar-valor", function() {
     	soma += +$(this).val().replace('.','').replace(',','.');
     });
     
-    troco = totalAPagar - soma;
+    troco = soma - totalAPagar;
     
     troco = parseFloat(Math.round(troco * 100) / 100).toFixed(2);
     troco = troco.replace('.','');
@@ -19,7 +19,7 @@ $(document).on("change", ".js-somar-valor", function() {
     
     soma = parseFloat(Math.round(soma * 100) / 100).toFixed(2);
 	  // modificar estilo
-    if (troco > 0) {
+    if (troco < 0) {
     	document.getElementsByClassName('js-troco')[0].style = "border-color: red;";
     } else {
     	document.getElementsByClassName('js-troco')[0].style = "border-color: green;";
@@ -27,7 +27,7 @@ $(document).on("change", ".js-somar-valor", function() {
     soma = soma.replace('.','');
     soma = soma.replace(',','');
     $(".js-total-da-soma").val(formatReal(soma));
-    $(".js-troco").val(formatReal(troco * (-1)));
+    $(".js-troco").val(formatReal(troco));
 });
 
 $(document).on("change", ".js-pagar-desconto", function() {

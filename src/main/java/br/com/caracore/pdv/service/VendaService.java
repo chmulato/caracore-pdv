@@ -203,6 +203,27 @@ public class VendaService {
 		}
 		return validar;
 	}
+	/**
+	 * Método para atualizar o desconto total da compra
+	 * 
+	 * @param codigo
+	 * @param desconto
+	 * @param status
+	 */
+	public void salvarDescontoEStatus(Long codigo, BigDecimal desconto, StatusVenda status) {
+		Venda venda = null;
+		if ((Util.validar(codigo)) && (Util.validar(desconto))) {
+			if ((desconto.doubleValue() < ZERO) || (desconto.doubleValue() > PORCENTAGEM)) {
+				throw new DescontoInvalidoException("Desconto inválido!");
+			}
+			venda = vendaRepository.findOne(codigo);
+			if (Util.validar(venda)) {
+				venda.setDescontoTotal(desconto);
+				venda.setStatus(status);
+				vendaRepository.save(venda);
+			}
+		}
+	}
 
 	/**
 	 * Método para atualizar o desconto total da compra

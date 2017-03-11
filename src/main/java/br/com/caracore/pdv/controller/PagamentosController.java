@@ -82,7 +82,7 @@ public class PagamentosController {
 				String cpf = pagamento.getCpf();
 				pagamento.setCpf(Util.removerFormatoCpf(cpf));
 			}
-			pagamento = pagamentoService.salvar(pagamento);
+			pagamento = pagamentoService.pagar(pagamento);
 			attributes.addFlashAttribute("mensagem", "Pago com sucesso!");
 			mv.addObject(pagamento);
 			return mv;

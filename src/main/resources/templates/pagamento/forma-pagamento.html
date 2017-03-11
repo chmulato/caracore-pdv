@@ -138,9 +138,7 @@
 								<input id="dinheiro" type="text" th:field="*{dinheiro}" class="form-control js-moeda js-somar-valor" placeholder="R$" />
 							</div>
 						</div>
-					</div>
 
-					<div class="row">
 						<div class="col-sm-2">
 							<div class="form-group" th:classappend="${#fields.hasErrors('cartao')} ? has-error">
 								<label for="cartao">Cartão</label>
@@ -156,9 +154,7 @@
 								<input id="cheque" type="text" th:field="*{cheque}" class="form-control js-moeda js-somar-valor" placeholder="R$" />
 							</div>
 						</div>
-					</div>
 
-					<div class="row">
 						<div class="col-sm-2">
 							<div class="form-group" th:classappend="${#fields.hasErrors('outros')} ? has-error">
 								<label for="outro">Outros</label>
