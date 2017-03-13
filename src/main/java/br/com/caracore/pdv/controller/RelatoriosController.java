@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import br.com.caracore.pdv.model.Pagamento;
+import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.service.PagamentoService;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
@@ -35,7 +35,7 @@ public class RelatoriosController {
 
 	final private static String DS_KEY = "dados";
 
-	private List<Pagamento> pagamentos;
+	private List<Venda> vendas;
 	
 	@Autowired
 	ServletContext context; 
@@ -43,20 +43,20 @@ public class RelatoriosController {
 	@Autowired
 	PagamentoService pagamentoService;
 	
-	@GetMapping("/compras/{codigo}")
+	@GetMapping("/compras/{codigoPagamento}")
 	@ResponseBody
-	public void getReportCompras(HttpServletResponse response, @PathVariable Long codigo) throws JRException, IOException {
+	public void getReportCompras(HttpServletResponse response, @PathVariable Long codigoPagamento) throws JRException, IOException {
 
-		Pagamento pagamento = pagamentoService.pesquisarPorCodigo(codigo);
+		Venda venda = pagamentoService.buscarVendaPorCodigoPagamento(codigoPagamento);
 		
-		if (pagamento != null) {
-
-			pagamentos = new ArrayList<>();
-			pagamentos.add(pagamento);
+		if (venda != null) {
+			
+			vendas = new ArrayList<>();
+			vendas.add(venda);
 
 			InputStream jasperStream = this.getClass().getResourceAsStream("/reports/relatorio_compras.jasper");
 
-			JRBeanCollectionDataSource dados = new JRBeanCollectionDataSource(pagamentos);
+			JRBeanCollectionDataSource dados = new JRBeanCollectionDataSource(vendas);
 			
 			Map<String, Object> parameters = new HashMap<>();
 	        

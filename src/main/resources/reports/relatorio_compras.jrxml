@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-03-13T13:51:19 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RelatorioAditivo" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="b1c7f85b-da37-4605-bdb5-86d7aca6701d">
+<!-- 2017-03-13T15:01:26 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorio_compras" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="b1c7f85b-da37-4605-bdb5-86d7aca6701d">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.5"/>
@@ -16,7 +16,8 @@
 	<parameter name="DATAINICIO" class="java.lang.String"/>
 	<parameter name="LOGOMARCA" class="java.lang.String"/>
 	<parameter name="DATAFIM" class="java.lang.String"/>
-	<field name="geracaoData" class="java.util.Date"/>
+	<field name="data" class="java.util.Date"/>
+	<field name="vendedor" class="java.lang.String"/>
 	<field name="numero" class="java.lang.Integer"/>
 	<field name="faceValor" class="java.math.BigDecimal"/>
 	<field name="desembolsoValor" class="java.math.BigDecimal"/>
@@ -35,7 +36,7 @@
 		<variableExpression><![CDATA[$F{desembolsoValor}]]></variableExpression>
 	</variable>
 	<group name="Data">
-		<groupExpression><![CDATA[$F{geracaoData}]]></groupExpression>
+		<groupExpression><![CDATA[$F{data}]]></groupExpression>
 		<groupHeader>
 			<band height="5">
 				<line>
@@ -170,7 +171,7 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial"/>
 				</textElement>
-				<text><![CDATA[Aditivo]]></text>
+				<text><![CDATA[Vendedor]]></text>
 			</staticText>
 			<staticText>
 				<reportElement key="staticText-3" x="310" y="2" width="84" height="13" uuid="67a931ee-4671-4151-a9ec-379751a7b68a"/>
@@ -216,7 +217,7 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{geracaoData}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{data}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField" x="167" y="1" width="121" height="13" uuid="70b25644-e43c-410d-ab8d-2d82c03ae9c5"/>
@@ -229,7 +230,7 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{numero}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{vendedor}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="false">
 				<reportElement key="textField" x="310" y="1" width="84" height="13" uuid="2ad90ad4-a06e-41f3-ab04-b5c4ee2c92bc"/>
