@@ -184,7 +184,7 @@
 							<div class="form-group">
 								<a th:href="@{/vendas/novo}" class="btn  btn-default  btn-venda">Retornar</a>
 								<button class="btn  btn-primary  btn-venda" type="submit" th:if="${!pagamento.ok}">Pagar</button>
-								<a th:href="@{/relatorios/compras/{codigo}(codigo=${pagamento?.codigo})}" class="btn  btn-danger  btn-venda" th:if="${pagamento.ok}">Extrato</a>
+								<a th:href="@{/relatorios/compras/{codigo}(codigo=${pagamento?.codigo})}" class="btn  btn-info  btn-venda" th:if="${pagamento.ok}">Extrato</a>
 							</div>
 						</div>
 					</div>
