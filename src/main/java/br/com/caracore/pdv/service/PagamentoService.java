@@ -1,13 +1,11 @@
 package br.com.caracore.pdv.service;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.caracore.pdv.model.Cliente;
-import br.com.caracore.pdv.model.ItemVenda;
 import br.com.caracore.pdv.model.Pagamento;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.types.StatusVenda;
@@ -32,9 +30,6 @@ public class PagamentoService {
 
 	@Autowired
 	private ClienteService clienteService;
-
-	@Autowired
-	private ItemVendaService itemVendaService;
 
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
@@ -233,32 +228,6 @@ public class PagamentoService {
 	public Cliente buscarCliente(String cpf) {
 		cpf = Util.removerFormatoCpf(cpf);
 		return clienteService.pesquisarPorCpf(cpf);
-	}
-	
-	/**
-	 * Método externo para buscar venda referente ao pagamento.
-	 * 
-	 * @param codigoPagamento
-	 * @return
-	 */
-	public Venda buscarVendaPorCodigoPagamento(Long codigoPagamento) {
-		Venda venda = null;
-		if (Util.validar(codigoPagamento)) {
-			Pagamento pagamento = pagamentoRepository.findOne(codigoPagamento);
-			if (Util.validar(pagamento)) {
-				if (Util.validar(pagamento.getVenda())) {
-					if (Util.validar(pagamento.getVenda().getCodigo())) {
-						venda = pagamento.getVenda();
-						venda.setPagamento(pagamento);
-						List<ItemVenda> itens = itemVendaService.buscarItens(venda);
-						if (Util.validar(itens)) {
-							venda.setItens(itens);
-						}
-					}
-				}
-			}
-		}
-		return venda;
 	}
 
 }

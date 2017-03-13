@@ -3,12 +3,10 @@ package br.com.caracore.pdv.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import br.com.caracore.pdv.model.Venda;
-import br.com.caracore.pdv.service.PagamentoService;
+import br.com.caracore.pdv.service.RelatorioService;
+import br.com.caracore.pdv.util.CompraVO;
+import br.com.caracore.pdv.util.Util;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -34,29 +33,21 @@ import net.sf.jasperreports.engine.util.JRLoader;
 public class RelatoriosController {
 
 	final private static String DS_KEY = "dados";
-
-	private List<Venda> vendas;
 	
 	@Autowired
-	ServletContext context; 
-	
-	@Autowired
-	PagamentoService pagamentoService;
+	RelatorioService relatorioService;
 	
 	@GetMapping("/compras/{codigoPagamento}")
 	@ResponseBody
 	public void getReportCompras(HttpServletResponse response, @PathVariable Long codigoPagamento) throws JRException, IOException {
 
-		Venda venda = pagamentoService.buscarVendaPorCodigoPagamento(codigoPagamento);
+		List<CompraVO> compras = relatorioService.buscarVendaPorCodigoPagamento(codigoPagamento);
 		
-		if (venda != null) {
+		if (Util.validar(compras)) {
 			
-			vendas = new ArrayList<>();
-			vendas.add(venda);
-
 			InputStream jasperStream = this.getClass().getResourceAsStream("/reports/relatorio_compras.jasper");
 
-			JRBeanCollectionDataSource dados = new JRBeanCollectionDataSource(vendas);
+			JRBeanCollectionDataSource dados = new JRBeanCollectionDataSource(compras);
 			
 			Map<String, Object> parameters = new HashMap<>();
 	        

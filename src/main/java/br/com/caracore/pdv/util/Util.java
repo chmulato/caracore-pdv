@@ -1,6 +1,7 @@
 package br.com.caracore.pdv.util;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -164,6 +165,26 @@ public class Util {
 		return cpf;
 	}
 
+	/**
+	 * Método para formatar numero
+	 * 
+	 * @param numero
+	 * @return
+	 */
+	public static String formatarNumero(BigDecimal numero) {
+		String formatado = "";
+		if (numero != null) {
+			DecimalFormat df = new DecimalFormat("#,###.00");
+		    formatado = df.format(numero);
+		    if (validar(formatado)) {
+		    	if (formatado.equals(",00")) {
+		    		formatado = "0,00";
+		    	}
+		    }
+		}
+		return formatado;
+	}
+     
 	public static List<Loja> criarListaDeLojas() {
 		Loja loja = new Loja();
 		List<Loja> lista = new ArrayList<>();
