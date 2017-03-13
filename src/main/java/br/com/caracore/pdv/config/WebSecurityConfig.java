@@ -37,6 +37,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/pagamentos/**").hasAnyRole("ADMINISTRADOR","OPERADOR","VISITANTE")
 				.antMatchers("/produtos").hasAnyRole("ADMINISTRADOR","OPERADOR","VISITANTE")
 				.antMatchers("/produtos/**").hasAnyRole("ADMINISTRADOR","OPERADOR")
+				.antMatchers("/relatorios").hasAnyRole("ADMINISTRADOR","OPERADOR","VISITANTE")
+				.antMatchers("/relatorios/**").hasAnyRole("ADMINISTRADOR","OPERADOR")
 				.antMatchers("/vendas").hasAnyRole("ADMINISTRADOR","OPERADOR","VISITANTE")
 				.antMatchers("/vendas/**").hasAnyRole("ADMINISTRADOR","OPERADOR","VISITANTE")
 				.antMatchers("/vendedores").hasAnyRole("ADMINISTRADOR","OPERADOR","VISITANTE")

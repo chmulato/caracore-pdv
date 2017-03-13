@@ -9,10 +9,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.NumberFormat;
 
+import br.com.caracore.pdv.model.types.StatusVenda;
 import br.com.caracore.pdv.service.exception.DescontoInvalidoException;
 import br.com.caracore.pdv.util.Util;
 
@@ -64,6 +66,9 @@ public class Pagamento {
 
 	private String cpf;
 	
+	@Transient
+	private Boolean ok;
+
 	/**
 	 * Método interno para calcular o valor a pagar
 	 * 
@@ -254,6 +259,24 @@ public class Pagamento {
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
+	
+	public Boolean getOk() {
+		Boolean result = Boolean.FALSE;
+		if (venda != null) {
+			if (venda.getStatus() != null) {
+				if (venda.getStatus().equals(StatusVenda.FINALIZADO)) {
+					result = Boolean.TRUE;
+				}
+			}
+		}
+		ok = result;
+		return ok;
+	}
+
+	public void setOk(Boolean ok) {
+		this.ok = ok;
+	}
+	
 
 	@Override
 	public int hashCode() {
