@@ -82,7 +82,7 @@ public class RelatoriosController {
 					JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource());
 
 					response.setContentType("application/x-pdf");
-					response.setHeader("Content-disposition", "inline; filename=lista_de_compras.pdf");
+					response.setHeader("Content-disposition", "inline; filename=nota_sem_valor_fiscal.pdf");
 
 					final OutputStream outStream = response.getOutputStream();
 					
