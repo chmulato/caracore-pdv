@@ -3,7 +3,9 @@ package br.com.caracore.pdv.util;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.List;
 
@@ -172,7 +174,7 @@ public class Util {
 	 * @return
 	 */
 	public static String formatarNumero(BigDecimal numero) {
-		String formatado = "";
+		String formatado = "0,00";
 		if (numero != null) {
 			DecimalFormat df = new DecimalFormat("#,###.00");
 		    formatado = df.format(numero);
@@ -184,7 +186,35 @@ public class Util {
 		}
 		return formatado;
 	}
-     
+	
+	/**
+	 * Método para formatar data
+	 * 
+	 * @param date
+	 * @param pattern
+	 * @return
+	 */
+	public static String formatarData(Date date, String pattern) {
+		String strData = "";
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		strData = simpleDateFormat.format(date);
+		return strData;
+	}
+	
+	/**
+	 * Método para formatar cpf
+	 * 
+	 * @param cpf
+	 * @return
+	 */
+	public static String formatarCpf(String cpf) {
+		String cpfFormatado = "";
+		if (cpf != null && !cpf.equals("")) {
+			cpfFormatado = Util.formatString(String.valueOf(cpf), "###.###.###-##");
+		}
+		return cpfFormatado;
+	}
+	
 	public static List<Loja> criarListaDeLojas() {
 		Loja loja = new Loja();
 		List<Loja> lista = new ArrayList<>();

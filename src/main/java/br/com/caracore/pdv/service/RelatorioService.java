@@ -19,7 +19,7 @@ public class RelatorioService {
 	
 	@Autowired
 	private PagamentoService pagamentoService;
-		
+	
 	/**
 	 * Pesquisar o pagamento pelo código
 	 * 
@@ -52,6 +52,50 @@ public class RelatorioService {
 			lista = result;
 		}
 		return lista;
+	}
+
+	/**
+	 * Método externo para recuperar nome do cliente
+	 * 
+	 * @param venda
+	 * @return
+	 */
+	public String cliente(Venda venda) {
+		String nome = "";
+		if (Util.validar(venda.getCliente())) {
+			nome = venda.getCliente().getNome(); 
+		}
+		return nome;
+	}
+
+	/**
+	 * Método externo para recuperar nome do vendedor
+	 * 
+	 * @param venda
+	 * @return
+	 */
+	public String vendedor(Venda venda) {
+		String nome = "";
+		if (Util.validar(venda.getVendedor())) {
+			nome = venda.getVendedor().getNome(); 
+		}
+		return nome;
+	}
+
+	/**
+	 * Método externo para recuperar nome da loja
+	 * 
+	 * @param venda
+	 * @return
+	 */
+	public String loja(Venda venda) {
+		String nome = "";
+		if (Util.validar(venda.getVendedor())) {
+			if (Util.validar(venda.getVendedor().getLoja())) {
+				nome = venda.getVendedor().getLoja().getNome(); 
+			}
+		}
+		return nome;
 	}
 
 }

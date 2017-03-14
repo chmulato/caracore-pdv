@@ -3,7 +3,6 @@ package br.com.caracore.pdv.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +21,6 @@ import br.com.caracore.pdv.model.Pagamento;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.service.RelatorioService;
 import br.com.caracore.pdv.util.Util;
-import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -36,6 +34,8 @@ import net.sf.jasperreports.engine.util.JRLoader;
 public class RelatoriosController {
 
 	final private static String DS_KEY = "dados";
+	
+	final private static String ZERO_REAL = "R$ 0,00";
 	
 	@Autowired
 	RelatorioService relatorioService;
@@ -61,25 +61,46 @@ public class RelatoriosController {
 					
 					Map<String, Object> parameters = new HashMap<>();
 			        
-			        parameters.put("Titulo", "Nota sem valor fiscal");
-			        parameters.put("DataHora", "01/01/2017");
-			        parameters.put("Dinheiro", BigDecimal.ONE);
-			        parameters.put("Cheque", BigDecimal.ONE);
-			        parameters.put("Outros", BigDecimal.ONE);
-			        parameters.put("Cartao", BigDecimal.ONE);
-			        parameters.put("Cliente", "João da Silva");
-			        parameters.put("Vendedor", "Maria");
-			        parameters.put("Cpf", "X49.01X.05X-XX");
-			        parameters.put("Total", BigDecimal.ONE);
-			        parameters.put("Troco", BigDecimal.ONE);
-			        parameters.put("DescontoTotal", "10,00%");
-			        parameters.put("ValorDescontoTotal", BigDecimal.ONE);
-			        parameters.put("Loja", "Loja 01");
+			        parameters.put("Titulo", "NOTA SEM VALOR FISCAL");
+			        parameters.put("DataHora", Util.formatarData(venda.getData(), "dd/MM/yyyy hh:mm:ss"));
+			        
+			        if (Util.validar(pagamento.getDinheiro())) {
+				        parameters.put("Dinheiro", Util.formatarNumero(pagamento.getDinheiro()));
+			        } else {
+				        parameters.put("Dinheiro", ZERO_REAL);
+			        }
+			        
+			        if (Util.validar(pagamento.getCheque())) {
+				        parameters.put("Cheque", Util.formatarNumero(pagamento.getCheque()));
+			        } else {
+				        parameters.put("Cheque", ZERO_REAL);
+			        }
+
+			        if (Util.validar(pagamento.getOutros())) {
+				        parameters.put("Outros", Util.formatarNumero(pagamento.getOutros()));
+			        } else {
+				        parameters.put("Outros", ZERO_REAL);
+			        }
+
+			        if (Util.validar(pagamento.getCartao())) {
+				        parameters.put("Cartao", Util.formatarNumero(pagamento.getCartao()));
+			        } else {
+				        parameters.put("Cartao", ZERO_REAL);
+			        }
+			        
+			        parameters.put("Cliente", relatorioService.cliente(venda));
+			        parameters.put("Vendedor", relatorioService.vendedor(venda));
+			        parameters.put("Cpf", Util.formatarCpf(pagamento.getCpf()));
+			        parameters.put("Total", Util.formatarNumero(pagamento.getTotalApagar()));
+			        parameters.put("Troco", Util.formatarNumero(pagamento.getTroco()));
+			        parameters.put("DescontoTotal", Util.formatarNumero(pagamento.getDesconto()) + " %");
+			        parameters.put("ValorDescontoTotal", Util.formatarNumero(pagamento.getValorDesconto()));
+			        parameters.put("Loja", relatorioService.loja(venda));
 			        
 			        parameters.put(DS_KEY, dados);
 					
 					JasperReport jasperReport = (JasperReport) JRLoader.loadObject(jasperStream);
-					JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource());
+					JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dados);
 
 					response.setContentType("application/x-pdf");
 					response.setHeader("Content-disposition", "inline; filename=nota_sem_valor_fiscal.pdf");
