@@ -3,6 +3,7 @@ package br.com.caracore.pdv.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class RelatoriosController {
 
 	final private static String DS_KEY = "dados";
 	
-	final private static String ZERO_REAL = "0,00";
+	final private static BigDecimal ZERO_REAL = BigDecimal.ZERO;
 	
 	@Autowired
 	RelatorioService relatorioService;
@@ -65,25 +66,25 @@ public class RelatoriosController {
 			        parameters.put("DataHora", Util.formatarData(venda.getData(), "dd/MM/yyyy hh:mm:ss"));
 			        
 			        if (Util.validar(pagamento.getDinheiro())) {
-				        parameters.put("Dinheiro", Util.formatarNumero(pagamento.getDinheiro()));
+				        parameters.put("Dinheiro", pagamento.getDinheiro());
 			        } else {
 				        parameters.put("Dinheiro", ZERO_REAL);
 			        }
 			        
 			        if (Util.validar(pagamento.getCheque())) {
-				        parameters.put("Cheque", Util.formatarNumero(pagamento.getCheque()));
+				        parameters.put("Cheque", pagamento.getCheque());
 			        } else {
 				        parameters.put("Cheque", ZERO_REAL);
 			        }
 
 			        if (Util.validar(pagamento.getOutros())) {
-				        parameters.put("Outros", Util.formatarNumero(pagamento.getOutros()));
+				        parameters.put("Outros", pagamento.getOutros());
 			        } else {
 				        parameters.put("Outros", ZERO_REAL);
 			        }
 
 			        if (Util.validar(pagamento.getCartao())) {
-				        parameters.put("Cartao", Util.formatarNumero(pagamento.getCartao()));
+				        parameters.put("Cartao", pagamento.getCartao());
 			        } else {
 				        parameters.put("Cartao", ZERO_REAL);
 			        }
@@ -98,10 +99,31 @@ public class RelatoriosController {
 			        }
 			        
 			        parameters.put("Vendedor", relatorioService.vendedor(venda));
-			        parameters.put("Total", Util.formatarNumero(pagamento.getTotalApagar()));
-			        parameters.put("Troco", Util.formatarNumero(pagamento.getTroco()));
-			        parameters.put("DescontoTotal", Util.formatarNumero(pagamento.getDesconto()) + " %");
-			        parameters.put("ValorDescontoTotal", Util.formatarNumero(pagamento.getValorDesconto()));
+			        
+			        if (Util.validar(pagamento.getTotalApagar())) {
+				        parameters.put("Total", pagamento.getTotalApagar());
+			        } else {
+				        parameters.put("Total", ZERO_REAL);
+			        }
+			        
+			        if (Util.validar(pagamento.getTroco())) {
+				        parameters.put("Troco", pagamento.getTroco());
+			        } else {
+				        parameters.put("Troco", ZERO_REAL);
+			        }
+			        
+			        if (Util.validar(pagamento.getDesconto())) {
+				        parameters.put("DescontoTotal", pagamento.getDesconto());
+			        } else {
+				        parameters.put("DescontoTotal", ZERO_REAL);
+			        }
+			        
+			        if (Util.validar(pagamento.getValorDesconto())) {
+				        parameters.put("ValorDescontoTotal", pagamento.getValorDesconto());
+			        } else {
+				        parameters.put("ValorDescontoTotal", ZERO_REAL);
+			        }
+			        
 			        parameters.put("Loja", relatorioService.loja(venda));
 			        
 			        parameters.put(DS_KEY, dados);
