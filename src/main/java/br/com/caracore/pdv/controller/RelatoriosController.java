@@ -35,7 +35,7 @@ public class RelatoriosController {
 
 	final private static String DS_KEY = "dados";
 	
-	final private static String ZERO_REAL = "R$ 0,00";
+	final private static String ZERO_REAL = "0,00";
 	
 	@Autowired
 	RelatorioService relatorioService;
@@ -88,9 +88,16 @@ public class RelatoriosController {
 				        parameters.put("Cartao", ZERO_REAL);
 			        }
 			        
-			        parameters.put("Cliente", relatorioService.cliente(venda));
+			        if (Util.validar(pagamento.getCpf())) {
+			        	String cpf = pagamento.getCpf();
+				        parameters.put("Cliente", relatorioService.cliente(venda, cpf));
+				        parameters.put("Cpf", Util.formatarCpf(cpf));
+			        } else {
+				        parameters.put("Cliente", "");
+				        parameters.put("Cpf", "");
+			        }
+			        
 			        parameters.put("Vendedor", relatorioService.vendedor(venda));
-			        parameters.put("Cpf", Util.formatarCpf(pagamento.getCpf()));
 			        parameters.put("Total", Util.formatarNumero(pagamento.getTotalApagar()));
 			        parameters.put("Troco", Util.formatarNumero(pagamento.getTroco()));
 			        parameters.put("DescontoTotal", Util.formatarNumero(pagamento.getDesconto()) + " %");

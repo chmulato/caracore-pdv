@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.caracore.pdv.model.Cliente;
 import br.com.caracore.pdv.model.ItemVenda;
 import br.com.caracore.pdv.model.Pagamento;
 import br.com.caracore.pdv.model.Venda;
@@ -13,6 +14,9 @@ import br.com.caracore.pdv.util.Util;
 
 @Service
 public class RelatorioService {
+
+	@Autowired
+	private ClienteService clienteService;
 
 	@Autowired
 	private ItemVendaService itemVendaService;
@@ -60,10 +64,17 @@ public class RelatorioService {
 	 * @param venda
 	 * @return
 	 */
-	public String cliente(Venda venda) {
+	public String cliente(Venda venda, String cpf) {
 		String nome = "";
 		if (Util.validar(venda.getCliente())) {
 			nome = venda.getCliente().getNome(); 
+		} else {
+			if (Util.validar(cpf)) {
+				Cliente cliente = clienteService.pesquisarPorCpf(cpf);
+				if (Util.validar(cliente)) {
+					nome = cliente.getNome();
+				}
+			}
 		}
 		return nome;
 	}
