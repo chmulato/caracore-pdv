@@ -3,6 +3,7 @@ package br.com.caracore.pdv.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,8 +17,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import br.com.caracore.pdv.model.ItemVenda;
+import br.com.caracore.pdv.model.Pagamento;
+import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.service.RelatorioService;
-import br.com.caracore.pdv.util.CompraVO;
 import br.com.caracore.pdv.util.Util;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
@@ -41,33 +44,55 @@ public class RelatoriosController {
 	@ResponseBody
 	public void getReportCompras(HttpServletResponse response, @PathVariable Long codigoPagamento) throws JRException, IOException {
 
-		List<CompraVO> compras = relatorioService.buscarVendaPorCodigoPagamento(codigoPagamento);
+		Pagamento pagamento = relatorioService.buscarPorCodigoPagamento(codigoPagamento);
 		
-		if (Util.validar(compras)) {
-			
-			InputStream jasperStream = this.getClass().getResourceAsStream("/reports/relatorio_compras.jasper");
+		if (Util.validar(pagamento)) {
 
-			JRBeanCollectionDataSource dados = new JRBeanCollectionDataSource(compras);
-			
-			Map<String, Object> parameters = new HashMap<>();
-	        
-	        parameters.put("TITULO", "Lista de Compras");
-	        parameters.put("EMPRESA", "Cara Core Informática");
-	        parameters.put("DATAINICIO", "01/01/2017");
-	        parameters.put("DATAFIM", "31/03/2017");
-	        
-	        parameters.put(DS_KEY, dados);
-			
-			JasperReport jasperReport = (JasperReport) JRLoader.loadObject(jasperStream);
-			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource());
+			if (Util.validar(pagamento.getVenda())) {
+				
+				Venda venda = pagamento.getVenda();
+				List<ItemVenda> itens = relatorioService.buscarPorVenda(venda);
+				
+				if (Util.validar(itens)) {
+					
+					InputStream jasperStream = this.getClass().getResourceAsStream("/reports/relatorio_compras.jasper");
 
-			response.setContentType("application/x-pdf");
-			response.setHeader("Content-disposition", "inline; filename=lista_de_compras.pdf");
+					JRBeanCollectionDataSource dados = new JRBeanCollectionDataSource(itens);
+					
+					Map<String, Object> parameters = new HashMap<>();
+			        
+			        parameters.put("Titulo", "Nota sem valor fiscal");
+			        parameters.put("DataHora", "01/01/2017");
+			        parameters.put("Dinheiro", BigDecimal.ONE);
+			        parameters.put("Cheque", BigDecimal.ONE);
+			        parameters.put("Outros", BigDecimal.ONE);
+			        parameters.put("Cartao", BigDecimal.ONE);
+			        parameters.put("Cliente", "João da Silva");
+			        parameters.put("Vendedor", "Maria");
+			        parameters.put("Cpf", "X49.01X.05X-XX");
+			        parameters.put("Total", BigDecimal.ONE);
+			        parameters.put("Troco", BigDecimal.ONE);
+			        parameters.put("DescontoTotal", "10,00%");
+			        parameters.put("ValorDescontoTotal", BigDecimal.ONE);
+			        parameters.put("Loja", "Loja 01");
+			        
+			        parameters.put(DS_KEY, dados);
+					
+					JasperReport jasperReport = (JasperReport) JRLoader.loadObject(jasperStream);
+					JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource());
 
-			final OutputStream outStream = response.getOutputStream();
+					response.setContentType("application/x-pdf");
+					response.setHeader("Content-disposition", "inline; filename=lista_de_compras.pdf");
+
+					final OutputStream outStream = response.getOutputStream();
+					
+					JasperExportManager.exportReportToPdfStream(jasperPrint, outStream);
+				
+				}
+				
+			}
 			
-			JasperExportManager.exportReportToPdfStream(jasperPrint, outStream);
-		
 		}
+		
 	}
 }

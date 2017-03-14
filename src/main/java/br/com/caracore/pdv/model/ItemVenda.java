@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.NumberFormat;
@@ -42,6 +43,13 @@ public class ItemVenda {
 	
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal subTotal;
+
+	@Transient
+	private String descricaoProduto;
+
+	public ItemVenda() {
+		super();
+	}
 
 	public Long getCodigo() {
 		return codigo;
@@ -97,6 +105,19 @@ public class ItemVenda {
 
 	public void setSubTotal(BigDecimal subTotal) {
 		this.subTotal = subTotal;
+	}
+
+	public String getDescricaoProduto() {
+		String descricao = "";
+		if ((produto != null) && ((produto.getDescricao() != null) && (!produto.getDescricao().equals("")))) {
+			descricao = produto.getDescricao();
+		}
+		descricaoProduto = descricao;
+		return descricaoProduto;
+	}
+
+	public void setDescricaoProduto(String descricaoProduto) {
+		this.descricaoProduto = descricaoProduto;
 	}
 
 	@Override
