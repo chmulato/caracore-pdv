@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-03-15T10:43:16 -->
+<!-- 2017-03-15T09:09:34 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorio_compras" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="b1c7f85b-da37-4605-bdb5-86d7aca6701d">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -25,6 +25,9 @@
 	<parameter name="DescontoTotal" class="java.math.BigDecimal"/>
 	<parameter name="ValorDescontoTotal" class="java.math.BigDecimal"/>
 	<parameter name="Loja" class="java.lang.String"/>
+	<parameter name="Path" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
 	<field name="desconto" class="java.math.BigDecimal"/>
 	<field name="quantidade" class="java.lang.Integer"/>
 	<field name="precoUnitario" class="java.math.BigDecimal"/>
@@ -57,6 +60,13 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{DataHora}]]></textFieldExpression>
 			</textField>
+			<frame>
+				<reportElement x="0" y="0" width="190" height="36" uuid="8cdaa4f2-f916-4bf9-88f3-6f5ac658326e"/>
+				<image>
+					<reportElement x="0" y="0" width="190" height="36" uuid="0951ef23-1b66-410a-9f2c-9bd590299b31"/>
+					<imageExpression><![CDATA[$P{Path} + "logo.png"]]></imageExpression>
+				</image>
+			</frame>
 			<textField pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-55" x="1" y="38" width="189" height="20" uuid="0cf26e73-170e-4c14-b2f1-6e2933f491d0"/>
 				<box>
@@ -136,15 +146,6 @@
 				<reportElement x="390" y="0" width="30" height="17" uuid="61b689be-e5ea-4a82-a5ef-f07706eea616"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<text><![CDATA[CPF:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="0" width="190" height="30" uuid="46a2ea8f-0ac4-41ba-894d-950f56402b1a">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="23" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Cara Core]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
@@ -352,7 +353,7 @@
 		</band>
 	</lastPageFooter>
 	<summary>
-		<band height="64" splitType="Prevent">
+		<band height="66" splitType="Prevent">
 			<textField pattern="#,##0.00">
 				<reportElement x="414" y="3" width="120" height="14" uuid="85e2f4f7-90d6-4024-a61a-f2277dde2bf4"/>
 				<textElement textAlignment="Right">

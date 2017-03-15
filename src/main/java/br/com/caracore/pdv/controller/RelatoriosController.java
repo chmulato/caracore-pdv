@@ -36,8 +36,6 @@ public class RelatoriosController {
 
 	final private static String DS_KEY = "dados";
 
-	final private static String PATH_IMAGE = "/reports";
-	
 	final private static BigDecimal ZERO_REAL = BigDecimal.ZERO;
 	
 	@Autowired
@@ -58,17 +56,12 @@ public class RelatoriosController {
 				
 				if (Util.validar(itens)) {
 					
-					ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-					
 					InputStream jasperStream = this.getClass().getResourceAsStream("/reports/relatorio_compras.jasper");
 
 					JRBeanCollectionDataSource dados = new JRBeanCollectionDataSource(itens);
 					
 					Map<String, Object> parameters = new HashMap<>();
 			        
-					String path = classLoader.getResource(PATH_IMAGE).getPath();
-
-			        parameters.put("Path", path); // caminho da imagem de logomarca
 			        parameters.put("Titulo", "NOTA SEM VALOR FISCAL");
 			        parameters.put("DataHora", Util.formatarData(venda.getData(), "dd/MM/yyyy hh:mm:ss"));
 			        
