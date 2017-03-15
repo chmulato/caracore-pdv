@@ -11,6 +11,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +43,9 @@ public class RelatoriosController {
 	@Autowired
 	RelatorioService relatorioService;
 	
+	@Value("classpath:reports/logo.png")
+	private Resource logomarca;
+	
 	@GetMapping("/compras/{codigoPagamento}")
 	@ResponseBody
 	public void getReportCompras(HttpServletResponse response, @PathVariable Long codigoPagamento) throws JRException, IOException {
@@ -62,6 +67,10 @@ public class RelatoriosController {
 					
 					Map<String, Object> parameters = new HashMap<>();
 			        
+					if (logomarca.exists()) {
+				        parameters.put("logo", logomarca.getURL());
+					}
+					
 			        parameters.put("Titulo", "NOTA SEM VALOR FISCAL");
 			        parameters.put("DataHora", Util.formatarData(venda.getData(), "dd/MM/yyyy hh:mm:ss"));
 			        

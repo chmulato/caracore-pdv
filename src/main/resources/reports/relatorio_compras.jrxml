@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-03-15T11:25:33 -->
+<!-- 2017-03-15T16:30:16 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorio_compras" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="b1c7f85b-da37-4605-bdb5-86d7aca6701d">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -10,6 +10,7 @@
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="logo" class="java.net.URL" isForPrompting="false"/>
 	<parameter name="dados" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 	<parameter name="Titulo" class="java.lang.String"/>
 	<parameter name="DataHora" class="java.lang.String"/>
@@ -45,19 +46,6 @@
 	<pageHeader>
 		<band height="63" splitType="Prevent">
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement key="textField-55" x="440" y="41" width="94" height="17" uuid="8d7a95be-721e-47c0-aeba-664533ab3508"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="Arial"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{DataHora}]]></textFieldExpression>
-			</textField>
-			<textField pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-55" x="1" y="38" width="189" height="20" uuid="0cf26e73-170e-4c14-b2f1-6e2933f491d0"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -70,11 +58,6 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Titulo}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="390" y="41" width="50" height="17" uuid="92bf7fbe-0b5f-41ba-a98b-12a9896a7c88"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle"/>
-				<text><![CDATA[Data/Hora:]]></text>
-			</staticText>
 			<textField>
 				<reportElement x="260" y="0" width="126" height="17" uuid="34b0bb0e-d5ae-4803-a1eb-c0137377dd97">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
@@ -137,15 +120,10 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<text><![CDATA[CPF:]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="0" y="0" width="190" height="30" uuid="46a2ea8f-0ac4-41ba-894d-950f56402b1a">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="23" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Cara Core]]></text>
-			</staticText>
+			<image>
+				<reportElement x="0" y="0" width="190" height="38" uuid="512ce963-ef65-4d25-af96-91910d21aca4"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -323,19 +301,6 @@
 				</textElement>
 				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de "]]></textFieldExpression>
 			</textField>
-			<textField evaluationTime="Report" pattern="dd/MM/yyyy HH.mm.ss" isBlankWhenNull="false">
-				<reportElement key="textField-13" x="430" y="0" width="104" height="17" uuid="f348f1a7-16b5-44e6-a4c2-7c2b59a798a2"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
-			</textField>
 			<textField evaluationTime="Report" isBlankWhenNull="false">
 				<reportElement key="textField-15" x="314" y="0" width="64" height="17" uuid="18b9cf08-ea25-482f-8ce1-8f2e3236ed30"/>
 				<box>
@@ -349,10 +314,23 @@
 				</textElement>
 				<textFieldExpression><![CDATA["" + $V{PAGE_NUMBER} + ""]]></textFieldExpression>
 			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-55" x="440" y="0" width="94" height="17" uuid="8d7a95be-721e-47c0-aeba-664533ab3508"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{DataHora}]]></textFieldExpression>
+			</textField>
 		</band>
 	</lastPageFooter>
 	<summary>
-		<band height="64" splitType="Prevent">
+		<band height="65" splitType="Prevent">
 			<textField pattern="#,##0.00">
 				<reportElement x="414" y="3" width="120" height="14" uuid="85e2f4f7-90d6-4024-a61a-f2277dde2bf4"/>
 				<textElement textAlignment="Right">
