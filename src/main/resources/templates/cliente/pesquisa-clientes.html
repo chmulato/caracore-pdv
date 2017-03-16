@@ -62,6 +62,7 @@
 								<th class="text-center">Código</th>
 								<th class="text-left">Nome</th>
 								<th class="text-center">Cpf</th>
+								<th class="text-center">Email</th>
 								<th class="text-center" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')"></th>
 							</tr>
 						</thead>
@@ -73,6 +74,7 @@
 									<span th:text="${cliente.nome}" sec:authorize="not hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')"></span>
 								</td>
 								<td th:text="${cliente.cpfFormatado}" class="text-center">849O17O59xx</td>
+								<td th:text="${cliente.email}" class="text-center">chmulato@hotmail.com</td>
 								<td class="text-center" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR', 'ROLE_OPERADOR')">
 									<i class="fa  fa-trash" style="cursor:pointer"
 										data-toggle="modal" data-target="#confirmaExclusaoModal"

@@ -19,6 +19,7 @@ import br.com.caracore.pdv.service.PagamentoService;
 import br.com.caracore.pdv.service.VendaService;
 import br.com.caracore.pdv.service.exception.CpfInvalidoException;
 import br.com.caracore.pdv.service.exception.DescontoInvalidoException;
+import br.com.caracore.pdv.service.exception.EmailInvalidoException;
 import br.com.caracore.pdv.service.exception.NomeExistenteException;
 import br.com.caracore.pdv.service.exception.ValorInvalidoException;
 import br.com.caracore.pdv.util.Util;
@@ -45,6 +46,7 @@ public class PagamentosController {
 			@RequestParam(value="codigoPagamento", required=false) Long codigoPagamento, 
 			@RequestParam(value="cpf", required=false) String cpf,
 			@RequestParam(value="nome", required=false) String nome,
+			@RequestParam(value="email", required=false) String email,
 			RedirectAttributes attributes) {
 		Pagamento pagamento = null;
 		Cliente cliente = null;
@@ -52,7 +54,7 @@ public class PagamentosController {
 		try {
 			if (Util.validar(codigoPagamento)) {
 				pagamento = pagamentoService.pesquisarPorCodigo(codigoPagamento);
-				cliente = new Cliente(cpf, nome);
+				cliente = new Cliente(cpf, nome, email);
 				cliente = pagamentoService.salvarCliente(cliente);
 				pagamento.setCpf(cliente.getCpf());
 				pagamento = pagamentoService.salvar(pagamento, cliente);
@@ -66,6 +68,8 @@ public class PagamentosController {
 			attributes.addFlashAttribute("error", "CPF inválido!");
 		} catch (NomeExistenteException ex) {
 			attributes.addFlashAttribute("error", "Nome já existente!");
+		} catch (EmailInvalidoException ex) {
+			attributes.addFlashAttribute("error", "Email com formato inválido!");
 		}
 		mv.addObject(pagamento);
 		return mv;

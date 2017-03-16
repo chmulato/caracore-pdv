@@ -22,6 +22,7 @@ import br.com.caracore.pdv.repository.filter.ClienteFilter;
 import br.com.caracore.pdv.service.ClienteService;
 import br.com.caracore.pdv.service.exception.CpfExistenteException;
 import br.com.caracore.pdv.service.exception.CpfInvalidoException;
+import br.com.caracore.pdv.service.exception.EmailInvalidoException;
 import br.com.caracore.pdv.service.exception.NomeExistenteException;
 import br.com.caracore.pdv.service.exception.ViolacaoIntegridadeException;
 
@@ -56,6 +57,9 @@ public class ClientesController {
 			return novo(cliente);
 		} catch (NomeExistenteException ex) {
 			errors.rejectValue("nome", " ", ex.getMessage());
+			return novo(cliente);
+		} catch (EmailInvalidoException ex) {
+			errors.rejectValue("email", " ", ex.getMessage());
 			return novo(cliente);
 		}
 	}

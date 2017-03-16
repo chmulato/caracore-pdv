@@ -138,9 +138,13 @@ public class Util {
 	 */
 	public static String formatString(String string, String mask) {
 		try {
-			javax.swing.text.MaskFormatter mf = new javax.swing.text.MaskFormatter(mask);
-			mf.setValueContainsLiteralCharacters(false);
-			return mf.valueToString(string);
+			if ((string !=null) && (!string.equals(""))) {
+				javax.swing.text.MaskFormatter mf = new javax.swing.text.MaskFormatter(mask);
+				mf.setValueContainsLiteralCharacters(false);
+				return mf.valueToString(string);
+			} else {
+				return "";
+			}
 		} catch (ParseException ex) {
 			ex.printStackTrace();
 		} catch (Exception ex) {

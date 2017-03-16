@@ -1,6 +1,6 @@
-INSERT INTO CLIENTE  (codigo,cpf,nome)	VALUES (1,NULL,'Pedro Silva');
-INSERT INTO CLIENTE  (codigo,cpf,nome)	VALUES (2,NULL,'Mariane Silveira');
-INSERT INTO CLIENTE  (codigo,cpf,nome)	VALUES (3,'84901705920','Christian Mulato');
+INSERT INTO CLIENTE  (codigo,cpf,nome,email)	VALUES (1,NULL,'Pedro Silva',NULL);
+INSERT INTO CLIENTE  (codigo,cpf,nome,email)	VALUES (2,NULL,'Mariane Silveira',NULL);
+INSERT INTO CLIENTE  (codigo,cpf,nome,email)	VALUES (3,'84901705920','Christian Mulato','chmulato@hotmail.com');
 
 INSERT INTO LOJA     (codigo,nome) VALUES (1,'Nome da Loja 1');
 INSERT INTO LOJA     (codigo,nome) VALUES (2,'Nome da Loja 2');

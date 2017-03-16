@@ -3,6 +3,8 @@ package br.com.caracore.pdv.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import br.com.caracore.pdv.repository.ClienteRepository;
 import br.com.caracore.pdv.repository.filter.ClienteFilter;
 import br.com.caracore.pdv.service.exception.CpfExistenteException;
 import br.com.caracore.pdv.service.exception.CpfInvalidoException;
+import br.com.caracore.pdv.service.exception.EmailInvalidoException;
 import br.com.caracore.pdv.service.exception.NomeExistenteException;
 import br.com.caracore.pdv.service.exception.ViolacaoIntegridadeException;
 import br.com.caracore.pdv.util.Util;
@@ -112,7 +115,11 @@ public class ClienteService {
 	public Cliente salvar(Cliente cliente) {
 		validarCpf(cliente);
 		validarNome(cliente);
-		return clienteRepository.save(cliente);
+		try {
+			return clienteRepository.save(cliente);
+		} catch (ConstraintViolationException ex) {
+			throw new EmailInvalidoException("Email com formato inválido!");
+		}
 	}
 
 	/**

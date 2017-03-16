@@ -13,6 +13,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.caracore.pdv.model.types.TipoOperador;
@@ -48,10 +49,12 @@ public class Operador {
 
 	@NotEmpty(message = "E-mail é obrigatório!")
 	@Size(max = 30, message = "O e-mail não pode conter mais de 30 caracteres.")
+	@Email
 	private String email;
 
 	@NotEmpty(message = "Repetir e-mail é obrigatório!")
 	@Size(max = 30, message = "Repetir e-mail não pode conter mais de 30 caracteres.")
+	@Email
 	@Transient
 	private String repetirEmail;
 

@@ -41,8 +41,8 @@
 				<div class="col-sm-6">
 					<div class="form-group" th:classappend="${#fields.hasErrors('cpf')} ? has-error">
 						<label for="cpf">Cpf</label>
-						<input id="cpf" type="text" name="cpf" class="form-control" th:field="*{cpf}" th:if="${cliente?.cpf != null}" readonly="readonly" />
-						<input id="cpf" type="text" name="cpf" class="form-control" th:field="*{cpf}" th:if="${cliente?.cpf == null}" />
+						<input id="cpf" type="text" name="cpf" class="form-control" th:field="*{cpf}" th:if="${!cliente.cpfVazio}" readonly="readonly" />
+						<input id="cpf" type="text" name="cpf" class="form-control" th:field="*{cpf}" th:if="${cliente.cpfVazio}" />
 					</div>
 				</div>
 			</div>
@@ -51,7 +51,16 @@
 				<div class="col-sm-6">
 					<div class="form-group" th:classappend="${#fields.hasErrors('nome')} ? has-error">
 						<label for="nome">Nome</label>
-						<input id="nome" type="text" name="nome" class="form-control" th:field="*{nome}"/>
+						<input id="nome" type="text" name="nome" class="form-control" th:field="*{nome}" />
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group" th:classappend="${#fields.hasErrors('email')} ? has-error">
+						<label for="email">Email</label>
+						<input id="email" type="text" name="email" class="form-control" th:field="*{email}" />
 					</div>
 				</div>
 			</div>
