@@ -61,7 +61,7 @@ public class Venda {
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal total;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "PAGAMENTO_ID")
 	private Pagamento pagamento;
 

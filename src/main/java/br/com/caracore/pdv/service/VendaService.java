@@ -2,6 +2,8 @@ package br.com.caracore.pdv.service;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +28,8 @@ import br.com.caracore.pdv.util.Util;
 public class VendaService {
 	
 	final private int QUANTIDADE_UNITARIA = 1;
+
+	final private long SOMANDO_MAIS_UM_DIA = 1;
 
 	final private double ZERO = 0.0d;
 	
@@ -223,6 +227,20 @@ public class VendaService {
 				vendaRepository.save(venda);
 			}
 		}
+	}
+	
+	/**
+	 * Método para recuperar lista de vendas por vendedor
+	 * 
+	 * @param vendedor
+	 * @param dataInicial
+	 * @return
+	 */
+	public List<Venda> listarVendasPorVendedor(Vendedor vendedor, Date dataInicial) {
+		LocalDateTime localDateTime = dataInicial.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+		localDateTime = localDateTime.minusDays(SOMANDO_MAIS_UM_DIA);
+		Date dataFinal = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+		return vendaRepository.findByDataBetweenAndVendedorAndStatus(dataFinal, dataInicial, vendedor, StatusVenda.FINALIZADO);
 	}
 
 	/**

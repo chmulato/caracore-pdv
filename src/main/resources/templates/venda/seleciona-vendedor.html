@@ -47,6 +47,7 @@
 							<th class="text-left">Nome</th>
 							<th class="text-left">Loja</th>
 							<th class="text-left">Tipo</th>
+							<th class="text-left">Vendas do Dia</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -65,9 +66,18 @@
 							</td>
 							<td th:text="${vendedor?.loja?.nome}" class="text-left">Loja 1</td>
 							<td th:text="#{|tipoVendedor.${vendedor.tipo}|}" class="text-left">Gerente</td>
+							<td class="text-center">
+								<a class="btn  btn-link btn-xs" style="cursor:pointer"
+									title="Selecionar vendedor" rel="tooltip"
+									data-toggle="modal" data-target="#relatorioVendedorModal"
+									data:nome="${vendedor.nome}" 
+									data:url-selecionar="@{/relatorios/vendedor/{codigo}(codigo=${vendedor.codigo})}">
+									<span class="glyphicon glyphicon-usd"></span>
+								</a>
+							</td>
 						</tr>
 						<tr th:if="${vendedores.empty}" class="text-center">
-							<td colspan="4">Nenhum vendedor cadastrado</td>
+							<td colspan="5">Nenhum vendedor cadastrado</td>
 						</tr>
 					</tbody>
 				</table>
@@ -90,6 +100,28 @@
 		     			<div class="modal-footer">
 		       				<button type="button" class="btn  btn-default" data-dismiss="modal">Cancelar</button>
 		       				<button type="submit" class="btn  btn-primary">Selecionar</button>
+		     			</div>
+		     		</form>
+		  		</div>
+			</div>
+		</div>	
+
+		<div class="modal  fade" id="relatorioVendedorModal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+		  		<div class="modal-content">
+		  			<form th:action="@{/vendas}" method="GET">
+		     			<div class="modal-header">
+			       			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			       				<span aria-hidden="true">&times;</span>
+			       			</button>
+			       			<h4 class="modal-title" id="myModalRelatorio">Selecionar vendedor</h4>
+		     			</div>
+		     			<div class="modal-body">
+		       				<span>Qual relatório?</span>
+		     			</div>
+		     			<div class="modal-footer">
+		       				<button type="button" class="btn  btn-default" data-dismiss="modal">Fechar</button>
+		       				<button type="submit" class="btn  btn-danger">Imprimir</button>
 		     			</div>
 		     		</form>
 		  		</div>

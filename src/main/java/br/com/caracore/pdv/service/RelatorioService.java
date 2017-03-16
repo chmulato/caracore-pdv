@@ -1,6 +1,8 @@
 package br.com.caracore.pdv.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,9 @@ import br.com.caracore.pdv.model.Cliente;
 import br.com.caracore.pdv.model.ItemVenda;
 import br.com.caracore.pdv.model.Pagamento;
 import br.com.caracore.pdv.model.Venda;
+import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.util.Util;
+import br.com.caracore.pdv.vo.VendaDiariaVO;
 
 @Service
 public class RelatorioService {
@@ -23,6 +27,12 @@ public class RelatorioService {
 	
 	@Autowired
 	private PagamentoService pagamentoService;
+
+	@Autowired
+	private VendaService vendaService;
+
+	@Autowired
+	private VendedorService vendedorService;
 	
 	/**
 	 * Pesquisar o pagamento pelo código
@@ -108,5 +118,211 @@ public class RelatorioService {
 		}
 		return nome;
 	}
+	
+	/**
+	 *	Método interno para buscar itens da venda
+	 * 
+	 * @param venda
+	 * @return
+	 */
+	private List<ItemVenda> buscarItens(Venda venda) {
+		List<ItemVenda> itens = null;
+		if (Util.validar(venda)) {
+			if (Util.validar(venda.getItens())) {
+				itens = venda.getItens();
+			} else {
+				itens = itemVendaService.buscarItens(venda);
+			}
+		}
+		return itens;
+	}
+	
+	/**
+	 * Método interno para recuperar pagamento
+	 * 
+	 * @param venda
+	 * @return
+	 */
+	private Pagamento buscarPagamento(Venda venda) {
+		Pagamento pagamento = null;
+		if (Util.validar(venda.getPagamento())) {
+			pagamento = venda.getPagamento();
+		} else {
+			pagamento = pagamentoService.pesquisarPorVenda(venda);
+		}
+		return pagamento;
+	}
+	
+	/**
+	 * Método externo para buscar o total pago
+	 * 
+	 * @param vendas
+	 * @return
+	 */
+	public BigDecimal calcularTotalPago(List<Venda> vendas) {
+		double total = 0.0d;
+		if (Util.validar(vendas)) {
+			for (Venda venda : vendas) {
+				Pagamento pagamento = buscarPagamento(venda);
+				if (Util.validar(pagamento)) {
+					if (Util.validar(pagamento.getTotalApagar())) {
+						total = total + pagamento.getTotalApagar().doubleValue();
+					}
+				}
+			}
+		}
+		return BigDecimal.valueOf(total);
+	}
+	
+	/**
+	 * Método externo para buscar o total de desconto
+	 * 
+	 * @param vendas
+	 * @return
+	 */
+	public BigDecimal calcularTotalDeDesconto(List<Venda> vendas) {
+		double total = 0.0d;
+		if (Util.validar(vendas)) {
+			for (Venda venda : vendas) {
+				Pagamento pagamento = buscarPagamento(venda);
+				if (Util.validar(pagamento)) {
+					if (Util.validar(pagamento.getValorDesconto())) {
+						total = total + pagamento.getValorDesconto().doubleValue();
+					}
+				}
+			}
+		}
+		return BigDecimal.valueOf(total);
+	}
 
+	/**
+	 * Método externo para buscar o total pago em dinheiro
+	 * 
+	 * @param vendas
+	 * @return
+	 */
+	public BigDecimal calcularTotalEmDinheiro(List<Venda> vendas) {
+		double total = 0.0d;
+		if (Util.validar(vendas)) {
+			for (Venda venda : vendas) {
+				Pagamento pagamento = buscarPagamento(venda);
+				if (Util.validar(pagamento)) {
+					if (Util.validar(pagamento.getDinheiro())) {
+						total = total + pagamento.getDinheiro().doubleValue();
+					}
+				}
+			}
+		}
+		return BigDecimal.valueOf(total);
+	}
+	
+	/**
+	 * Método externo para buscar o total pago em cartão
+	 * 
+	 * @param vendas
+	 * @return
+	 */
+	public BigDecimal calcularTotalEmCartao(List<Venda> vendas) {
+		double total = 0.0d;
+		if (Util.validar(vendas)) {
+			for (Venda venda : vendas) {
+				Pagamento pagamento = buscarPagamento(venda);
+				if (Util.validar(pagamento)) {
+					if (Util.validar(pagamento.getCartao())) {
+						total = total + pagamento.getCartao().doubleValue();
+					}
+				}
+			}
+		}
+		return BigDecimal.valueOf(total);
+	}
+	
+	/**
+	 * Método externo para buscar o total
+	 * 
+	 * @param vendas
+	 * @return
+	 */
+	public BigDecimal calcularTotal(List<Venda> vendas) {
+		double total = 0.0d;
+		if (Util.validar(vendas)) {
+			for (Venda venda : vendas) {
+				if (Util.validar(venda.getTotal())) {
+					total = total + venda.getTotal().doubleValue();
+				}
+			}
+		}
+		return BigDecimal.valueOf(total);
+	}
+	
+	/**
+	 * Método externo para listar as vendas do dia do vendedor
+	 * 
+	 * @param vendedor
+	 * @return
+	 */
+	public List<Venda> listarVendasPorVendedor(Vendedor vendedor) {
+		return vendaService.listarVendasPorVendedor(vendedor, new Date());
+	}
+	
+	/**
+	 * Método para recuperar lista de vendas do dia por vendedor informado
+	 *
+	 * @param vendedor
+	 * @return
+	 */
+	public List<VendaDiariaVO> listarVendasDoDia(List<Venda> vendas) {
+		List<VendaDiariaVO> lista = null;
+		if (Util.validar(vendas)) {
+			lista = new ArrayList<>();
+			for (Venda venda : vendas) {
+				VendaDiariaVO vo = new VendaDiariaVO();
+				if (Util.validar(venda.getCodigo())) {
+					vo.setVenda(venda.getCodigo());
+				}
+				if (Util.validar(venda.getData())) {
+					vo.setData(venda.getData());
+				}
+				List<ItemVenda> itens = buscarItens(venda);
+				if (Util.validar(itens)) {
+					double total = 0;
+					int soma = 0;
+					for (ItemVenda itemVenda : itens) {
+						if (Util.validar(itemVenda.getQuantidade())) {
+							soma = soma + itemVenda.getQuantidade().intValue();
+						}
+						if (Util.validar(itemVenda.getSubTotal())) {
+							total = total + itemVenda.getSubTotal().doubleValue();
+						}
+					}
+					vo.setItens(Integer.valueOf(soma));
+					vo.setTotal(BigDecimal.valueOf(total));
+					lista.add(vo);
+				}
+			}
+		}
+		return lista;
+	}
+
+	/**
+	 * Método externo para recuperar vendedor e loja
+	 * 
+	 * @param codigo
+	 * @return
+	 */
+	public Vendedor buscarVendedorELoja(Long codigo) {
+		Vendedor vendedor = null;
+		if (Util.validar(codigo)) {
+			Vendedor vendedorDB = vendedorService.pesquisarPorId(codigo);
+			if (Util.validar(vendedorDB)) {
+				if (Util.validar(vendedorDB.getLoja())) {
+					if (Util.validar(vendedorDB.getLoja().getNome())) {
+						vendedor = vendedorDB;
+					}
+				}
+			}
+		}
+		return vendedor;
+	}
+	
 }
