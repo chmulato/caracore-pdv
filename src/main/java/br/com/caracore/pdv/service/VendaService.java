@@ -210,7 +210,7 @@ public class VendaService {
 	 * @param desconto
 	 * @param status
 	 */
-	public void salvarDescontoEStatus(Long codigo, BigDecimal desconto, StatusVenda status) {
+	public void salvarDescontoETotalPagoEStatus(Long codigo, BigDecimal desconto, BigDecimal valorPago, StatusVenda status) {
 		Venda venda = null;
 		if ((Util.validar(codigo)) && (Util.validar(desconto))) {
 			if ((desconto.doubleValue() < ZERO) || (desconto.doubleValue() > PORCENTAGEM)) {
@@ -219,6 +219,7 @@ public class VendaService {
 			venda = vendaRepository.findOne(codigo);
 			if (Util.validar(venda)) {
 				venda.setDescontoTotal(desconto);
+				venda.setTotal(valorPago);
 				venda.setStatus(status);
 				vendaRepository.save(venda);
 			}
