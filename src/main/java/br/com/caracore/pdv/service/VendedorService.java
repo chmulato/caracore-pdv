@@ -77,7 +77,7 @@ public class VendedorService {
 		vendedorRepository.delete(codigo);;
 	}
 
-	public Vendedor pesquisarPorId(Long codigo) {
+	public Vendedor pesquisarPorCodigo(Long codigo) {
 		return vendedorRepository.findOne(codigo);
 	}
 

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.com.caracore.pdv.model.ItemVenda;
+import br.com.caracore.pdv.model.Loja;
 import br.com.caracore.pdv.model.Pagamento;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
@@ -227,6 +228,81 @@ public class RelatoriosController {
 
 			response.setContentType("application/x-pdf");
 			response.setHeader("Content-disposition", "inline; filename=vendas_do_vendedor_" + codigoVendedor + ".pdf");
+
+			final OutputStream outStream = response.getOutputStream();
+			
+			JasperExportManager.exportReportToPdfStream(jasperPrint, outStream);
+
+		}
+		
+	}
+	
+	@GetMapping("/loja/{codigoLoja}")
+	@ResponseBody
+	public void getReportLojaDiaria(HttpServletResponse response, @PathVariable Long codigoLoja) throws JRException, IOException {
+
+		String nomeLoja = "";
+		
+		List<VendaDiariaVO> vendasDoDia = Util.criarListaVendasDiariasVO();
+		
+		BigDecimal valorDesconto = BigDecimal.ZERO;
+		BigDecimal totalPago = BigDecimal.ZERO;
+		BigDecimal dinheiro = BigDecimal.ZERO;
+		BigDecimal cartao = BigDecimal.ZERO;
+		BigDecimal cheque = BigDecimal.ZERO;
+		BigDecimal outros = BigDecimal.ZERO;
+		BigDecimal totalVendas = BigDecimal.ZERO;
+		
+		Loja loja = relatorioService.buscarLoja(codigoLoja);
+		
+		if (Util.validar(loja) && (Util.validar(loja.getCodigo()))) {
+			
+			nomeLoja = loja.getNome();
+			List<Venda> vendas = relatorioService.listarVendasDoDiaPorLoja(loja);
+			
+			if (Util.validar(vendas)) {
+
+				vendasDoDia = relatorioService.listarVendasDoDia(vendas);
+				
+				if (Util.validar(vendasDoDia)) {
+					valorDesconto = relatorioService.calcularTotalDeDesconto(vendas);
+					totalPago = relatorioService.calcularTotalPago(vendas);
+					dinheiro = relatorioService.calcularTotalEmDinheiro(vendas);
+					cartao = relatorioService.calcularTotalEmCartao(vendas);
+					cheque = relatorioService.calcularTotalEmCheque(vendas);
+					outros = relatorioService.calcularTotalEmOutros(vendas);
+					totalVendas = relatorioService.calcularTotalVendas(vendas);
+				}
+				
+			}
+			
+			InputStream jasperStream = this.getClass().getResourceAsStream("/reports/relatorio_vendas_por_loja.jasper");
+
+			JRBeanCollectionDataSource dados = new JRBeanCollectionDataSource(vendasDoDia, false);
+			
+			Map<String, Object> parameters = new HashMap<>();
+	        
+			if (logomarca.exists()) {
+		        parameters.put("logo", logomarca.getURL());
+			}
+			
+	        parameters.put("Titulo", "VENDAS DO DIA");
+	        parameters.put("DataHora", Util.formatarData(new Date(), "dd/MM/yyyy hh:mm:ss"));
+	        parameters.put("Loja", nomeLoja);
+	        parameters.put("TotalPago", totalPago);
+	        parameters.put("Dinheiro", dinheiro);
+	        parameters.put("Cartao", cartao);
+	        parameters.put("Cheque", cheque);
+	        parameters.put("Outros", outros);
+	        parameters.put("ValorDesconto", valorDesconto);
+	        parameters.put("TotalVendas", totalVendas);
+	        parameters.put(DS_KEY, dados);
+			
+			JasperReport jasperReport = (JasperReport) JRLoader.loadObject(jasperStream);
+			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dados);
+
+			response.setContentType("application/x-pdf");
+			response.setHeader("Content-disposition", "inline; filename=vendas_da_loja_" + codigoLoja + ".pdf");
 
 			final OutputStream outStream = response.getOutputStream();
 			

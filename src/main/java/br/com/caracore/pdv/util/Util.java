@@ -264,6 +264,7 @@ public class Util {
 		vo.setVenda(Long.valueOf(0l));
 		vo.setItens(Integer.valueOf(0));
 		vo.setTotal(BigDecimal.ZERO);
+		vo.setVendedor("");
 		List<VendaDiariaVO> lista = new ArrayList<>();
 		lista.add(vo);
 		return lista;

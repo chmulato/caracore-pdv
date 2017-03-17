@@ -47,7 +47,7 @@
 							<th class="text-left">Nome</th>
 							<th class="text-left">Loja</th>
 							<th class="text-left">Tipo</th>
-							<th class="text-left">Relatórios</th>
+							<th class="text-left" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')">Relatórios</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -66,8 +66,8 @@
 							</td>
 							<td th:text="${vendedor?.loja?.nome}" class="text-left">Loja 1</td>
 							<td th:text="#{|tipoVendedor.${vendedor.tipo}|}" class="text-left">Gerente</td>
-							<td class="text-center">
-								<a class="btn  btn-link btn-xs" style="cursor:pointer"
+							<td class="text-center" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')">
+								<a class="btn  btn-link  btn-xs" style="cursor:pointer"
 									title="Vendas do dia por vendedor" rel="tooltip"
 									data-toggle="modal" data-target="#relatorioVendedorModal"
 									data:nome="${vendedor.nome}" 
@@ -76,8 +76,11 @@
 								</a>
 							</td>
 						</tr>
-						<tr th:if="${vendedores.empty}" class="text-center">
+						<tr th:if="${vendedores.empty}" class="text-center" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')">
 							<td colspan="5">Nenhum vendedor cadastrado</td>
+						</tr>
+						<tr th:if="${vendedores.empty}" class="text-center" sec:authorize="not hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')">
+							<td colspan="4">Nenhum vendedor cadastrado</td>
 						</tr>
 					</tbody>
 				</table>

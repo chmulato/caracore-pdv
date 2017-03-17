@@ -74,7 +74,7 @@ public class VendedoresController {
 	
 	@GetMapping("/{codigo}")
 	public ModelAndView editar(@PathVariable Long codigo) {
-		Vendedor vendedor = vendedorService.pesquisarPorId(codigo);
+		Vendedor vendedor = vendedorService.pesquisarPorCodigo(codigo);
 		return novo(vendedor);
 	}
 

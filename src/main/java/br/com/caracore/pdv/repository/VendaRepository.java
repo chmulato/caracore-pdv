@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import br.com.caracore.pdv.model.Loja;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.model.types.StatusVenda;
@@ -20,5 +21,8 @@ public interface VendaRepository extends JpaRepository<Venda, Long> {
 
 	@Query("select v from Venda v where (v.data between ?1 and ?2) and v.vendedor = ?3 and v.status = ?4")
 	public List<Venda> findByDataBetweenAndVendedorAndStatus(Date dataInicial, Date dataFinal, Vendedor vendedor, StatusVenda status);
+	
+	@Query("select v from Venda v where (v.data between ?1 and ?2) and v.vendedor.loja = ?3 and v.status = ?4")
+	public List<Venda> findByDataBetweenAndLojaAndStatus(Date dataInicial, Date dataFinal, Loja loja, StatusVenda status);
 	
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.caracore.pdv.model.Cliente;
 import br.com.caracore.pdv.model.ItemVenda;
+import br.com.caracore.pdv.model.Loja;
 import br.com.caracore.pdv.model.Pagamento;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
@@ -24,6 +25,9 @@ public class RelatorioService {
 
 	@Autowired
 	private ItemVendaService itemVendaService;
+
+	@Autowired
+	private LojaService lojaService;
 	
 	@Autowired
 	private PagamentoService pagamentoService;
@@ -306,6 +310,16 @@ public class RelatorioService {
 	public List<Venda> listarVendasDoDiaPorVendedor(Vendedor vendedor) {
 		return vendaService.listarVendasPorVendedor(vendedor, new Date());
 	}
+
+	/**
+	 * Método externo para listar as vendas do dia da loja
+	 * 
+	 * @param loja
+	 * @return
+	 */
+	public List<Venda> listarVendasDoDiaPorLoja(Loja loja) {
+		return vendaService.listarVendasPorLoja(loja, new Date());
+	}
 	
 	/**
 	 * Método para recuperar lista de vendas do dia por vendedor informado
@@ -324,6 +338,10 @@ public class RelatorioService {
 				}
 				if (Util.validar(venda.getData())) {
 					vo.setData(venda.getData());
+				}
+				if ((Util.validar(venda.getVendedor())) && (Util.validar(venda.getVendedor().getNome()))) {
+					String vendedor = String.valueOf(venda.getVendedor().getCodigo()) + " - " + venda.getVendedor().getNome();
+					vo.setVendedor(vendedor);
 				}
 				List<ItemVenda> itens = buscarItens(venda);
 				if (Util.validar(itens)) {
@@ -355,7 +373,7 @@ public class RelatorioService {
 	public Vendedor buscarVendedorELoja(Long codigo) {
 		Vendedor vendedor = null;
 		if (Util.validar(codigo)) {
-			Vendedor vendedorDB = vendedorService.pesquisarPorId(codigo);
+			Vendedor vendedorDB = vendedorService.pesquisarPorCodigo(codigo);
 			if (Util.validar(vendedorDB)) {
 				if (Util.validar(vendedorDB.getLoja())) {
 					if (Util.validar(vendedorDB.getLoja().getNome())) {
@@ -365,6 +383,23 @@ public class RelatorioService {
 			}
 		}
 		return vendedor;
+	}
+
+	/**
+	 * Método externo para recuperar loja
+	 * 
+	 * @param codigo
+	 * @return
+	 */
+	public Loja buscarLoja(Long codigo) {
+		Loja loja = null;
+		if (Util.validar(codigo)) {
+			Loja lojaDB = lojaService.pesquisarPorCodigo(codigo);
+			if (Util.validar(lojaDB)) {
+				loja = lojaDB;
+			}
+		}
+		return loja;
 	}
 	
 }

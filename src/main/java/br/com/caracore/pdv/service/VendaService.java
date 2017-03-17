@@ -66,7 +66,7 @@ public class VendaService {
 	 */
 	public Vendedor selecionarPorId(Long codigo) {
 		Vendedor vendedor = null;
-		vendedor = vendedorService.pesquisarPorId(codigo);
+		vendedor = vendedorService.pesquisarPorCodigo(codigo);
 		return vendedor;
 	}
 	
@@ -237,6 +237,19 @@ public class VendaService {
 		Date dataInicial = Util.dataHoraInicial(data);
 		Date dataFinal = Util.dataHoraFinal(data);
 		return vendaRepository.findByDataBetweenAndVendedorAndStatus(dataInicial, dataFinal, vendedor, StatusVenda.FINALIZADO);
+	}
+
+	/**
+	 * Método para recuperar lista de vendas por loja
+	 * 
+	 * @param loja
+	 * @param dataInicial
+	 * @return
+	 */
+	public List<Venda> listarVendasPorLoja(Loja loja, Date data) {
+		Date dataInicial = Util.dataHoraInicial(data);
+		Date dataFinal = Util.dataHoraFinal(data);
+		return vendaRepository.findByDataBetweenAndLojaAndStatus(dataInicial, dataFinal, loja, StatusVenda.FINALIZADO);
 	}
 
 	/**
