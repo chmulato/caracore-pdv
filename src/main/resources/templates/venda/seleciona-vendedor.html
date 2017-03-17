@@ -47,7 +47,7 @@
 							<th class="text-left">Nome</th>
 							<th class="text-left">Loja</th>
 							<th class="text-left">Tipo</th>
-							<th class="text-left">Vendas do Dia</th>
+							<th class="text-left">Relatórios</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -68,11 +68,11 @@
 							<td th:text="#{|tipoVendedor.${vendedor.tipo}|}" class="text-left">Gerente</td>
 							<td class="text-center">
 								<a class="btn  btn-link btn-xs" style="cursor:pointer"
-									title="Selecionar vendedor" rel="tooltip"
+									title="Vendas do dia por vendedor" rel="tooltip"
 									data-toggle="modal" data-target="#relatorioVendedorModal"
 									data:nome="${vendedor.nome}" 
 									data:url-selecionar="@{/relatorios/vendedor/{codigo}(codigo=${vendedor.codigo})}">
-									<span class="glyphicon glyphicon-usd"></span>
+									<span class="glyphicon glyphicon-file"></span>
 								</a>
 							</td>
 						</tr>
