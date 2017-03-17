@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -220,6 +221,43 @@ public class Util {
 		return cpfFormatado;
 	}
 	
+	/**
+	 * Método para buscar a data/hora inicial do dia
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static Date dataHoraInicial(Date data) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(data);
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
+		return c.getTime();
+	}
+
+	/**
+	 * Método para buscar a data/hora final do dia
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static Date dataHoraFinal(Date data) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(data);
+		c.set(Calendar.HOUR_OF_DAY, 23);
+		c.set(Calendar.MINUTE, 59);
+		c.set(Calendar.SECOND, 59);
+		c.set(Calendar.MILLISECOND, 999);
+		return c.getTime();
+	}
+	
+	/**
+	 * Método para criar uma lista default vazia
+	 * 
+	 * @return
+	 */
 	public static List<VendaDiariaVO> criarListaVendasDiariasVO() {
 		VendaDiariaVO vo = new VendaDiariaVO();
 		vo.setData(new Date());
@@ -231,6 +269,11 @@ public class Util {
 		return lista;
 	}
 	
+	/**
+	 * Método para criar uma lista default vazia
+	 * 
+	 * @return
+	 */
 	public static List<Loja> criarListaDeLojas() {
 		Loja loja = new Loja();
 		List<Loja> lista = new ArrayList<>();
@@ -238,13 +281,23 @@ public class Util {
 		return lista;
 	}
 
+	/**
+	 * Método para criar uma lista default vazia
+	 * 
+	 * @return
+	 */
 	public static List<Produto> criarListaDeProdutos() {
 		Produto produto = new Produto();
 		List<Produto> lista = new ArrayList<>();
 		lista.add(produto);
 		return lista;
 	}
-
+	
+	/**
+	 * Método para criar uma lista default vazia
+	 * 
+	 * @return
+	 */
 	public static List<Vendedor> criarListaDeVendedores() {
 		Vendedor vendedor = new Vendedor();
 		List<Vendedor> lista = new ArrayList<>();
@@ -252,6 +305,11 @@ public class Util {
 		return lista;
 	}
 
+	/**
+	 * Método para criar uma lista default vazia
+	 * 
+	 * @return
+	 */
 	public static List<Operador> criarListaDeOperadores() {
 		Operador operador = new Operador();
 		List<Operador> lista = new ArrayList<>();
@@ -259,10 +317,16 @@ public class Util {
 		return lista;
 	}
 
+	/**
+	 * Método para criar uma lista default vazia
+	 * 
+	 * @return
+	 */
 	public static List<ItemVenda> criarListaDeItensVenda() {
 		ItemVenda item = new ItemVenda();
 		List<ItemVenda> lista = new ArrayList<>();
 		lista.add(item);
 		return lista;
 	}
+	
 }

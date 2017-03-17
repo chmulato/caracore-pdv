@@ -303,7 +303,7 @@ public class RelatorioService {
 	 * @param vendedor
 	 * @return
 	 */
-	public List<Venda> listarVendasPorVendedor(Vendedor vendedor) {
+	public List<Venda> listarVendasDoDiaPorVendedor(Vendedor vendedor) {
 		return vendaService.listarVendasPorVendedor(vendedor, new Date());
 	}
 	

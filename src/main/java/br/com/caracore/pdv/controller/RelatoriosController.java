@@ -181,7 +181,7 @@ public class RelatoriosController {
 			
 			nomeVendedor = vendedor.getNome();
 			nomeLoja = vendedor.getLoja().getNome();
-			List<Venda> vendas = relatorioService.listarVendasPorVendedor(vendedor);
+			List<Venda> vendas = relatorioService.listarVendasDoDiaPorVendedor(vendedor);
 			
 			if (Util.validar(vendas)) {
 
