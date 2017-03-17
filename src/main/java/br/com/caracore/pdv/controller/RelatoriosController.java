@@ -164,11 +164,13 @@ public class RelatoriosController {
 
 		List<VendaDiariaVO> vendasDoDia = Util.criarListaVendasDiariasVO();
 		
-		BigDecimal desconto = BigDecimal.ZERO;
-		BigDecimal pago = BigDecimal.ZERO;
+		BigDecimal valorDesconto = BigDecimal.ZERO;
+		BigDecimal totalPago = BigDecimal.ZERO;
 		BigDecimal dinheiro = BigDecimal.ZERO;
 		BigDecimal cartao = BigDecimal.ZERO;
-		BigDecimal soma = BigDecimal.ZERO;
+		BigDecimal cheque = BigDecimal.ZERO;
+		BigDecimal outros = BigDecimal.ZERO;
+		BigDecimal totalVendas = BigDecimal.ZERO;
 		
 		Vendedor vendedor = relatorioService.buscarVendedorELoja(codigoVendedor);
 		
@@ -182,11 +184,13 @@ public class RelatoriosController {
 				vendasDoDia = relatorioService.listarVendasDoDia(vendas);
 				
 				if (Util.validar(vendasDoDia)) {
-					desconto = relatorioService.calcularTotalDeDesconto(vendas);
-					pago = relatorioService.calcularTotalPago(vendas);
+					valorDesconto = relatorioService.calcularTotalDeDesconto(vendas);
+					totalPago = relatorioService.calcularTotalPago(vendas);
 					dinheiro = relatorioService.calcularTotalEmDinheiro(vendas);
 					cartao = relatorioService.calcularTotalEmCartao(vendas);
-					soma = relatorioService.calcularTotal(vendas);
+					cheque = relatorioService.calcularTotalEmCheque(vendas);
+					outros = relatorioService.calcularTotalEmOutros(vendas);
+					totalVendas = relatorioService.calcularTotalVendas(vendas);
 				}
 				
 			}
@@ -205,11 +209,13 @@ public class RelatoriosController {
 	        parameters.put("DataHora", Util.formatarData(new Date(), "dd/MM/yyyy hh:mm:ss"));
 	        parameters.put("Vendedor", vendedor.getNome());
 	        parameters.put("Loja", nomeLoja);
-	        parameters.put("Desconto", desconto);
-	        parameters.put("Pago", pago);
+	        parameters.put("TotalPago", totalPago);
 	        parameters.put("Dinheiro", dinheiro);
 	        parameters.put("Cartao", cartao);
-	        parameters.put("Soma", soma);
+	        parameters.put("Cheque", cheque);
+	        parameters.put("Outros", outros);
+	        parameters.put("ValorDesconto", valorDesconto);
+	        parameters.put("TotalVendas", totalVendas);
 	        parameters.put(DS_KEY, dados);
 			
 			JasperReport jasperReport = (JasperReport) JRLoader.loadObject(jasperStream);

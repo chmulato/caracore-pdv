@@ -175,6 +175,48 @@ public class RelatorioService {
 	}
 	
 	/**
+	 * Método externo para buscar o total de outros
+	 * 
+	 * @param vendas
+	 * @return
+	 */
+	public BigDecimal calcularTotalEmOutros(List<Venda> vendas) {
+		double total = 0.0d;
+		if (Util.validar(vendas)) {
+			for (Venda venda : vendas) {
+				Pagamento pagamento = buscarPagamento(venda);
+				if (Util.validar(pagamento)) {
+					if (Util.validar(pagamento.getOutros())) {
+						total = total + pagamento.getOutros().doubleValue();
+					}
+				}
+			}
+		}
+		return BigDecimal.valueOf(total);
+	}
+	
+	/**
+	 * Método externo para buscar o total em cheque
+	 * 
+	 * @param vendas
+	 * @return
+	 */
+	public BigDecimal calcularTotalEmCheque(List<Venda> vendas) {
+		double total = 0.0d;
+		if (Util.validar(vendas)) {
+			for (Venda venda : vendas) {
+				Pagamento pagamento = buscarPagamento(venda);
+				if (Util.validar(pagamento)) {
+					if (Util.validar(pagamento.getCheque())) {
+						total = total + pagamento.getCheque().doubleValue();
+					}
+				}
+			}
+		}
+		return BigDecimal.valueOf(total);
+	}
+	
+	/**
 	 * Método externo para buscar o total de desconto
 	 * 
 	 * @param vendas
@@ -243,7 +285,7 @@ public class RelatorioService {
 	 * @param vendas
 	 * @return
 	 */
-	public BigDecimal calcularTotal(List<Venda> vendas) {
+	public BigDecimal calcularTotalVendas(List<Venda> vendas) {
 		double total = 0.0d;
 		if (Util.validar(vendas)) {
 			for (Venda venda : vendas) {
