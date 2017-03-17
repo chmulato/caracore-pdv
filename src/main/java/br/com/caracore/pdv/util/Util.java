@@ -14,6 +14,7 @@ import br.com.caracore.pdv.model.Loja;
 import br.com.caracore.pdv.model.Operador;
 import br.com.caracore.pdv.model.Produto;
 import br.com.caracore.pdv.model.Vendedor;
+import br.com.caracore.pdv.vo.VendaDiariaVO;
 
 public class Util {
 
@@ -217,6 +218,17 @@ public class Util {
 			cpfFormatado = Util.formatString(String.valueOf(cpf), "###.###.###-##");
 		}
 		return cpfFormatado;
+	}
+	
+	public static List<VendaDiariaVO> criarListaVendasDiariasVO() {
+		VendaDiariaVO vo = new VendaDiariaVO();
+		vo.setData(new Date());
+		vo.setVenda(Long.valueOf(0l));
+		vo.setItens(Integer.valueOf(0));
+		vo.setTotal(BigDecimal.ZERO);
+		List<VendaDiariaVO> lista = new ArrayList<>();
+		lista.add(vo);
+		return lista;
 	}
 	
 	public static List<Loja> criarListaDeLojas() {

@@ -162,6 +162,8 @@ public class RelatoriosController {
 	@ResponseBody
 	public void getReportVendasDiaria(HttpServletResponse response, @PathVariable Long codigoVendedor) throws JRException, IOException {
 
+		List<VendaDiariaVO> vendasDoDia = Util.criarListaVendasDiariasVO();
+		
 		BigDecimal desconto = BigDecimal.ZERO;
 		BigDecimal pago = BigDecimal.ZERO;
 		BigDecimal dinheiro = BigDecimal.ZERO;
@@ -176,52 +178,50 @@ public class RelatoriosController {
 			List<Venda> vendas = relatorioService.listarVendasPorVendedor(vendedor);
 			
 			if (Util.validar(vendas)) {
-				
-				List<VendaDiariaVO> vendasDoDia = relatorioService.listarVendasDoDia(vendas);
+
+				vendasDoDia = relatorioService.listarVendasDoDia(vendas);
 				
 				if (Util.validar(vendasDoDia)) {
-					
 					desconto = relatorioService.calcularTotalDeDesconto(vendas);
 					pago = relatorioService.calcularTotalPago(vendas);
 					dinheiro = relatorioService.calcularTotalEmDinheiro(vendas);
 					cartao = relatorioService.calcularTotalEmCartao(vendas);
 					soma = relatorioService.calcularTotal(vendas);
-					
-					InputStream jasperStream = this.getClass().getResourceAsStream("/reports/relatorio_vendas_por_vendedor.jasper");
-
-					JRBeanCollectionDataSource dados = new JRBeanCollectionDataSource(vendasDoDia, false);
-					
-					Map<String, Object> parameters = new HashMap<>();
-			        
-					if (logomarca.exists()) {
-				        parameters.put("logo", logomarca.getURL());
-					}
-					
-			        parameters.put("Titulo", "VENDAS DO DIA");
-			        parameters.put("DataHora", Util.formatarData(new Date(), "dd/MM/yyyy hh:mm:ss"));
-			        parameters.put("Vendedor", vendedor.getNome());
-			        parameters.put("Loja", nomeLoja);
-			        parameters.put("Desconto", desconto);
-			        parameters.put("Pago", pago);
-			        parameters.put("Dinheiro", dinheiro);
-			        parameters.put("Cartao", cartao);
-			        parameters.put("Soma", soma);
-			        parameters.put(DS_KEY, dados);
-					
-					JasperReport jasperReport = (JasperReport) JRLoader.loadObject(jasperStream);
-					JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dados);
-
-					response.setContentType("application/x-pdf");
-					response.setHeader("Content-disposition", "inline; filename=vendas_do_vendedor_" + codigoVendedor + ".pdf");
-
-					final OutputStream outStream = response.getOutputStream();
-					
-					JasperExportManager.exportReportToPdfStream(jasperPrint, outStream);
-				
 				}
 				
 			}
 			
+			InputStream jasperStream = this.getClass().getResourceAsStream("/reports/relatorio_vendas_por_vendedor.jasper");
+
+			JRBeanCollectionDataSource dados = new JRBeanCollectionDataSource(vendasDoDia, false);
+			
+			Map<String, Object> parameters = new HashMap<>();
+	        
+			if (logomarca.exists()) {
+		        parameters.put("logo", logomarca.getURL());
+			}
+			
+	        parameters.put("Titulo", "VENDAS DO DIA");
+	        parameters.put("DataHora", Util.formatarData(new Date(), "dd/MM/yyyy hh:mm:ss"));
+	        parameters.put("Vendedor", vendedor.getNome());
+	        parameters.put("Loja", nomeLoja);
+	        parameters.put("Desconto", desconto);
+	        parameters.put("Pago", pago);
+	        parameters.put("Dinheiro", dinheiro);
+	        parameters.put("Cartao", cartao);
+	        parameters.put("Soma", soma);
+	        parameters.put(DS_KEY, dados);
+			
+			JasperReport jasperReport = (JasperReport) JRLoader.loadObject(jasperStream);
+			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dados);
+
+			response.setContentType("application/x-pdf");
+			response.setHeader("Content-disposition", "inline; filename=vendas_do_vendedor_" + codigoVendedor + ".pdf");
+
+			final OutputStream outStream = response.getOutputStream();
+			
+			JasperExportManager.exportReportToPdfStream(jasperPrint, outStream);
+
 		}
 		
 	}
