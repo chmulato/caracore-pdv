@@ -162,6 +162,9 @@ public class RelatoriosController {
 	@ResponseBody
 	public void getReportVendasDiaria(HttpServletResponse response, @PathVariable Long codigoVendedor) throws JRException, IOException {
 
+		String nomeVendedor = "";
+		String nomeLoja = "";
+		
 		List<VendaDiariaVO> vendasDoDia = Util.criarListaVendasDiariasVO();
 		
 		BigDecimal valorDesconto = BigDecimal.ZERO;
@@ -176,7 +179,8 @@ public class RelatoriosController {
 		
 		if (Util.validar(vendedor) && (Util.validar(vendedor.getCodigo()))) {
 			
-			String nomeLoja = vendedor.getLoja().getNome();
+			nomeVendedor = vendedor.getNome();
+			nomeLoja = vendedor.getLoja().getNome();
 			List<Venda> vendas = relatorioService.listarVendasPorVendedor(vendedor);
 			
 			if (Util.validar(vendas)) {
@@ -207,7 +211,7 @@ public class RelatoriosController {
 			
 	        parameters.put("Titulo", "VENDAS DO DIA");
 	        parameters.put("DataHora", Util.formatarData(new Date(), "dd/MM/yyyy hh:mm:ss"));
-	        parameters.put("Vendedor", vendedor.getNome());
+	        parameters.put("Vendedor", nomeVendedor);
 	        parameters.put("Loja", nomeLoja);
 	        parameters.put("TotalPago", totalPago);
 	        parameters.put("Dinheiro", dinheiro);
