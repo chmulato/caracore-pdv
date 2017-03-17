@@ -258,14 +258,16 @@ public class VendaService {
 	 * @param codigo
 	 * @param desconto
 	 */
-	public void salvarDescontoTotal(Long codigo, BigDecimal desconto) {
+	public void salvarVendedorEDescontoTotal(Long codigo, Vendedor vendedor, BigDecimal desconto) {
 		if ((Util.validar(codigo)) && (Util.validar(desconto))) {
 			if ((desconto.doubleValue() < ZERO) || (desconto.doubleValue() > PORCENTAGEM)) {
 				throw new DescontoInvalidoException("Desconto inválido!");
 			}
 			Venda venda = vendaRepository.findOne(codigo);
+			vendedor = vendedorService.pesquisarPorCodigo(vendedor.getCodigo());
 			if (Util.validar(venda)) {
 				venda.setDescontoTotal(desconto);
+				venda.setVendedor(vendedor);
 				vendaRepository.save(venda);
 			}
 		}

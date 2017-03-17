@@ -85,11 +85,17 @@ public class VendasController {
 	
 	@GetMapping("/vendedor/{codigo}")
 	public ModelAndView selecionar(@PathVariable Long codigo) {
+		Venda venda = null;
 		ModelAndView mv = new ModelAndView("venda/cadastro-venda");
 		Vendedor vendedor = vendaService.selecionarPorId(codigo);
-		Venda venda = new Venda();
-		venda.setVendedor(vendedor);
-		mv.addObject(vendedor);
+		if (Util.validar(vendedor)) {
+			venda = vendaService.recuperarVendaEmAberto(vendedor);
+			if (!Util.validar(venda)) {
+				venda = new Venda();
+			}
+			venda.setVendedor(vendedor);
+			mv.addObject(vendedor);
+		}
 		return novo(venda);
 	}
 	

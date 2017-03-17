@@ -74,12 +74,12 @@
 					<input type="hidden" th:field="*{codigo}" />
 
 					<input type="hidden" th:field="*{venda}" />
-					
+
 					<div class="row">
 						<div class="col-sm-2">
 						</div>
 					</div>
-
+					
 					<div class="row">
 						<div class="col-sm-2">
 							<div class="form-group" th:classappend="${#fields.hasErrors('cpf')} ? has-error">
@@ -87,6 +87,7 @@
 								<input id="cpf" type="text" th:field="*{cpf}" class="form-control" />
 							</div>
 						</div>
+						
 						<div class="col-xs-2" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')">
 							<div class="aw-page-header-controls">
 								<a class="btn  btn-primary" style="cursor:pointer"
@@ -184,7 +185,7 @@
 
 						<div class="col-sm-2">
 							<div class="form-group">
-								<a th:href="@{/vendas/novo}" class="btn  btn-default  btn-venda">Retornar</a>
+								<a th:href="@{/vendas/vendedor/{codigo}(codigo=${pagamento.venda.vendedor.codigo})}" class="btn  btn-default  btn-venda">Retornar</a>
 								<button class="btn  btn-primary  btn-venda" type="submit" th:if="${!pagamento.ok}">Pagar</button>
 								<a th:href="@{/relatorios/compras/{codigo}(codigo=${pagamento?.codigo})}" class="btn  btn-danger  btn-venda" th:if="${pagamento.ok}">Imprimir Cupom</a>
 							</div>
@@ -192,6 +193,15 @@
 					</div>
 
 					<hr>
+
+					<div class="row">
+						<div class="col-sm-2">
+							<div class="form-group">
+								<label for="vendedor">Vendedor</label>
+								<input id="vendedor" type="text" th:field="*{venda.vendedor.nome}" class="form-control" readonly="readonly" />
+							</div>
+						</div>
+					</div>
 
 				</form>
 				

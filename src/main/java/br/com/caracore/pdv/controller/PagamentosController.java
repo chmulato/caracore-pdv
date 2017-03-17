@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import br.com.caracore.pdv.model.Cliente;
 import br.com.caracore.pdv.model.Pagamento;
 import br.com.caracore.pdv.model.Venda;
+import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.service.PagamentoService;
 import br.com.caracore.pdv.service.VendaService;
 import br.com.caracore.pdv.service.exception.CpfInvalidoException;
@@ -126,7 +127,8 @@ public class PagamentosController {
 		}
 		try {
 			Cliente cliente = new Cliente();
-			vendaService.salvarDescontoTotal(venda.getCodigo(), venda.getDescontoTotal());
+			Vendedor vendedor = venda.getVendedor();
+			vendaService.salvarVendedorEDescontoTotal(venda.getCodigo(), vendedor, venda.getDescontoTotal());
 			Pagamento pagamento = pagamentoService.pesquisarPorVenda(venda);
 			if ((Util.validar(pagamento) && (Util.validar(pagamento.getCpf())))) {
 				String cpf = pagamento.getCpf();
