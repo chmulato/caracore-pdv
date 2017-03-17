@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-03-16T21:35:11 -->
+<!-- 2017-03-17T10:17:58 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorio_compras" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="b1c7f85b-da37-4605-bdb5-86d7aca6701d">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -281,7 +281,7 @@
 		</band>
 	</lastPageFooter>
 	<summary>
-		<band height="67" splitType="Prevent">
+		<band height="59" splitType="Prevent">
 			<textField pattern="#,##0.00">
 				<reportElement x="414" y="3" width="120" height="14" uuid="85e2f4f7-90d6-4024-a61a-f2277dde2bf4"/>
 				<textElement textAlignment="Right">
@@ -359,7 +359,7 @@
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Top">
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Total:]]></text>
@@ -368,10 +368,10 @@
 				<reportElement x="414" y="45" width="120" height="14" uuid="21f615f5-06c2-4a3f-a585-368e2759d716">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new java.text.DecimalFormat("#,##0.00", new java.text.DecimalFormatSymbols(new Locale("pt", "BR"))).format($P{TotalVendas})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" R$ "+ new java.text.DecimalFormat("#,##0.00", new java.text.DecimalFormatSymbols(new Locale("pt", "BR"))).format($P{TotalVendas})]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement key="staticText-2" x="315" y="17" width="52" height="14" uuid="239e890e-885e-4874-9ebb-fcbbe28acff1"/>
@@ -412,10 +412,10 @@
 				<reportElement x="414" y="31" width="120" height="14" uuid="3acef93c-f662-4318-b2c8-054ca3002c8c">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Right" verticalAlignment="Top">
 					<font fontName="Arial"/>
 				</textElement>
-				<textFieldExpression><![CDATA[" R$ "+ new java.text.DecimalFormat("#,##0.00", new java.text.DecimalFormatSymbols(new Locale("pt", "BR"))).format($P{TotalPago})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new java.text.DecimalFormat("#,##0.00", new java.text.DecimalFormatSymbols(new Locale("pt", "BR"))).format($P{TotalPago})]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement key="staticText-2" x="1" y="31" width="52" height="14" uuid="4d2892e3-aaa6-4f36-bdc6-e55aec99e9d4"/>
@@ -456,11 +456,14 @@
 				<reportElement x="100" y="45" width="120" height="14" uuid="4031d505-1ad9-4914-8ad4-786740244394">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Right" verticalAlignment="Top">
 					<font fontName="Arial"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.text.DecimalFormat("#,##0.00", new java.text.DecimalFormatSymbols(new Locale("pt", "BR"))).format($P{Outros})]]></textFieldExpression>
 			</textField>
+			<line>
+				<reportElement x="315" y="45" width="219" height="1" uuid="a30092a5-df5b-4dc4-86cb-a1bdbee9768a"/>
+			</line>
 		</band>
 	</summary>
 </jasperReport>
