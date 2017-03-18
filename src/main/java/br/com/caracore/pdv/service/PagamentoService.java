@@ -177,12 +177,9 @@ public class PagamentoService {
 		if ((Util.validar(pagamento)) && (Util.validar(pagamento.getVenda()))) {
 			if (Util.validar(pagamento.getVenda().getCodigo())) {
 				Long codigoVenda = pagamento.getVenda().getCodigo();
-				Venda venda = vendaService.pesquisarPorId(codigoVenda);
-				if ((Util.validar(venda)) && (Util.validar(venda.getDescontoTotal())) && (Util.validar(venda.getTotal()))) {
-					BigDecimal desconto = pagamento.getDesconto();
-					BigDecimal valorPago = pagamento.getTotalApagar();
-					vendaService.salvarDescontoETotalPagoEStatus(codigoVenda, desconto, valorPago, StatusVenda.FINALIZADO);
-				}
+				BigDecimal desconto = pagamento.getDesconto();
+				BigDecimal valorPago = pagamento.getTotalApagar();
+				vendaService.salvarDescontoETotalPagoEStatus(codigoVenda, desconto, valorPago, StatusVenda.FINALIZADO);
 			}
 		}
 		return pagamento;

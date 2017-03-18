@@ -211,12 +211,11 @@ public class VendaService {
 	 * @param status
 	 */
 	public void salvarDescontoETotalPagoEStatus(Long codigo, BigDecimal desconto, BigDecimal valorPago, StatusVenda status) {
-		Venda venda = null;
 		if ((Util.validar(codigo)) && (Util.validar(desconto))) {
 			if ((desconto.doubleValue() < ZERO) || (desconto.doubleValue() > PORCENTAGEM)) {
 				throw new DescontoInvalidoException("Desconto inválido!");
 			}
-			venda = vendaRepository.findOne(codigo);
+			Venda venda = vendaRepository.findOne(codigo);
 			if (Util.validar(venda)) {
 				venda.setDescontoTotal(desconto);
 				venda.setTotal(valorPago);
