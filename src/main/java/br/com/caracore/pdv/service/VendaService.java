@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import br.com.caracore.pdv.model.ItemVenda;
 import br.com.caracore.pdv.model.Loja;
 import br.com.caracore.pdv.model.Operador;
+import br.com.caracore.pdv.model.Pagamento;
 import br.com.caracore.pdv.model.Produto;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
@@ -206,21 +207,24 @@ public class VendaService {
 	/**
 	 * Método para atualizar o desconto total da compra
 	 * 
-	 * @param codigo
-	 * @param desconto
-	 * @param status
+	 * @param pagamento
 	 */
-	public void salvarDescontoETotalPagoEStatus(Long codigo, BigDecimal desconto, BigDecimal valorPago, StatusVenda status) {
-		if ((Util.validar(codigo)) && (Util.validar(desconto))) {
-			if ((desconto.doubleValue() < ZERO) || (desconto.doubleValue() > PORCENTAGEM)) {
-				throw new DescontoInvalidoException("Desconto inválido!");
-			}
-			Venda venda = vendaRepository.findOne(codigo);
-			if (Util.validar(venda)) {
-				venda.setDescontoTotal(desconto);
-				venda.setTotal(valorPago);
-				venda.setStatus(status);
-				vendaRepository.save(venda);
+	public void salvarVendaPaga(Pagamento pagamento) {
+		if (Util.validar(pagamento)) {
+			if (Util.validar(pagamento.getTotalApagar()) && Util.validar(pagamento.getDesconto())) {
+				Long codigo = pagamento.getVenda().getCodigo();
+				BigDecimal valorPago = pagamento.getTotalApagar();
+				BigDecimal desconto = pagamento.getDesconto();
+				if ((desconto.doubleValue() < ZERO) || (desconto.doubleValue() > PORCENTAGEM)) {
+					throw new DescontoInvalidoException("Desconto inválido!");
+				}
+				Venda venda = vendaRepository.findOne(codigo);
+				if (Util.validar(venda)) {
+					venda.setDescontoTotal(desconto);
+					venda.setTotal(valorPago);
+					venda.setStatus(StatusVenda.FINALIZADO);
+					vendaRepository.save(venda);
+				}
 			}
 		}
 	}
