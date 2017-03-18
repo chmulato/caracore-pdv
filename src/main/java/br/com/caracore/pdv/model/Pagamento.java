@@ -3,6 +3,8 @@ package br.com.caracore.pdv.model;
 import java.math.BigDecimal;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,6 +17,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.format.annotation.NumberFormat;
 
 import br.com.caracore.pdv.model.types.StatusVenda;
+import br.com.caracore.pdv.model.types.TipoPagamentoCartao;
 import br.com.caracore.pdv.service.exception.DescontoInvalidoException;
 import br.com.caracore.pdv.util.Util;
 
@@ -43,6 +46,9 @@ public class Pagamento {
 	
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal cartao;
+
+	@Enumerated(EnumType.STRING)
+	private TipoPagamentoCartao tipoPagamentoCartao;
 	
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal cheque;
@@ -204,6 +210,14 @@ public class Pagamento {
 		this.cartao = cartao;
 	}
 
+	public TipoPagamentoCartao getTipoPagamentoCartao() {
+		return tipoPagamentoCartao;
+	}
+
+	public void setTipoPagamentoCartao(TipoPagamentoCartao tipoPagamentoCartao) {
+		this.tipoPagamentoCartao = tipoPagamentoCartao;
+	}
+
 	public BigDecimal getCheque() {
 		return cheque;
 	}
@@ -276,7 +290,6 @@ public class Pagamento {
 	public void setOk(Boolean ok) {
 		this.ok = ok;
 	}
-	
 
 	@Override
 	public int hashCode() {
@@ -289,8 +302,10 @@ public class Pagamento {
 		result = prime * result + ((cpf == null) ? 0 : cpf.hashCode());
 		result = prime * result + ((desconto == null) ? 0 : desconto.hashCode());
 		result = prime * result + ((dinheiro == null) ? 0 : dinheiro.hashCode());
+		result = prime * result + ((ok == null) ? 0 : ok.hashCode());
 		result = prime * result + ((outros == null) ? 0 : outros.hashCode());
 		result = prime * result + ((subTotal == null) ? 0 : subTotal.hashCode());
+		result = prime * result + ((tipoPagamentoCartao == null) ? 0 : tipoPagamentoCartao.hashCode());
 		result = prime * result + ((totalApagar == null) ? 0 : totalApagar.hashCode());
 		result = prime * result + ((troco == null) ? 0 : troco.hashCode());
 		result = prime * result + ((valorDesconto == null) ? 0 : valorDesconto.hashCode());
@@ -342,6 +357,11 @@ public class Pagamento {
 				return false;
 		} else if (!dinheiro.equals(other.dinheiro))
 			return false;
+		if (ok == null) {
+			if (other.ok != null)
+				return false;
+		} else if (!ok.equals(other.ok))
+			return false;
 		if (outros == null) {
 			if (other.outros != null)
 				return false;
@@ -351,6 +371,8 @@ public class Pagamento {
 			if (other.subTotal != null)
 				return false;
 		} else if (!subTotal.equals(other.subTotal))
+			return false;
+		if (tipoPagamentoCartao != other.tipoPagamentoCartao)
 			return false;
 		if (totalApagar == null) {
 			if (other.totalApagar != null)
@@ -374,4 +396,5 @@ public class Pagamento {
 			return false;
 		return true;
 	}
+
 }

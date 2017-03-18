@@ -25,6 +25,7 @@ import br.com.caracore.pdv.model.Loja;
 import br.com.caracore.pdv.model.Pagamento;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
+import br.com.caracore.pdv.model.types.TipoPagamentoCartao;
 import br.com.caracore.pdv.service.RelatorioService;
 import br.com.caracore.pdv.util.Util;
 import br.com.caracore.pdv.vo.VendaDiariaVO;
@@ -39,6 +40,10 @@ import net.sf.jasperreports.engine.util.JRLoader;
 @Controller
 @RequestMapping("/relatorios")
 public class RelatoriosController {
+
+	final private int TIPO_ZERO_PAGAMENTO_DEBITO = 0;
+
+	final private int TIPO_PAGAMENTO_CREDITO = 1;
 
 	final private static String DS_KEY = "dados";
 
@@ -97,9 +102,24 @@ public class RelatoriosController {
 			        }
 
 			        if (Util.validar(pagamento.getCartao())) {
-				        parameters.put("Cartao", pagamento.getCartao());
+			        	if (Util.validar(pagamento.getTipoPagamentoCartao())) {
+			        		if (pagamento.getTipoPagamentoCartao().equals(TipoPagamentoCartao.DEBITO)) {
+						        parameters.put("CartaoDebito", pagamento.getCartao());
+			        		} else {
+						        parameters.put("CartaoDebito", ZERO_REAL);
+			        		}
+			        		if (pagamento.getTipoPagamentoCartao().equals(TipoPagamentoCartao.CREDITO)) {
+						        parameters.put("CartaoCredito", pagamento.getCartao());
+			        		} else {
+						        parameters.put("CartaoCredito", ZERO_REAL);
+			        		}
+			        	} else {
+					        parameters.put("CartaoDebito", ZERO_REAL);
+					        parameters.put("CartaoCredito", ZERO_REAL);
+			        	}
 			        } else {
-				        parameters.put("Cartao", ZERO_REAL);
+				        parameters.put("CartaoDebito", ZERO_REAL);
+				        parameters.put("CartaoCredito", ZERO_REAL);
 			        }
 			        
 			        if (Util.validar(pagamento.getCpf())) {
@@ -145,7 +165,7 @@ public class RelatoriosController {
 					JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dados);
 
 					response.setContentType("application/x-pdf");
-					response.setHeader("Content-disposition", "inline; filename=nota_sem_valor_fiscal.pdf");
+					response.setHeader("Content-disposition", "inline; filename=cupom_nao_fiscal.pdf");
 
 					final OutputStream outStream = response.getOutputStream();
 					
@@ -168,13 +188,14 @@ public class RelatoriosController {
 		
 		List<VendaDiariaVO> vendasDoDia = Util.criarListaVendasDiariasVO();
 		
-		BigDecimal valorDesconto = BigDecimal.ZERO;
-		BigDecimal totalPago = BigDecimal.ZERO;
-		BigDecimal dinheiro = BigDecimal.ZERO;
-		BigDecimal cartao = BigDecimal.ZERO;
-		BigDecimal cheque = BigDecimal.ZERO;
-		BigDecimal outros = BigDecimal.ZERO;
-		BigDecimal totalVendas = BigDecimal.ZERO;
+		BigDecimal valorDesconto = ZERO_REAL;
+		BigDecimal totalPago = ZERO_REAL;
+		BigDecimal dinheiro = ZERO_REAL;
+		BigDecimal cartaoDebito = ZERO_REAL;
+		BigDecimal cartaoCredito = ZERO_REAL;
+		BigDecimal cheque = ZERO_REAL;
+		BigDecimal outros = ZERO_REAL;
+		BigDecimal totalVendas = ZERO_REAL;
 		
 		Vendedor vendedor = relatorioService.buscarVendedorELoja(codigoVendedor);
 		
@@ -192,7 +213,9 @@ public class RelatoriosController {
 					valorDesconto = relatorioService.calcularTotalDeDesconto(vendas);
 					totalPago = relatorioService.calcularTotalPago(vendas);
 					dinheiro = relatorioService.calcularTotalEmDinheiro(vendas);
-					cartao = relatorioService.calcularTotalEmCartao(vendas);
+					BigDecimal[] cartao = relatorioService.calcularTotalEmCartao(vendas);
+					cartaoDebito = cartao[TIPO_ZERO_PAGAMENTO_DEBITO]; 
+					cartaoCredito = cartao[TIPO_PAGAMENTO_CREDITO]; 
 					cheque = relatorioService.calcularTotalEmCheque(vendas);
 					outros = relatorioService.calcularTotalEmOutros(vendas);
 					totalVendas = relatorioService.calcularTotalVendas(vendas);
@@ -216,7 +239,8 @@ public class RelatoriosController {
 	        parameters.put("Loja", nomeLoja);
 	        parameters.put("TotalPago", totalPago);
 	        parameters.put("Dinheiro", dinheiro);
-	        parameters.put("Cartao", cartao);
+	        parameters.put("CartaoDebito", cartaoDebito);
+	        parameters.put("CartaoCredito", cartaoCredito);
 	        parameters.put("Cheque", cheque);
 	        parameters.put("Outros", outros);
 	        parameters.put("ValorDesconto", valorDesconto);
@@ -245,13 +269,14 @@ public class RelatoriosController {
 		
 		List<VendaDiariaVO> vendasDoDia = Util.criarListaVendasDiariasVO();
 		
-		BigDecimal valorDesconto = BigDecimal.ZERO;
-		BigDecimal totalPago = BigDecimal.ZERO;
-		BigDecimal dinheiro = BigDecimal.ZERO;
-		BigDecimal cartao = BigDecimal.ZERO;
-		BigDecimal cheque = BigDecimal.ZERO;
-		BigDecimal outros = BigDecimal.ZERO;
-		BigDecimal totalVendas = BigDecimal.ZERO;
+		BigDecimal valorDesconto = ZERO_REAL;
+		BigDecimal totalPago = ZERO_REAL;
+		BigDecimal dinheiro = ZERO_REAL;
+		BigDecimal cartaoDebito = ZERO_REAL;
+		BigDecimal cartaoCredito = ZERO_REAL;
+		BigDecimal cheque = ZERO_REAL;
+		BigDecimal outros = ZERO_REAL;
+		BigDecimal totalVendas = ZERO_REAL;
 		
 		Loja loja = relatorioService.buscarLoja(codigoLoja);
 		
@@ -268,7 +293,9 @@ public class RelatoriosController {
 					valorDesconto = relatorioService.calcularTotalDeDesconto(vendas);
 					totalPago = relatorioService.calcularTotalPago(vendas);
 					dinheiro = relatorioService.calcularTotalEmDinheiro(vendas);
-					cartao = relatorioService.calcularTotalEmCartao(vendas);
+					BigDecimal[] cartao = relatorioService.calcularTotalEmCartao(vendas);
+					cartaoDebito = cartao[TIPO_ZERO_PAGAMENTO_DEBITO]; 
+					cartaoCredito = cartao[TIPO_PAGAMENTO_CREDITO]; 
 					cheque = relatorioService.calcularTotalEmCheque(vendas);
 					outros = relatorioService.calcularTotalEmOutros(vendas);
 					totalVendas = relatorioService.calcularTotalVendas(vendas);
@@ -291,7 +318,8 @@ public class RelatoriosController {
 	        parameters.put("Loja", nomeLoja);
 	        parameters.put("TotalPago", totalPago);
 	        parameters.put("Dinheiro", dinheiro);
-	        parameters.put("Cartao", cartao);
+	        parameters.put("CartaoDebito", cartaoDebito);
+	        parameters.put("CartaoCredito", cartaoCredito);
 	        parameters.put("Cheque", cheque);
 	        parameters.put("Outros", outros);
 	        parameters.put("ValorDesconto", valorDesconto);

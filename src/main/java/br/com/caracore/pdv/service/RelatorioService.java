@@ -14,12 +14,17 @@ import br.com.caracore.pdv.model.Loja;
 import br.com.caracore.pdv.model.Pagamento;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
+import br.com.caracore.pdv.model.types.TipoPagamentoCartao;
 import br.com.caracore.pdv.util.Util;
 import br.com.caracore.pdv.vo.VendaDiariaVO;
 
 @Service
 public class RelatorioService {
 
+	final private int TIPO_ZERO_PAGAMENTO_DEBITO = 0;
+
+	final private int TIPO_UM_PAGAMENTO_CREDITO = 1;
+	
 	@Autowired
 	private ClienteService clienteService;
 
@@ -268,19 +273,30 @@ public class RelatorioService {
 	 * @param vendas
 	 * @return
 	 */
-	public BigDecimal calcularTotalEmCartao(List<Venda> vendas) {
-		double total = 0.0d;
+	public BigDecimal[] calcularTotalEmCartao(List<Venda> vendas) {
+		BigDecimal[] emCartao = { BigDecimal.ZERO, BigDecimal.ZERO };
+		double totalDebito = 0.0d;
+		double totalCredito = 0.0d;
 		if (Util.validar(vendas)) {
 			for (Venda venda : vendas) {
 				Pagamento pagamento = buscarPagamento(venda);
 				if (Util.validar(pagamento)) {
 					if (Util.validar(pagamento.getCartao())) {
-						total = total + pagamento.getCartao().doubleValue();
+						if (Util.validar(pagamento.getTipoPagamentoCartao())) {
+							if (pagamento.getTipoPagamentoCartao().equals(TipoPagamentoCartao.DEBITO)) {
+								totalDebito = totalDebito + pagamento.getCartao().doubleValue();
+							}
+							if (pagamento.getTipoPagamentoCartao().equals(TipoPagamentoCartao.CREDITO)) {
+								totalCredito = totalCredito + pagamento.getCartao().doubleValue();
+							}
+						}
 					}
 				}
 			}
 		}
-		return BigDecimal.valueOf(total);
+		emCartao[TIPO_ZERO_PAGAMENTO_DEBITO] = BigDecimal.valueOf(totalDebito);
+		emCartao[TIPO_UM_PAGAMENTO_CREDITO] = BigDecimal.valueOf(totalCredito);
+		return emCartao;
 	}
 	
 	/**

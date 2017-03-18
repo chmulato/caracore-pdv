@@ -14,6 +14,7 @@ import br.com.caracore.pdv.service.exception.CpfExistenteException;
 import br.com.caracore.pdv.service.exception.CpfInvalidoException;
 import br.com.caracore.pdv.service.exception.DescontoInvalidoException;
 import br.com.caracore.pdv.service.exception.PagamentoInvalidoException;
+import br.com.caracore.pdv.service.exception.TipoPagamentoCartaoInvalidoException;
 import br.com.caracore.pdv.service.exception.ValorInvalidoException;
 import br.com.caracore.pdv.util.Util;
 
@@ -124,6 +125,9 @@ public class PagamentoService {
 			}
 			if (Util.validar(pagamento.getCartao())) {
 				cartao = pagamento.getCartao().doubleValue();
+				if (!Util.validar(pagamento.getTipoPagamentoCartao())) {
+					throw new TipoPagamentoCartaoInvalidoException("Débito ou Crédito?");
+				}
 			}
 			if (Util.validar(pagamento.getCheque())) {
 				cheque = pagamento.getCheque().doubleValue();
