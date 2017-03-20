@@ -46,12 +46,12 @@ public class LojaService {
 	}
 
 	/**
-	 * Método interno para recuperar loja por nome
+	 * Método externo para recuperar loja por nome
 	 * 
 	 * @param nome
 	 * @return
 	 */
-	private Loja pesquisarPorNome(String nome) {
+	public Loja pesquisarPorNome(String nome) {
 		return lojaRepository.findByNomeIgnoreCase(nome);
 	}
 

@@ -21,6 +21,7 @@ import br.com.caracore.pdv.model.Operador;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.repository.filter.ProdutoFilter;
+import br.com.caracore.pdv.repository.filter.VendaFilter;
 import br.com.caracore.pdv.repository.filter.VendedorFilter;
 import br.com.caracore.pdv.service.VendaService;
 import br.com.caracore.pdv.service.exception.ProdutoNaoCadastradoException;
@@ -69,6 +70,30 @@ public class VendasController {
 		mv.addObject(limparFiltro(venda));
 		mv.addObject(venda);
 		return mv;
+	}
+	
+	@GetMapping("/vendas")
+	public ModelAndView pesquisarVendas(VendaFilter filtroVenda) {
+		ModelAndView mv = new ModelAndView("venda/pesquisa-vendas");
+		if (filtroVenda != null) {
+			mv.addObject("vendas", vendaService.pesquisar(filtroVenda));
+		} else {
+			filtroVenda = new VendaFilter();
+			filtroVenda.setVendedor("");
+		}
+		return mv;		
+	}
+	
+	@PostMapping("/vendas")
+	public ModelAndView pesquisarVendas(@Valid VendaFilter filtroVenda, BindingResult result, RedirectAttributes attributes) {
+		ModelAndView mv = new ModelAndView("venda/pesquisa-vendas");
+		if (filtroVenda != null) {
+			mv.addObject("vendas", vendaService.pesquisar(filtroVenda));
+		} else {
+			filtroVenda = new VendaFilter();
+			filtroVenda.setVendedor("");
+		}
+		return mv;		
 	}
 	
 	@GetMapping("/vendedores")

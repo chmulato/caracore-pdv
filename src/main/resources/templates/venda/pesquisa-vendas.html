@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt" 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:data="http://www.thymeleaf.org/extras/data-attribute"
+	layout:decorate="~{layout/layout-padrao}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	
+	<head>
+		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/pesquisa-itens.css}"/>
+	</head>
+	<body>
+		<section layout:fragment="conteudo">
+		<div class="page-header">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-xs-10">
+						<h1>
+							Pesquisar Vendas
+						</h1>
+					</div>
+				</div>
+			</div>
+		</div>			
+		
+		<div class="container-fluid">
+
+			<form method="post" class="form-vertical  js-form-loading" th:object="${vendaFilter}" th:action="@{/vendas/vendas}">
+				<div class="row">
+					<div class="col-sm-2">
+						<div class="form-group">
+							<div class="input-group">
+								<label for="vendedor" class="control-label">Vendedor</label>
+								<input id="vendedor" type="text" th:field="*{vendedor}" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="form-group">
+							<div class="input-group">
+								<label for="loja" class="control-label">Loja</label>
+								<input id="loja" type="text" th:field="*{loja}" class="form-control" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-2">
+						<div class="form-group">
+							<div class="input-group">
+								<label for="dataInicial" class="control-label">Data Inicial</label>
+								<input id="dataInicial" type="text" class="form-control"	th:field="*{dataInicial}"
+									data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR"
+									data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" />
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="form-group">
+							<div class="input-group">
+								<label for="dataFinal" class="control-label">Data Final</label>
+								<input id="dataFinal" type="text" class="form-control"	th:field="*{dataFinal}"
+									data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR"
+									data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" />
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="form-group">
+							<button class="btn  btn-primary btn-venda" type="submit">Pesquisar</button>
+						</div>
+					</div>
+				</div>
+			</form>
+
+			<div class="alert  alert-danger" th:if="${!#strings.isEmpty(error)}">
+				<span th:text="${error}"></span>
+			</div>
+
+			<div class="table-responsive">
+				<table id="tabela-vendedores" class="table  table-striped  table-bordered  table-hover  table-condensed  js-sticky-table">
+					<thead class="aw-table-header-solid">
+						<tr>
+							<th class="text-center">Código</th>
+							<th class="text-left">Data</th>
+							<th class="text-left">Vendedor</th>
+							<th class="text-left">Loja</th>
+							<th class="text-left">Status</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="venda : ${vendas}">
+							<td class="text-center">
+								<a th:href="@{/vendas/{codigo}(codigo=${venda.codigo})}" th:text="${venda.codigo}" ></a>
+							</td>
+							<td class="text-left">
+								<span th:text="${venda.dataFormatada}"></span>
+							</td>
+							<td class="text-left">
+								<span th:text="${venda?.vendedor?.nome}"></span>
+							</td>
+							<td class="text-left">
+								<span th:text="${venda?.vendedor?.loja?.nome}"></span>
+							</td>
+							<td class="text-left">
+								<span th:text="${venda.status}"></span>
+							</td>
+						</tr>
+						<tr th:if="${vendas.empty}">
+							<td colspan="5">Nenhum venda efetuada</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		
+	</section>
+	
+</body>
+</html>

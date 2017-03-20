@@ -1,17 +1,21 @@
 package br.com.caracore.pdv.repository.filter;
 
-import java.util.Date;
-
-import br.com.caracore.pdv.model.Vendedor;
+import br.com.caracore.pdv.model.types.StatusVenda;
 
 public class VendaFilter {
 	
 	private Long codigo;
 	
-	private Date data;
+	private String dataInicial;
 	
-	private Vendedor vendedor;
+	private String dataFinal;
 
+	private String vendedor;
+
+	private String loja;
+
+	private StatusVenda statusVenda;
+	
 	public Long getCodigo() {
 		return codigo;
 	}
@@ -20,20 +24,44 @@ public class VendaFilter {
 		this.codigo = codigo;
 	}
 
-	public Date getData() {
-		return data;
+	public String getDataInicial() {
+		return dataInicial;
 	}
 
-	public void setData(Date data) {
-		this.data = data;
+	public void setDataInicial(String dataInicial) {
+		this.dataInicial = dataInicial;
 	}
 
-	public Vendedor getVendedor() {
+	public String getDataFinal() {
+		return dataFinal;
+	}
+
+	public void setDataFinal(String dataFinal) {
+		this.dataFinal = dataFinal;
+	}
+
+	public String getVendedor() {
 		return vendedor;
 	}
 
-	public void setVendedor(Vendedor vendedor) {
+	public void setVendedor(String vendedor) {
 		this.vendedor = vendedor;
 	}
 
+	public String getLoja() {
+		return loja;
+	}
+
+	public void setLoja(String loja) {
+		this.loja = loja;
+	}
+
+	public StatusVenda getStatusVenda() {
+		return statusVenda;
+	}
+
+	public void setStatusVenda(StatusVenda statusVenda) {
+		this.statusVenda = statusVenda;
+	}
+	
 }

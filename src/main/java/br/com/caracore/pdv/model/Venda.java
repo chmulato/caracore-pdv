@@ -16,12 +16,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
 
 import br.com.caracore.pdv.model.types.StatusVenda;
+import br.com.caracore.pdv.util.Util;
 
 @Entity
 public class Venda {
@@ -64,6 +66,9 @@ public class Venda {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "PAGAMENTO_ID")
 	private Pagamento pagamento;
+
+	@Transient
+	private String dataFormatada;
 
 	public Venda() {
 		super();
@@ -167,6 +172,18 @@ public class Venda {
 			validar = Boolean.FALSE;
 		}
 		return validar;
+	}
+
+	public String getDataFormatada() {
+		dataFormatada = "";
+		if (data != null) {
+			dataFormatada = Util.formatarData(data, "dd/MM/yyyy hh:mm:ss");
+		}
+		return dataFormatada;
+	}
+
+	public void setDataFormatada(String dataFormatada) {
+		this.dataFormatada = dataFormatada;
 	}
 
 	@Override

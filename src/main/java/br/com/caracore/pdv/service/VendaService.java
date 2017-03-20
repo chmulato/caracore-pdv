@@ -18,6 +18,7 @@ import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.model.types.StatusVenda;
 import br.com.caracore.pdv.repository.VendaRepository;
+import br.com.caracore.pdv.repository.filter.VendaFilter;
 import br.com.caracore.pdv.repository.filter.VendedorFilter;
 import br.com.caracore.pdv.service.exception.DescontoInvalidoException;
 import br.com.caracore.pdv.service.exception.ProdutoNaoCadastradoException;
@@ -54,6 +55,54 @@ public class VendaService {
 	@Autowired
 	private ItemVendaService itemVendaService;
 
+	/**
+	 * Método para buscar vendas por parâmetros
+	 * 
+	 * @param codigo
+	 * @param dataInicial
+	 * @param dataFinal
+	 * @param nomeVendedor
+	 * @return
+	 */
+	public List<Venda> pesquisar(VendaFilter filtro) {
+		List<Venda> lista = null;
+		boolean pesquisaDefault = true;
+		String nomeVendedor = null;
+		String nomeLoja = null;
+		Date dataInicial = null;
+		Date dataFinal = null;
+		if (filtro != null) {
+			if (Util.validar(filtro.getVendedor())) {
+				nomeVendedor = filtro.getVendedor();
+				pesquisaDefault = false;
+			}
+			if (Util.validar(filtro.getLoja())) {
+				nomeLoja = filtro.getLoja();
+				pesquisaDefault = false;
+			}
+			if (Util.validar(filtro.getDataInicial())) {
+				String data = filtro.getDataInicial();
+				dataInicial = Util.dataHoraInicial(Util.formataData(data));
+				pesquisaDefault = false;
+			}
+			if (Util.validar(filtro.getDataFinal())) {
+				String data = filtro.getDataFinal();
+				dataFinal = Util.dataHoraFinal(Util.formataData(data));
+				pesquisaDefault = false;
+			}
+		}
+		if (pesquisaDefault) {
+			dataInicial = Util.dataHoraInicial(new Date());
+			dataFinal = Util.dataHoraFinal(new Date());
+			lista = vendaRepository.findByDataBetweenOrStatus(dataInicial, dataFinal, StatusVenda.FINALIZADO);
+		} else {
+			Vendedor vendedor = vendedorService.pesquisar(nomeVendedor);
+			Loja loja = lojaService.pesquisarPorNome(nomeLoja);
+			lista = vendaRepository.findByDataBetweenOrVendedorOrLoja(dataInicial, dataFinal, vendedor, loja);
+		}
+		
+		return lista;
+	}
 
 	public List<Vendedor> pesquisar(VendedorFilter filtro) {
 		return vendedorService.pesquisar(filtro);

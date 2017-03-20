@@ -81,6 +81,20 @@ public class VendedorService {
 		return vendedorRepository.findOne(codigo);
 	}
 
+	public Vendedor pesquisar(String nomeVendedor) {
+		Vendedor result = null;
+		if (Util.validar(nomeVendedor)) {
+			List<Vendedor> lista = vendedorRepository.findByNomeContainingIgnoreCase(nomeVendedor);
+			if (Util.validar(lista)) {
+				for (Vendedor vendedor : lista) {
+					result = vendedor;
+					break;
+				}
+			}
+		}
+		return result;
+	}
+
 	public List<Vendedor> pesquisar(VendedorFilter filtro) {
 		String nome = filtro.getNome() == null ? "%" : filtro.getNome();
 		return vendedorRepository.findByNomeContainingIgnoreCase(nome);

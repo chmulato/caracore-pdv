@@ -12,6 +12,7 @@
 	
 		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/vendors.min.css}"/>
 		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/algaworks.min.css}"/>
+		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/bootstrap-datepicker.standalone.min.css}" />
 		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/application.css}"/>
 	
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -66,10 +67,15 @@
 				      
 				          <ul class="aw-menu__list  aw-menu__list--sublist">
 						        <li class="aw-menu__item" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR','ROLE_VISITANTE')">
-						          <a th:href="@{/vendas/vendedores}"><i class="fa  fa-fw  fa-home"></i><span>Vendas</span></a>
+						          <a th:href="@{/vendas/vendedores}"><i class="fa  fa-fw  fa-home"></i><span>PDV</span></a>
 						        </li>
 				          </ul>
 				      
+				          <ul class="aw-menu__list  aw-menu__list--sublist">
+						        <li class="aw-menu__item" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR','ROLE_VISITANTE')">
+						          <a th:href="@{/vendas/vendas}"><i class="fa  fa-fw  fa-home"></i><span>Vendas</span></a>
+						        </li>
+				          </ul>
 				        </li>
 
 				        <li class="aw-menu__item  is-expanded">
@@ -126,6 +132,8 @@
 	
 		<script th:src="@{/layout/vendors/jquery/jquery.js}"></script>
 		<script th:src="@{/layout/vendors/bootstrap/bootstrap.js}"></script>
+		<script th:src="@{/layout/javascripts/bootstrap-datepicker.min.js}"></script>
+		<script th:src="@{/layout/javascripts/bootstrap-datepicker.pt-BR.min.js}"></script>
 		<script th:src="@{/layout/javascripts/vendors.min.js}"></script>
 		<script th:src="@{/layout/javascripts/algaworks.min.js}"></script>
 		<script th:src="@{/layout/javascripts/jquery.masknumber.min.js}"></script>

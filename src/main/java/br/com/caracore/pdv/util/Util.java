@@ -1,6 +1,7 @@
 package br.com.caracore.pdv.util;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,6 +15,7 @@ import br.com.caracore.pdv.model.ItemVenda;
 import br.com.caracore.pdv.model.Loja;
 import br.com.caracore.pdv.model.Operador;
 import br.com.caracore.pdv.model.Produto;
+import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.vo.VendaDiariaVO;
 
@@ -130,7 +132,25 @@ public class Util {
 			return (false);
 		}
 	}
-
+	
+	/**
+	 * Método para formatar String em data
+	 * 
+	 * @param data
+	 * @return
+	 * @throws Exception
+	 */
+	public static Date formataData(String data) { 
+        Date date = new Date();
+        try {
+            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            date = (java.util.Date)formatter.parse(data);
+        } catch (ParseException ex) {            
+            ex.printStackTrace();
+        }
+        return date;
+	}
+	
 	/**
 	 * Método para truncar valor para duas casas
 	 * 
@@ -282,6 +302,18 @@ public class Util {
 		vo.setVendedor("");
 		List<VendaDiariaVO> lista = new ArrayList<>();
 		lista.add(vo);
+		return lista;
+	}
+	
+	/**
+	 * Método para criar uma lista default vazia
+	 * 
+	 * @return
+	 */
+	public static List<Venda> criarListaDeVendas() {
+		Venda venda = new Venda();
+		List<Venda> lista = new ArrayList<>();
+		lista.add(venda);
 		return lista;
 	}
 	
