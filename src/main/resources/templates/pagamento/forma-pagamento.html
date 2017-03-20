@@ -204,7 +204,7 @@
 						</div>
 
 						<div class="col-sm-3">
-							<div class="form-group">
+							<div class="form-group" th:classappend="${#fields.hasErrors('troco')} ? has-error">
 								<label for="troco">Troco</label>
 								<input id="troco" type="text" th:field="*{troco}" class="form-control js-moeda js-troco" placeholder="R$" readonly="readonly" />
 							</div>

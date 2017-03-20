@@ -23,7 +23,9 @@ import br.com.caracore.pdv.service.exception.CpfInvalidoException;
 import br.com.caracore.pdv.service.exception.DescontoInvalidoException;
 import br.com.caracore.pdv.service.exception.EmailInvalidoException;
 import br.com.caracore.pdv.service.exception.NomeExistenteException;
+import br.com.caracore.pdv.service.exception.PagamentoInvalidoException;
 import br.com.caracore.pdv.service.exception.TipoPagamentoCartaoInvalidoException;
+import br.com.caracore.pdv.service.exception.TrocoInvalidoException;
 import br.com.caracore.pdv.service.exception.ValorInvalidoException;
 import br.com.caracore.pdv.util.Util;
 
@@ -111,6 +113,11 @@ public class PagamentosController {
 		} catch (TipoPagamentoCartaoInvalidoException ex) {
 			errors.rejectValue("tipoPagamentoCartao", " ", ex.getMessage());
 			attributes.addFlashAttribute("error", "Débito ou Crédito?");
+		} catch (TrocoInvalidoException ex) {
+			errors.rejectValue("troco", " ", ex.getMessage());
+			attributes.addFlashAttribute("error", ex.getMessage());
+		} catch (PagamentoInvalidoException ex) {
+			attributes.addFlashAttribute("error", ex.getMessage());
 		}
 		mv.addObject("tipoPagamentoCartoes", TipoPagamentoCartao.values());
 		mv.addObject(pagamento);

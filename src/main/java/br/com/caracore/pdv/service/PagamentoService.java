@@ -14,13 +14,16 @@ import br.com.caracore.pdv.service.exception.CpfInvalidoException;
 import br.com.caracore.pdv.service.exception.DescontoInvalidoException;
 import br.com.caracore.pdv.service.exception.PagamentoInvalidoException;
 import br.com.caracore.pdv.service.exception.TipoPagamentoCartaoInvalidoException;
+import br.com.caracore.pdv.service.exception.TrocoInvalidoException;
 import br.com.caracore.pdv.service.exception.ValorInvalidoException;
 import br.com.caracore.pdv.util.Util;
 
 @Service
 public class PagamentoService {
 
-	final double ZERO = 0;
+	final int DUAS_CASAS_DECIMAIS = 2;
+	
+	final double ZERO = 0.0d;
 
 	final double PORCENTAGEM = 100.0;
 
@@ -138,6 +141,10 @@ public class PagamentoService {
 			troco = valores - totalApagar;
 			if (troco < ZERO) {
 				throw new ValorInvalidoException("Valores inválidos!");
+			}
+			troco = Util.round(troco, DUAS_CASAS_DECIMAIS);
+			if ((dinheiro == ZERO) && (troco > ZERO)) {
+				throw new TrocoInvalidoException("Troco somente com pagamento em dinheiro!");
 			}
 			pagamento.setTroco(BigDecimal.valueOf(troco));
 		}
