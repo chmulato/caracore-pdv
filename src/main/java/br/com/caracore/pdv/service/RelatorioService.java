@@ -259,7 +259,14 @@ public class RelatorioService {
 				Pagamento pagamento = buscarPagamento(venda);
 				if (Util.validar(pagamento)) {
 					if (Util.validar(pagamento.getDinheiro())) {
-						total = total + pagamento.getDinheiro().doubleValue();
+						if (Util.validar(pagamento.getTroco())) {
+							double troco = pagamento.getTroco().doubleValue();
+							double dinheiro = pagamento.getDinheiro().doubleValue();
+							double diferenca = (dinheiro - troco); 
+							total = total + diferenca;
+						} else {
+							total = total + pagamento.getDinheiro().doubleValue();
+						}
 					}
 				}
 			}
