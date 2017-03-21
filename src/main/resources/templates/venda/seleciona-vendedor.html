@@ -68,8 +68,15 @@
 							<td th:text="#{|tipoVendedor.${vendedor.tipo}|}" class="text-left">Gerente</td>
 							<td class="text-center" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')">
 								<a class="btn  btn-link  btn-xs" style="cursor:pointer"
-									title="Vendas do dia por vendedor" rel="tooltip"
+									title="Vendas do dia" rel="tooltip"
 									data-toggle="modal" data-target="#relatorioVendedorModal"
+									data:nome="${vendedor.nome}" 
+									data:url-selecionar="@{/relatorios/vendedor/{codigo}(codigo=${vendedor.codigo})}">
+									<span class="glyphicon glyphicon-file"></span>
+								</a>
+								<a class="btn  btn-link  btn-xs" style="cursor:pointer; color:red;"
+									title="Vendas por período" rel="tooltip"
+									data-toggle="modal" data-target="#relatorioVendedorPeriodoModal"
 									data:nome="${vendedor.nome}" 
 									data:url-selecionar="@{/relatorios/vendedor/{codigo}(codigo=${vendedor.codigo})}">
 									<span class="glyphicon glyphicon-file"></span>
@@ -117,11 +124,46 @@
 			       			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			       				<span aria-hidden="true">&times;</span>
 			       			</button>
-			       			<h4 class="modal-title" id="myModalRelatorio">Selecionar vendedor</h4>
+			       			<h4 class="modal-title" id="myModalRelatorio01">Selecionar vendedor</h4>
 		     			</div>
 		     			<div class="modal-body">
 		       				<span>Qual relatório?</span>
 		     			</div>
+		     			<div class="modal-footer">
+		       				<button type="button" class="btn  btn-default" data-dismiss="modal">Fechar</button>
+		       				<button type="submit" class="btn  btn-primary">Imprimir</button>
+		     			</div>
+		     		</form>
+		  		</div>
+			</div>
+		</div>	
+
+		<div class="modal  fade" id="relatorioVendedorPeriodoModal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+		  		<div class="modal-content">
+		  			<form th:action="@{/vendas}" method="POST">
+		     			<div class="modal-header">
+			       			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			       				<span aria-hidden="true">&times;</span>
+			       			</button>
+			       			<h4 class="modal-title" id="myModalRelatorio02">Selecionar período</h4>
+		     			</div>
+				      	<div class="modal-body">
+				        	<span>Imprimir relatório?</span>
+				        	<hr>
+							<div class="form-group">
+								<label for="dataInicial" class="control-label">Data Inicial</label>
+								<input id="dataInicial" type="text" class="form-control" name="dataInicial"
+									data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR"
+									data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" />
+				        	</div>
+							<div class="form-group">
+								<label for="dataFinal" class="control-label">Data Final</label>
+								<input id="dataFinal" type="text" class="form-control" name="dataFinal"
+									data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR"
+									data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" />
+				        	</div>
+				      	</div>
 		     			<div class="modal-footer">
 		       				<button type="button" class="btn  btn-default" data-dismiss="modal">Fechar</button>
 		       				<button type="submit" class="btn  btn-primary">Imprimir</button>

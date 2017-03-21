@@ -315,6 +315,19 @@ public class VendaService {
 	}
 	
 	/**
+	 * Método para recuperar lista de vendas por periodo e por vendedor
+	 * 
+	 * @param vendedor
+	 * @param dataInicial
+	 * @return
+	 */
+	public List<Venda> listarVendasPorPeriodoPorVendedor(Vendedor vendedor, Date dataInicial, Date dataFinal) {
+		dataInicial = Util.dataHoraInicial(dataInicial);
+		dataFinal = Util.dataHoraFinal(dataFinal);
+		return vendaRepository.findByDataBetweenAndVendedorAndStatus(dataInicial, dataFinal, vendedor, StatusVenda.FINALIZADO);
+	}
+	
+	/**
 	 * Método para recuperar lista de vendas por vendedor
 	 * 
 	 * @param vendedor

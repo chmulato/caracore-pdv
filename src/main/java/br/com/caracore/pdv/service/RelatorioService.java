@@ -323,6 +323,16 @@ public class RelatorioService {
 		}
 		return BigDecimal.valueOf(total);
 	}
+
+	/**
+	 * Método externo para listar as vendas por periodo e por vendedor
+	 * 
+	 * @param vendedor
+	 * @return
+	 */
+	public List<Venda> listarVendasPorPeriodoPorVendedor(Vendedor vendedor, Date dataInicial, Date dataFinal) {
+		return vendaService.listarVendasPorPeriodoPorVendedor(vendedor, dataInicial, dataFinal);
+	}
 	
 	/**
 	 * Método externo para listar as vendas do dia do vendedor
