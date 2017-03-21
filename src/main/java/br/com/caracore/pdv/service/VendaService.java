@@ -101,7 +101,19 @@ public class VendaService {
 		} else {
 			Vendedor vendedor = vendedorService.pesquisar(nomeVendedor);
 			Loja loja = lojaService.pesquisarPorNome(nomeLoja);
-			lista = vendaRepository.findByDataBetweenAndVendedorAndLoja(dataInicial, dataFinal, vendedor, loja);
+			if ((!Util.validar(dataInicial) && (!Util.validar(dataFinal)))) {
+				dataInicial = Util.dataHoraInicialDoMes(new Date());
+				dataFinal = Util.dataHoraFinalDoMes(new Date());
+			}
+			if ((Util.validar(vendedor)) && (Util.validar(loja))) {
+				lista = vendaRepository.findByDataBetweenAndVendedorAndLoja(dataInicial, dataFinal, vendedor, loja);
+			}
+			if ((Util.validar(vendedor)) && (!Util.validar(loja))) {
+				lista = vendaRepository.findByDataBetweenAndVendedor(dataInicial, dataFinal, vendedor);
+			}
+			if ((!Util.validar(vendedor)) && (Util.validar(loja))) {
+				lista = vendaRepository.findByDataBetweenAndLoja(dataInicial, dataFinal, loja);
+			}
 		}
 		return lista;
 	}
