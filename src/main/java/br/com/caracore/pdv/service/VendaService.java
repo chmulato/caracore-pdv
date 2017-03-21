@@ -26,6 +26,8 @@ import br.com.caracore.pdv.util.Util;
 
 @Service
 public class VendaService {
+
+	final private boolean PESQUISA_DEFAULT = true;
 	
 	final private int QUANTIDADE_UNITARIA = 1;
 
@@ -39,6 +41,9 @@ public class VendaService {
 
 	@Autowired
 	private VendaRepository vendaRepository;
+
+	@Autowired
+	private PagamentoService pagamentoService;
 
 	@Autowired
 	private ProdutoService produtoService;
@@ -66,7 +71,7 @@ public class VendaService {
 	 */
 	public List<Venda> pesquisar(VendaFilter filtro) {
 		List<Venda> lista = null;
-		boolean pesquisaDefault = true;
+		boolean pesquisaDefault = PESQUISA_DEFAULT;
 		String nomeVendedor = null;
 		String nomeLoja = null;
 		Date dataInicial = null;
@@ -83,27 +88,46 @@ public class VendaService {
 			if (Util.validar(filtro.getDataInicial())) {
 				String data = filtro.getDataInicial();
 				dataInicial = Util.dataHoraInicial(Util.formataData(data));
-				pesquisaDefault = false;
 			}
 			if (Util.validar(filtro.getDataFinal())) {
 				String data = filtro.getDataFinal();
 				dataFinal = Util.dataHoraFinal(Util.formataData(data));
-				pesquisaDefault = false;
 			}
 		}
 		if (pesquisaDefault) {
-			dataInicial = Util.dataHoraInicial(new Date());
-			dataFinal = Util.dataHoraFinal(new Date());
-			lista = vendaRepository.findByDataBetweenOrStatus(dataInicial, dataFinal, StatusVenda.FINALIZADO);
+			dataInicial = Util.dataHoraInicialDoMes(new Date());
+			dataFinal = Util.dataHoraFinalDoMes(new Date());
+			lista = vendaRepository.findByDataBetween(dataInicial, dataFinal);
 		} else {
 			Vendedor vendedor = vendedorService.pesquisar(nomeVendedor);
 			Loja loja = lojaService.pesquisarPorNome(nomeLoja);
-			lista = vendaRepository.findByDataBetweenOrVendedorOrLoja(dataInicial, dataFinal, vendedor, loja);
+			lista = vendaRepository.findByDataBetweenAndVendedorAndLoja(dataInicial, dataFinal, vendedor, loja);
 		}
-		
 		return lista;
 	}
 
+	/**
+	 * Método interno para buscar o pagamento
+	 * 
+	 * @param venda
+	 * @return
+	 */
+	private Venda buscarPagamento(Venda venda) {
+		if (Util.validar(venda)) {
+			Pagamento pagamento = pagamentoService.pesquisarPorVenda(venda);
+			if (Util.validar(pagamento)) {
+				venda.setPagamento(pagamento);
+			}
+		}
+		return venda;
+	}
+	
+	/**
+	 * Método externo para pesquisar lista de vendedores
+	 * 
+	 * @param filtro
+	 * @return
+	 */
 	public List<Vendedor> pesquisar(VendedorFilter filtro) {
 		return vendedorService.pesquisar(filtro);
 	}
@@ -364,7 +388,8 @@ public class VendaService {
 	 * @return
 	 */
 	public Venda pesquisarPorId(Long codigo) {
-		return vendaRepository.findOne(codigo);
+		Venda venda = vendaRepository.findOne(codigo);
+		return buscarPagamento(venda);
 	}
 	
 	/**

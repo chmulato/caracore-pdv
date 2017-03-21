@@ -25,9 +25,9 @@ public interface VendaRepository extends JpaRepository<Venda, Long> {
 	@Query("select v from Venda v where (v.data between ?1 and ?2) and v.vendedor.loja = ?3 and v.status = ?4")
 	public List<Venda> findByDataBetweenAndLojaAndStatus(Date dataInicial, Date dataFinal, Loja loja, StatusVenda status);
 	
-	@Query("select v from Venda v where (v.data between ?1 and ?2) or v.vendedor = ?3 or v.vendedor.loja = ?4")
-	public List<Venda> findByDataBetweenOrVendedorOrLoja(Date dataInicial, Date dataFinal, Vendedor vendedor, Loja loja);
+	@Query("select v from Venda v where (v.data between ?1 and ?2) and v.vendedor = ?3 and v.vendedor.loja = ?4")
+	public List<Venda> findByDataBetweenAndVendedorAndLoja(Date dataInicial, Date dataFinal, Vendedor vendedor, Loja loja);
 	
-	@Query("select v from Venda v where (v.data between ?1 and ?2) or (v.status <> ?3)")
-	public List<Venda> findByDataBetweenOrStatus(Date dataInicial, Date dataFinal, StatusVenda status);
+	@Query("select v from Venda v where (v.data between ?1 and ?2)")
+	public List<Venda> findByDataBetween(Date dataInicial, Date dataFinal);
 }

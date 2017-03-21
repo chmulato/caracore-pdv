@@ -26,7 +26,7 @@
 			
 			<div class="container-fluid">
 				
-				<form method="post" class="form-horizontal  js-form-loading" th:object="${venda}" th:action="@{/pagamentos/forma-pagamento}">
+				<form class="form-horizontal  js-form-loading" th:object="${venda}">
 					<div class="table-responsive">
 						<table id="tabela-produtos" class="table  table-striped  table-bordered  table-hover  table-condensed  js-sticky-table">
 							<thead class="aw-table-header-solid">
@@ -95,7 +95,7 @@
 					<div class="col-sm-4">
 						<div class="form-group">
 							<a th:href="@{/vendas/vendas}" class="btn  btn-default  btn-venda">Retornar</a>
-							<button class="btn  btn-primary  btn-venda" type="submit">Pagamento</button>
+							<a th:href="@{/pagamentos/{codigo}(codigo=${venda?.pagamento?.codigo})}" class="btn  btn-primary  btn-venda">Pagamento</a>
 						</div>
 					</div>
 				</form>

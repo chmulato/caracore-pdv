@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.InputMismatchException;
 import java.util.List;
 
@@ -257,6 +258,68 @@ public class Util {
 	}
 	
 	/**
+	 * Método interno auxiliar para o cálculo
+	 * 
+	 * @param data
+	 * @return
+	 */
+	private static Calendar getCalendarForNow(Date data) {
+	    Calendar calendar = GregorianCalendar.getInstance();
+	    calendar.setTime(data);
+	    return calendar;
+	}
+	
+	/**
+	 * Método interno auxiliar para o cálculo
+	 * 
+	 * @param calendar
+	 */
+	private static void setTimeToBeginningOfDay(Calendar calendar) {
+	    calendar.set(Calendar.HOUR_OF_DAY, 0);
+	    calendar.set(Calendar.MINUTE, 0);
+	    calendar.set(Calendar.SECOND, 0);
+	    calendar.set(Calendar.MILLISECOND, 0);
+	}
+
+	/**
+	 * Método interno auxiliar para o cálculo
+	 * 
+	 * @param calendar
+	 */
+	private static void setTimeToEndofDay(Calendar calendar) {
+	    calendar.set(Calendar.HOUR_OF_DAY, 23);
+	    calendar.set(Calendar.MINUTE, 59);
+	    calendar.set(Calendar.SECOND, 59);
+	    calendar.set(Calendar.MILLISECOND, 999);
+	}
+
+	/**
+	 * Método externo para recuperar data/hora inicial do mes
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static Date dataHoraFinalDoMes(Date data) {
+	    Calendar c = getCalendarForNow(data);
+        c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+        setTimeToEndofDay(c);
+        return c.getTime();
+    }
+	
+	/**
+	 * Método externo para recuperar data/hora final do mes
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static Date dataHoraInicialDoMes(Date data) {
+	    Calendar c = getCalendarForNow(data);
+        c.set(Calendar.DAY_OF_MONTH, c.getActualMinimum(Calendar.DAY_OF_MONTH));
+        setTimeToBeginningOfDay(c);
+        return c.getTime();
+	}
+	
+	/**
 	 * Método para buscar a data/hora inicial do dia
 	 * 
 	 * @param data
@@ -265,10 +328,7 @@ public class Util {
 	public static Date dataHoraInicial(Date data) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(data);
-		c.set(Calendar.HOUR_OF_DAY, 0);
-		c.set(Calendar.MINUTE, 0);
-		c.set(Calendar.SECOND, 0);
-		c.set(Calendar.MILLISECOND, 0);
+        setTimeToBeginningOfDay(c);
 		return c.getTime();
 	}
 
@@ -281,10 +341,7 @@ public class Util {
 	public static Date dataHoraFinal(Date data) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(data);
-		c.set(Calendar.HOUR_OF_DAY, 23);
-		c.set(Calendar.MINUTE, 59);
-		c.set(Calendar.SECOND, 59);
-		c.set(Calendar.MILLISECOND, 999);
+        setTimeToEndofDay(c);
 		return c.getTime();
 	}
 	

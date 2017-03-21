@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,6 +39,14 @@ public class PagamentosController {
 
 	@Autowired
 	private VendaService vendaService;
+
+	@GetMapping("{codigo}")
+	public ModelAndView pesquisarPagamento(@PathVariable Long codigo) {
+		ModelAndView mv = new ModelAndView("pagamento/visualiza-pagamento");
+		Pagamento pagamento = pagamentoService.pesquisarPorCodigo(codigo);
+		mv.addObject(pagamento);
+		return mv;
+	}
 
 	@GetMapping("/forma-pagamento")
 	public ModelAndView pesquisarPagamento(@Valid Pagamento pagamento, RedirectAttributes attributes) {

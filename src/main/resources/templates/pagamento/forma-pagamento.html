@@ -161,8 +161,8 @@
 
 						<div class="col-sm-3">
 							<div class="form-group" th:classappend="${#fields.hasErrors('tipoPagamentoCartao')} ? has-error">
-								<label for="perfil">Débito/Crédito</label>
-								<select id="perfil" class="form-control" th:field="*{tipoPagamentoCartao}">
+								<label for="tipoPagamentoCartao">Débito/Crédito</label>
+								<select id="tipoPagamentoCartao" class="form-control" th:field="*{tipoPagamentoCartao}">
 									<option value="">Selecione tipo</option>
 									<option th:each="tipoPagamentoCartao : ${tipoPagamentoCartoes}" th:value="${tipoPagamentoCartao}" th:text="#{|tipoPagamentoCartao.${tipoPagamentoCartao}|}"></option>
 								</select>

@@ -28,7 +28,7 @@ public class Pagamento {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "CLIENTE_ID")
 	private Cliente cliente;
 

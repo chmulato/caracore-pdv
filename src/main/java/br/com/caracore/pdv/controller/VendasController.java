@@ -80,12 +80,14 @@ public class VendasController {
 		} else {
 			filtroVenda = new VendaFilter();
 			filtroVenda.setVendedor("");
+			filtroVenda.setLoja("");
 		}
+		mv.addObject(filtroVenda);
 		return mv;		
 	}
 	
 	@GetMapping("{codigo}")
-	public ModelAndView pesquisarVendas(@PathVariable Long codigo) {
+	public ModelAndView pesquisarVenda(@PathVariable Long codigo) {
 		ModelAndView mv = new ModelAndView("venda/visualiza-venda");
 		Operador operador = recuperarOperador();
 		mv.addObject("vendedores", buscarVendedores(operador));
