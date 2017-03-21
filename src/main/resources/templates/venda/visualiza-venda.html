@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt" 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:data="http://www.thymeleaf.org/extras/data-attribute"
+	layout:decorate="~{layout/layout-padrao}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	
+	<head>
+		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/pesquisa-itens.css}"/>
+	</head>
+	<body>
+		<section layout:fragment="conteudo">
+			<div class="page-header">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-xs-10">
+							<h1>
+								Visualizar Venda
+							</h1>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="container-fluid">
+				
+				<form method="post" class="form-horizontal  js-form-loading" th:object="${venda}" th:action="@{/pagamentos/forma-pagamento}">
+					<div class="table-responsive">
+						<table id="tabela-produtos" class="table  table-striped  table-bordered  table-hover  table-condensed  js-sticky-table">
+							<thead class="aw-table-header-solid">
+								<tr>
+									<th class="text-center">Cód. Produto</th>
+									<th class="text-left">Cód. Barra</th>
+									<th class="text-left">Descrição do produto</th>
+									<th class="text-right">QTD</th>
+									<th class="text-right">Preço unitário</th>
+									<th class="text-right">Desconto</th>
+									<th class="text-right">Preço parcial</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="item : ${venda?.itens}">
+									<td th:text="${item?.produto?.codigo}" class="text-center">1000</td>
+									<td th:text="${item?.produto?.codigoBarra}" class="text-left">0110</td>
+									<td th:text="${item?.produto?.descricao}"  class="text-left">CamisaPolo</td>
+									<td th:text="${item.quantidade}" class="text-right">1</td>
+									<td th:text="|R$${{item.precoUnitario}}|" class="text-right">R$ 1.999,99</td>
+									<td th:text="|${{item.desconto}}%|" class="text-right"></td>
+									<td th:text="|R$${{item.subTotal}}|" class="text-right">R$ 1.999,99</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<hr>
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label for="nome">Sub Total</label>
+							<input id="nome" type="text" class="form-control js-moeda" th:field="*{subTotal}" readonly="readonly" />
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label for="descontoTotal">Desconto Total</label>
+							<input id="descontoTotal" type="text" class="form-control js-moeda" placeholder="%" th:field="*{descontoTotal}" readonly="readonly" />
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label for="total">Total</label>
+							<input id="total" type="text" class="form-control js-moeda" th:field="*{total}" readonly="readonly" />
+						</div>
+					</div>
+
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label for="codigo">Num. Venda</label>
+							<input id="codigo" type="text" class="form-control" th:field="*{codigo}" readonly="readonly" />
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label for="data">Data/Hora</label>
+							<input id="data" type="text" class="form-control" th:field="*{data}" readonly="readonly" />
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label for="vendedor">Vendedor</label>
+							<input id="vendedor" type="text" class="form-control" th:field="*{vendedor.nome}" readonly="readonly" />
+						</div>
+					</div>
+					
+					<div class="col-sm-4">
+						<div class="form-group">
+							<a th:href="@{/vendas/vendas}" class="btn  btn-default  btn-venda">Retornar</a>
+							<button class="btn  btn-primary  btn-venda" type="submit">Pagamento</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			
+		</section>
+
+</html>

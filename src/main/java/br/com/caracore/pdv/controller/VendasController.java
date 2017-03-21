@@ -86,12 +86,10 @@ public class VendasController {
 	
 	@GetMapping("{codigo}")
 	public ModelAndView pesquisarVendas(@PathVariable Long codigo) {
-		ModelAndView mv = new ModelAndView("venda/cadastro-venda");
+		ModelAndView mv = new ModelAndView("venda/visualiza-venda");
 		Operador operador = recuperarOperador();
 		mv.addObject("vendedores", buscarVendedores(operador));
 		Venda venda = vendaService.pesquisarPorId(codigo);
-		ProdutoFilter produtoFilter = new ProdutoFilter();
-		mv.addObject("produtoFilter", produtoFilter);
 		mv.addObject(venda);
 		return mv;		
 	}
