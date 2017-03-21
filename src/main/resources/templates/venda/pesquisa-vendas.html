@@ -83,16 +83,21 @@
 					<thead class="aw-table-header-solid">
 						<tr>
 							<th class="text-center">Código</th>
+							<th class="text-left">Status</th>
 							<th class="text-left">Data</th>
 							<th class="text-left">Vendedor</th>
 							<th class="text-left">Loja</th>
-							<th class="text-left">Status</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="venda : ${vendas}">
 							<td class="text-center">
 								<a th:href="@{/vendas/{codigo}(codigo=${venda.codigo})}" th:text="${venda.codigo}" ></a>
+							</td>
+							<td class="text-left">
+								<span th:text="${venda.status}" th:if="${#strings.toString(venda.status) == 'FINALIZADO'}" ></span>
+								<span th:text="${venda.status}" th:if="${#strings.toString(venda.status) == 'EM_ABERTO' }" style="color: red" ></span>
+								<span th:text="${venda.status}" th:if="${#strings.toString(venda.status) == 'CANCELADO' }" ></span>
 							</td>
 							<td class="text-left">
 								<span th:text="${venda.dataFormatada}"></span>
@@ -102,9 +107,6 @@
 							</td>
 							<td class="text-left">
 								<span th:text="${venda?.vendedor?.loja?.nome}"></span>
-							</td>
-							<td class="text-left">
-								<span th:text="${venda.status}"></span>
 							</td>
 						</tr>
 						<tr th:if="${vendas.empty}">
