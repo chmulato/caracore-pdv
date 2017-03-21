@@ -331,7 +331,7 @@ public class RelatoriosController {
 		        parameters.put("logo", logomarca.getURL());
 			}
 			
-	        parameters.put("Titulo", "VENDAS DO DIA");
+	        parameters.put("Titulo", "VENDAS POR PERÍODO");
 	        parameters.put("DataHora", Util.formatarData(new Date(), "dd/MM/yyyy hh:mm:ss"));
 	        parameters.put("Vendedor", nomeVendedor);
 	        parameters.put("Loja", nomeLoja);
