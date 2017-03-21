@@ -48,7 +48,7 @@ public class PagamentoService {
 	 */
 	private void validarCpfDeCliente(Pagamento pagamento) {
 		if (Util.validar(pagamento)) {
-			if ((Util.validar(pagamento.getCpf()) && (Util.validar(pagamento.getCliente())))) {
+			if (Util.validar(pagamento.getCpf())) {
 				String cpf = pagamento.getCpf();
 				// cpf = Util.removerFormatoCpf(cpf);
 				if (!Util.isCPF(cpf)) {
