@@ -157,7 +157,17 @@ public class PagamentoService {
 	 * @return
 	 */
 	public Pagamento pesquisarPorCodigo(Long codigo) {
-		return pagamentoRepository.findOne(codigo);
+		Pagamento pagamento = pagamentoRepository.findOne(codigo);
+		if (Util.validar(pagamento)) {
+			if (Util.validar(pagamento.getCpf())) {
+				String cpf = pagamento.getCpf();
+				Cliente cliente = clienteService.pesquisarPorCpf(cpf);
+				if (Util.validar(cliente)) {
+					pagamento.setCliente(cliente);
+				}
+			}
+		}
+		return pagamento;
 	}
 
 	/**
