@@ -99,12 +99,12 @@ public class VendaService {
 			dataFinal = Util.dataHoraFinalDoMes(new Date());
 			lista = vendaRepository.findByDataBetween(dataInicial, dataFinal);
 		} else {
-			Vendedor vendedor = vendedorService.pesquisar(nomeVendedor);
-			Loja loja = lojaService.pesquisarPorNome(nomeLoja);
 			if ((!Util.validar(dataInicial) && (!Util.validar(dataFinal)))) {
 				dataInicial = Util.dataHoraInicialDoMes(new Date());
 				dataFinal = Util.dataHoraFinalDoMes(new Date());
 			}
+			Vendedor vendedor = vendedorService.pesquisar(nomeVendedor);
+			Loja loja = lojaService.pesquisarPorNome(nomeLoja);
 			if ((Util.validar(vendedor)) && (Util.validar(loja))) {
 				lista = vendaRepository.findByDataBetweenAndVendedorAndLoja(dataInicial, dataFinal, vendedor, loja);
 			}
