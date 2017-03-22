@@ -79,8 +79,8 @@
 			</div>
 
 			<div class="table-responsive">
-				<table id="tabela-vendedores" class="table  table-striped  table-bordered  table-hover  table-condensed  js-sticky-table">
-					<thead class="aw-table-header-solid">
+				<table id="tabela-vendedores" class="table  table-striped  table-bordered  table-hover">
+					<thead>
 						<tr>
 							<th class="text-center">Código</th>
 							<th class="text-left">Status</th>
@@ -89,7 +89,7 @@
 							<th class="text-left">Loja</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody id="table_pesquisa_vendas">
 						<tr th:each="venda : ${vendas}">
 							<td class="text-center">
 								<a th:href="@{/vendas/{codigo}(codigo=${venda.codigo})}" th:text="${venda.codigo}" ></a>
@@ -115,6 +115,9 @@
 					</tbody>
 				</table>
 			</div>
+	        <div class="col-md-12 text-center">
+      			<ul class="pagination pagination-lg pager" id="pagination_venda"></ul>
+      		</div>
 		</div>
 		
 	</section>

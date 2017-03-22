@@ -1,4 +1,21 @@
-$("#pesquisa_cliente").easyAutocomplete(options);
+$(document).ready(function() {
+    var options = {
+    	    url: /*[[@{/clientes/clientes}]]*/ 'http://localhost:8080/clientes/clientes',
+    	    getValue: function(element) {
+    	        return element.nome;
+    	    },
+
+    	    list: {
+    	        onSelectItemEvent: function() {
+    	            var selectedItemValueCpf = $("#pesquisa_cliente").getSelectedItemData().cpf;
+    	            var selectedItemValueEmail = $("#pesquisa_cliente").getSelectedItemData().email;
+    	            $("#cpf_modal").val(selectedItemValueCpf).trigger("change");
+    	            $("#email_modal").val(selectedItemValueEmail).trigger("change");
+    	        }		        	    
+    	    }
+    };
+   $("#pesquisa_cliente").easyAutocomplete(options);
+ });
 
 $(document).on("change", ".js-somar-valor", function() {
     var soma = 0;

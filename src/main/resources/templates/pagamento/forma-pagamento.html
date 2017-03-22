@@ -10,24 +10,7 @@
 	<head>
 		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/pesquisa-itens.css}"/>
 		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/easy-autocomplete.min.css}"/>
-		<script th:inline="javascript">
-		        var options = {
-		        	    url: /*[[@{/clientes/clientes}]]*/ 'http://localhost:8080/clientes/clientes',
-		        	    getValue: function(element) {
-		        	        return element.nome;
-		        	    },
-
-		        	    list: {
-		        	        onSelectItemEvent: function() {
-		        	            var selectedItemValueCpf = $("#pesquisa_cliente").getSelectedItemData().cpf;
-		        	            var selectedItemValueEmail = $("#pesquisa_cliente").getSelectedItemData().email;
-		        	            $("#cpf_modal").val(selectedItemValueCpf).trigger("change");
-		        	            $("#email_modal").val(selectedItemValueEmail).trigger("change");
-		        	        }		        	    
-		        	    }
-		        };
-			</script>
-		</head>
+	</head>
 	<body>
 		<section layout:fragment="conteudo">
 			
