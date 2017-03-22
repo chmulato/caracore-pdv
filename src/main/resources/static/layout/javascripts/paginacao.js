@@ -1,7 +1,7 @@
 $.fn.pageMe = function(opts){
     var $this = this,
         defaults = {
-            perPage: 5,
+            perPage: 7,
             showPrevNext: false,
             hidePageNumbers: false
         },
@@ -101,6 +101,6 @@ $.fn.pageMe = function(opts){
 };
 
 $(document).ready(function(){
-  $('#table_pesquisa_vendas').pageMe({pagerSelector:'#pagination_venda',showPrevNext:true,hidePageNumbers:false,perPage:4});
+  $('#table_pesquisa_vendas').pageMe({pagerSelector:'#pagination_venda',showPrevNext:true,hidePageNumbers:false,perPage:15});
 });
 
