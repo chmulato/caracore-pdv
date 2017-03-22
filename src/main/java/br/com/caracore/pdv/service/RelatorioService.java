@@ -350,6 +350,16 @@ public class RelatorioService {
 	 * @param loja
 	 * @return
 	 */
+	public List<Venda> listarVendasPorPeriodoPorLoja(Loja loja, Date dataInicial, Date dataFinal) {
+		return vendaService.listarVendasPorPeriodoPorLoja(loja, dataInicial, dataFinal);
+	}
+
+	/**
+	 * Método externo para listar as vendas do dia da loja
+	 * 
+	 * @param loja
+	 * @return
+	 */
 	public List<Venda> listarVendasDoDiaPorLoja(Loja loja) {
 		return vendaService.listarVendasPorLoja(loja, new Date());
 	}
