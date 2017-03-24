@@ -55,9 +55,7 @@
 							<td class="text-center">
 								<a class="btn  btn-link btn-xs" style="cursor:pointer"
 									title="Selecionar vendedor" rel="tooltip"
-									data-toggle="modal" data-target="#selecionaVendedorModal"
-									data:nome="${vendedor.nome}" 
-									data:url-selecionar="@{/vendas/vendedor/{codigo}(codigo=${vendedor.codigo})}">
+									th:href="@{/vendas/vendedor/{codigo}(codigo=${vendedor.codigo})}">
 									<span class="glyphicon glyphicon-ok"></span>
 								</a>
 							</td>
@@ -93,28 +91,6 @@
 				</table>
 			</div>
 		</div>
-
-		<div class="modal  fade" id="selecionaVendedorModal" tabindex="-1" role="dialog">
-			<div class="modal-dialog" role="document">
-		  		<div class="modal-content">
-		  			<form th:action="@{/vendedores}" method="GET">
-		     			<div class="modal-header">
-			       			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			       				<span aria-hidden="true">&times;</span>
-			       			</button>
-			       			<h4 class="modal-title" id="myModalVendedor">Selecionar vendedor</h4>
-		     			</div>
-		     			<div class="modal-body">
-		       				<span>Tem certeza?</span>
-		     			</div>
-		     			<div class="modal-footer">
-		       				<button type="button" class="btn  btn-default" data-dismiss="modal">Cancelar</button>
-		       				<button type="submit" class="btn  btn-primary">Selecionar</button>
-		     			</div>
-		     		</form>
-		  		</div>
-			</div>
-		</div>	
 
 		<div class="modal  fade" id="relatorioVendedorModal" tabindex="-1" role="dialog">
 			<div class="modal-dialog" role="document">

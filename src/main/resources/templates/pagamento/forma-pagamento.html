@@ -71,9 +71,9 @@
 							</div>
 						</div>
 						
-						<div class="col-xs-3" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')">
-							<div class="aw-page-header-controls">
-								<a class="btn  btn-primary" style="cursor:pointer"
+						<div class="col-sm-3" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')">
+							<div>
+								<a class="btn  btn-primary  btn-venda" style="cursor:pointer"
 									data-toggle="modal" data-target="#cadastrarClienteModal"
 									data:codigo="${pagamento?.codigo}" 
 									data:url-cadastrar="@{/pagamentos/cliente}">
@@ -86,41 +86,8 @@
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="form-group">
-								<label for="subtotal">Sub Total</label>
-								<input id="subtotal" type="text" th:field="*{subTotal}" class="form-control js-moeda js-pagar-sub-total" readonly="readonly" />
-							</div>
-						</div>
-
-						<div class="col-sm-3">
-							<div class="form-group" th:classappend="${#fields.hasErrors('desconto')} ? has-error">
-								<label for="desconto">Desconto (%)</label>
-								<input id="desconto" type="text" th:field="*{desconto}" class="form-control js-moeda js-pagar-desconto" placeholder="%" />
-							</div>
-						</div>
-						
-						<div class="col-sm-3">
-							<div class="form-group">
-							</div>
-						</div>
-					</div>
-					
-					<div class="row">
-						<div class="col-sm-3">
-							<div class="form-group">
-								<label for="valorDesconto">Valor do Desconto</label>
-								<input id="valorDdesconto" type="text" th:field="*{valorDesconto}" class="form-control js-moeda js-pagar-valor-desconto" placeholder="R$" readonly="readonly" />
-							</div>
-						</div>
-
-						<div class="col-sm-3">
-							<div class="form-group">
 								<label for="outro">Total A pagar</label>
-								<input id="outro" type="text" th:field="*{totalApagar}" class="form-control js-moeda js-pagar-total-a-pagar" placeholder="R$" readonly="readonly" />
-							</div>
-						</div>
-						
-						<div class="col-sm-3">
-							<div class="form-group">
+								<input id="outro" type="text" th:field="*{totalApagar}" class="form-control js-moeda js-total" placeholder="R$" readonly="readonly" />
 							</div>
 						</div>
 					</div>
@@ -131,47 +98,30 @@
 						<div class="col-sm-3">
 							<div class="form-group" th:classappend="${#fields.hasErrors('dinheiro')} ? has-error">
 								<label for="dinheiro">Dinheiro</label>
-								<input id="dinheiro" type="text" th:field="*{dinheiro}" class="form-control js-moeda js-somar-valor" placeholder="R$" />
+								<input id="dinheiro" type="text" th:field="*{dinheiro}" class="form-control js-moeda js-dinheiro js-somar-valor" placeholder="R$" />
 							</div>
 						</div>
 
 						<div class="col-sm-3">
-							<div class="form-group" th:classappend="${#fields.hasErrors('cartao')} ? has-error">
-								<label for="cartao">Cartão</label>
-								<input id="cartao" type="text" th:field="*{cartao}" class="form-control js-moeda js-somar-valor" placeholder="R$" />
-							</div>
-						</div>
-
-						<div class="col-sm-3">
-							<div class="form-group" th:classappend="${#fields.hasErrors('tipoPagamentoCartao')} ? has-error">
-								<label for="tipoPagamentoCartao">Débito/Crédito</label>
-								<select id="tipoPagamentoCartao" class="form-control" th:field="*{tipoPagamentoCartao}">
-									<option value="">Selecione tipo</option>
-									<option th:each="tipoPagamentoCartao : ${tipoPagamentoCartoes}" th:value="${tipoPagamentoCartao}" th:text="#{|tipoPagamentoCartao.${tipoPagamentoCartao}|}"></option>
-								</select>
+							<div class="form-group" th:classappend="${#fields.hasErrors('debito')} ? has-error">
+								<label for="debito">Débito</label>
+								<input id="debito" type="text" th:field="*{debito}" class="form-control js-moeda js-somar-valor" placeholder="R$" />
 							</div>
 						</div>
 					</div>
 
 					<div class="row">
 						<div class="col-sm-3">
-							<div class="form-group" th:classappend="${#fields.hasErrors('cheque')} ? has-error">
-								<label for="cheque">Cheque</label>
-								<input id="cheque" type="text" th:field="*{cheque}" class="form-control js-moeda js-somar-valor" placeholder="R$" />
+							<div class="form-group" th:classappend="${#fields.hasErrors('credito')} ? has-error">
+								<label for="credito">Crédito</label>
+								<input id="credito" type="text" th:field="*{credito}" class="form-control js-moeda js-somar-valor" placeholder="R$" />
 							</div>
 						</div>
 
 						<div class="col-sm-3">
 							<div class="form-group" th:classappend="${#fields.hasErrors('outros')} ? has-error">
-								<label for="outro">Outros</label>
+								<label for="outro">Vale</label>
 								<input id="outro" type="text" th:field="*{outros}" class="form-control js-moeda js-somar-valor" placeholder="R$" />
-							</div>
-						</div>
-						
-						<div class="col-sm-2">
-							<div class="form-group">
-								<label for="vendedor">Vendedor</label>
-								<input id="vendedor" type="text" th:field="*{venda.vendedor.nome}" class="form-control" readonly="readonly" />
 							</div>
 						</div>
 					</div>
@@ -182,7 +132,7 @@
 						<div class="col-sm-3">
 							<div class="form-group">
 								<label for="totalPago">A Pagar</label>
-								<input id="totalPago" type="text" name="totalPago" class="form-control js-moeda js-total-da-soma" placeholder="R$" readonly="readonly" />
+								<input id="totalPago" type="text" name="totalPago" class="form-control js-moeda js-a-pagar" placeholder="R$" readonly="readonly" />
 							</div>
 						</div>
 
@@ -192,7 +142,14 @@
 								<input id="troco" type="text" th:field="*{troco}" class="form-control js-moeda js-troco" placeholder="R$" readonly="readonly" />
 							</div>
 						</div>
+					</div>
 
+					<div class="row">
+						<div class="col-sm-3">
+							<div class="form-group">
+							</div>
+						</div>
+						
 						<div class="col-sm-3">
 							<div class="form-group">
 								<a th:href="@{/vendas/vendedor/{codigo}(codigo=${pagamento.venda.vendedor.codigo})}" class="btn  btn-default  btn-venda">Retornar</a>

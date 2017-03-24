@@ -17,7 +17,6 @@ import br.com.caracore.pdv.model.Cliente;
 import br.com.caracore.pdv.model.Pagamento;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
-import br.com.caracore.pdv.model.types.TipoPagamentoCartao;
 import br.com.caracore.pdv.service.PagamentoService;
 import br.com.caracore.pdv.service.VendaService;
 import br.com.caracore.pdv.service.exception.CpfInvalidoException;
@@ -25,7 +24,6 @@ import br.com.caracore.pdv.service.exception.DescontoInvalidoException;
 import br.com.caracore.pdv.service.exception.EmailInvalidoException;
 import br.com.caracore.pdv.service.exception.NomeExistenteException;
 import br.com.caracore.pdv.service.exception.PagamentoInvalidoException;
-import br.com.caracore.pdv.service.exception.TipoPagamentoCartaoInvalidoException;
 import br.com.caracore.pdv.service.exception.TrocoInvalidoException;
 import br.com.caracore.pdv.service.exception.ValorInvalidoException;
 import br.com.caracore.pdv.util.Util;
@@ -51,7 +49,6 @@ public class PagamentosController {
 	@GetMapping("/forma-pagamento")
 	public ModelAndView pesquisarPagamento(@Valid Pagamento pagamento, RedirectAttributes attributes) {
 		ModelAndView mv = new ModelAndView("pagamento/forma-pagamento");
-		mv.addObject("tipoPagamentoCartoes", TipoPagamentoCartao.values());
 		mv.addObject(pagamento);
 		return mv;
 	}
@@ -86,7 +83,6 @@ public class PagamentosController {
 		} catch (EmailInvalidoException ex) {
 			attributes.addFlashAttribute("error", "Email com formato inválido!");
 		}
-		mv.addObject("tipoPagamentoCartoes", TipoPagamentoCartao.values());
 		mv.addObject(pagamento);
 		return mv;
 	}
@@ -104,7 +100,6 @@ public class PagamentosController {
 			}
 			pagamento = pagamentoService.pagar(pagamento);
 			attributes.addFlashAttribute("mensagem", "Pago com sucesso!");
-			mv.addObject("tipoPagamentoCartoes", TipoPagamentoCartao.values());
 			mv.addObject(pagamento);
 			return mv;
 		} catch (DescontoInvalidoException ex) {
@@ -115,20 +110,16 @@ public class PagamentosController {
 			attributes.addFlashAttribute("error", "Corrigir CPF!");
 		} catch (ValorInvalidoException ex) {
 			errors.rejectValue("dinheiro", " ", ex.getMessage());
-			errors.rejectValue("cartao", " ", ex.getMessage());
-			errors.rejectValue("cheque", " ", ex.getMessage());
+			errors.rejectValue("debito", " ", ex.getMessage());
+			errors.rejectValue("credito", " ", ex.getMessage());
 			errors.rejectValue("outros", " ", ex.getMessage());
 			attributes.addFlashAttribute("error", "Corrigir valores!");
-		} catch (TipoPagamentoCartaoInvalidoException ex) {
-			errors.rejectValue("tipoPagamentoCartao", " ", ex.getMessage());
-			attributes.addFlashAttribute("error", "Débito ou Crédito?");
 		} catch (TrocoInvalidoException ex) {
 			errors.rejectValue("troco", " ", ex.getMessage());
 			attributes.addFlashAttribute("error", ex.getMessage());
 		} catch (PagamentoInvalidoException ex) {
 			attributes.addFlashAttribute("error", ex.getMessage());
 		}
-		mv.addObject("tipoPagamentoCartoes", TipoPagamentoCartao.values());
 		mv.addObject(pagamento);
 		return pesquisarPagamento(pagamento, attributes);
 	}
@@ -165,7 +156,6 @@ public class PagamentosController {
 				pagamento.atualizarPagamento(pagamento.getCliente(), venda, venda.getSubTotal(), venda.getTotal(), venda.getDescontoTotal());
 			}
 			pagamento = pagamentoService.salvar(pagamento, cliente);
-			mv.addObject("tipoPagamentoCartoes", TipoPagamentoCartao.values());
 			mv.addObject(pagamento);
 			return mv;
 		} catch (DescontoInvalidoException ex) {

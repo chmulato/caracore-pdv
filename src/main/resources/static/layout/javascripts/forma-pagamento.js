@@ -18,57 +18,51 @@ $(document).ready(function() {
  });
 
 $(document).on("change", ".js-somar-valor", function() {
+    
+	var dinheiro = 0;
+	var a_pagar = 0;
     var soma = 0;
     var troco = 0;
-    var totalAPagar = 0;
+    var total = 0;
     
-    totalAPagar  = $(".js-pagar-total-a-pagar").val().replace('.','').replace(',','.');
+    dinheiro = $(".js-dinheiro").val().replace('.','').replace(',','.');
+    total = $(".js-total").val().replace('.','').replace(',','.');
     
     $(".js-somar-valor").each(function() {
     	soma += +$(this).val().replace('.','').replace(',','.');
     });
     
-    troco = soma - totalAPagar;
+    a_pagar = soma - total;
+    
+    if (a_pagar > 0) {
+    	
+    	troco = a_pagar;
+    	
+    	if ((dinheiro > 0) && (troco <= dinheiro)) {
+    		a_pagar = 0;
+        	document.getElementsByClassName('js-troco')[0].style = "border-color: green";
+    	} else {
+        	document.getElementsByClassName('js-troco')[0].style = "border-color: none";
+    	}
+
+    	if (dinheiro == 0) {
+        	document.getElementsByClassName('js-troco')[0].style = "border-color: none";
+    	}
+    	
+    	if ((troco > dinheiro)) {
+    		a_pagar = 0;
+        	document.getElementsByClassName('js-troco')[0].style = "border-color: red";
+    	}
+    }
     
     troco = parseFloat(Math.round(troco * 100) / 100).toFixed(2);
     troco = troco.replace('.','');
     troco = troco.replace(',','');
     
-    soma = parseFloat(Math.round(soma * 100) / 100).toFixed(2);
-	  // modificar estilo
-    if (troco < 0) {
-    	document.getElementsByClassName('js-troco')[0].style = "border-color: red;";
-    } else {
-    	document.getElementsByClassName('js-troco')[0].style = "border-color: green;";
-    }
-    soma = soma.replace('.','');
-    soma = soma.replace(',','');
-    $(".js-total-da-soma").val(formatReal(soma));
-    $(".js-troco").val(formatReal(troco));
-});
-
-$(document).on("change", ".js-pagar-desconto", function() {
-    var subTotal = 0;
-    var desconto = 0;
-    var totalAPagar = 0;
-    var valorDesconto = 0;
+    a_pagar = parseFloat(Math.round(a_pagar * 100) / 100).toFixed(2);
+    a_pagar = a_pagar.replace('.','');
+    a_pagar = a_pagar.replace(',','');
     
-	subTotal  = $(".js-pagar-sub-total").val().replace('.','').replace(',','.');
-	desconto = $(".js-pagar-desconto").val().replace('.','').replace(',','.');
-	
-	if ((desconto >= 0) && (desconto <= 100)) {
-		valorDesconto = (subTotal * desconto)/100;
-		totalAPagar = subTotal - valorDesconto;
-		
-		valorDesconto = parseFloat(Math.round(valorDesconto * 100) / 100).toFixed(2);
-		valorDesconto = valorDesconto.replace('.','');
-	    
-		totalAPagar = parseFloat(Math.round(totalAPagar * 100) / 100).toFixed(2);
-		totalAPagar = totalAPagar.replace('.','');
-	} else {
-		valorDesconto = valorDesconto.replace('.','');
-		totalAPagar = subTotal.replace('.','');
-	}
-    $(".js-pagar-valor-desconto").val(formatReal(valorDesconto));
-    $(".js-pagar-total-a-pagar").val(formatReal(totalAPagar));
+    $(".js-troco").val(formatReal(troco));
+    $(".js-a-pagar").val(formatReal(a_pagar));
 });

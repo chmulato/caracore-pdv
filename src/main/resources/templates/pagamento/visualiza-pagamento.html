@@ -31,28 +31,6 @@
 			
 				<form class="form-vertical  js-form-loading" th:object="${pagamento}">
 
-					<div class="alert  alert-danger  alert-dismissible" role="alert" th:if="${#fields.hasAnyErrors()}">
-						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<th:block th:each="error : ${#fields.detailedErrors()}">
-							<div>
-								<i class="fa  fa-exclamation-circle"></i>
-								<span th:text="${error.message}"></span>
-							</div>
-						</th:block>
-					</div>
-
-					<div class="alert  alert-danger" th:if="${!#strings.isEmpty(error)}">
-						<span th:text="${error}"></span>
-					</div>
-
-					<div class="alert  alert-info" th:if="${!#strings.isEmpty(info)}">
-						<span th:text="${info}"></span>
-					</div>
-					
-					<div class="alert  alert-success" th:if="${!#strings.isEmpty(mensagem)}">
-						<span th:text="${mensagem}"></span>
-					</div>
-
 					<input type="hidden" th:field="*{codigo}" />
 
 					<input type="hidden" th:field="*{venda}" />
@@ -77,45 +55,12 @@
 							</div>
 						</div>
 					</div>
-
-					<div class="row">
-						<div class="col-sm-3">
-							<div class="form-group">
-								<label for="subtotal">Sub Total</label>
-								<input id="subtotal" type="text" th:field="*{subTotal}" class="form-control js-moeda" readonly="readonly" />
-							</div>
-						</div>
-
-						<div class="col-sm-3">
-							<div class="form-group">
-								<label for="desconto">Desconto (%)</label>
-								<input id="desconto" type="text" th:field="*{desconto}" class="form-control js-moeda" readonly="readonly" />
-							</div>
-						</div>
-						
-						<div class="col-sm-3">
-							<div class="form-group">
-							</div>
-						</div>
-					</div>
 					
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="form-group">
-								<label for="valorDesconto">Valor do Desconto</label>
-								<input id="valorDdesconto" type="text" th:field="*{valorDesconto}" class="form-control js-moeda" readonly="readonly" />
-							</div>
-						</div>
-
-						<div class="col-sm-3">
-							<div class="form-group">
 								<label for="outro">Total Pago</label>
 								<input id="outro" type="text" th:field="*{totalApagar}" class="form-control js-moeda" readonly="readonly" />
-							</div>
-						</div>
-						
-						<div class="col-sm-3">
-							<div class="form-group">
 							</div>
 						</div>
 					</div>
@@ -132,16 +77,8 @@
 
 						<div class="col-sm-3">
 							<div class="form-group">
-								<label for="cartao">Cartão</label>
-								<input id="cartao" type="text" th:field="*{cartao}" class="form-control js-moeda" readonly="readonly" />
-							</div>
-						</div>
-
-						<div class="col-sm-3">
-							<div class="form-group">
-								<label for="tipoPagamentoCartao">Débito/Crédito</label>
-								<input id="tipoPagamentoCartao" th:text="#{|tipoPagamentoCartao.${tipoPagamentoCartao}|}" th:field="*{tipoPagamentoCartao}" class="form-control" readonly="readonly" th:if="${tipoPagamentoCartao != null}" />
-								<input id="tipoPagamentoCartao" type="text" th:field="*{tipoPagamentoCartao}" class="form-control" readonly="readonly" th:if="${tipoPagamentoCartao == null}" />
+								<label for="cartao">Débito</label>
+								<input id="cartao" type="text" th:field="*{debito}" class="form-control js-moeda" readonly="readonly" />
 							</div>
 						</div>
 					</div>
@@ -149,22 +86,15 @@
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="form-group">
-								<label for="cheque">Cheque</label>
-								<input id="cheque" type="text" th:field="*{cheque}" class="form-control js-moeda" readonly="readonly" />
+								<label for="cheque">Crédito</label>
+								<input id="cheque" type="text" th:field="*{credito}" class="form-control js-moeda" readonly="readonly" />
 							</div>
 						</div>
 
 						<div class="col-sm-3">
 							<div class="form-group">
-								<label for="outro">Outros</label>
+								<label for="outro">Vale</label>
 								<input id="outro" type="text" th:field="*{outros}" class="form-control js-moeda" readonly="readonly" />
-							</div>
-						</div>
-						
-						<div class="col-sm-2">
-							<div class="form-group">
-								<label for="vendedor">Vendedor</label>
-								<input id="vendedor" type="text" th:field="*{venda.vendedor.nome}" class="form-control" readonly="readonly" />
 							</div>
 						</div>
 					</div>

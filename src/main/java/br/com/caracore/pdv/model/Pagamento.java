@@ -3,8 +3,6 @@ package br.com.caracore.pdv.model;
 import java.math.BigDecimal;
 
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,7 +15,6 @@ import javax.validation.constraints.NotNull;
 import org.springframework.format.annotation.NumberFormat;
 
 import br.com.caracore.pdv.model.types.StatusVenda;
-import br.com.caracore.pdv.model.types.TipoPagamentoCartao;
 import br.com.caracore.pdv.service.exception.DescontoInvalidoException;
 import br.com.caracore.pdv.util.Util;
 
@@ -45,13 +42,10 @@ public class Pagamento {
 	private BigDecimal dinheiro;
 	
 	@NumberFormat(pattern = "#,##0.00")
-	private BigDecimal cartao;
-
-	@Enumerated(EnumType.STRING)
-	private TipoPagamentoCartao tipoPagamentoCartao;
+	private BigDecimal debito;
 	
 	@NumberFormat(pattern = "#,##0.00")
-	private BigDecimal cheque;
+	private BigDecimal credito;
 
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal outros;
@@ -202,28 +196,20 @@ public class Pagamento {
 		this.dinheiro = dinheiro;
 	}
 
-	public BigDecimal getCartao() {
-		return cartao;
+	public BigDecimal getDebito() {
+		return debito;
 	}
 
-	public void setCartao(BigDecimal cartao) {
-		this.cartao = cartao;
+	public void setDebito(BigDecimal debito) {
+		this.debito = debito;
 	}
 
-	public TipoPagamentoCartao getTipoPagamentoCartao() {
-		return tipoPagamentoCartao;
+	public BigDecimal getCredito() {
+		return credito;
 	}
 
-	public void setTipoPagamentoCartao(TipoPagamentoCartao tipoPagamentoCartao) {
-		this.tipoPagamentoCartao = tipoPagamentoCartao;
-	}
-
-	public BigDecimal getCheque() {
-		return cheque;
-	}
-
-	public void setCheque(BigDecimal cheque) {
-		this.cheque = cheque;
+	public void setCredito(BigDecimal credito) {
+		this.credito = credito;
 	}
 
 	public BigDecimal getOutros() {
@@ -295,8 +281,8 @@ public class Pagamento {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((cartao == null) ? 0 : cartao.hashCode());
-		result = prime * result + ((cheque == null) ? 0 : cheque.hashCode());
+		result = prime * result + ((debito == null) ? 0 : debito.hashCode());
+		result = prime * result + ((credito == null) ? 0 : credito.hashCode());
 		result = prime * result + ((cliente == null) ? 0 : cliente.hashCode());
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
 		result = prime * result + ((cpf == null) ? 0 : cpf.hashCode());
@@ -305,7 +291,6 @@ public class Pagamento {
 		result = prime * result + ((ok == null) ? 0 : ok.hashCode());
 		result = prime * result + ((outros == null) ? 0 : outros.hashCode());
 		result = prime * result + ((subTotal == null) ? 0 : subTotal.hashCode());
-		result = prime * result + ((tipoPagamentoCartao == null) ? 0 : tipoPagamentoCartao.hashCode());
 		result = prime * result + ((totalApagar == null) ? 0 : totalApagar.hashCode());
 		result = prime * result + ((troco == null) ? 0 : troco.hashCode());
 		result = prime * result + ((valorDesconto == null) ? 0 : valorDesconto.hashCode());
@@ -322,15 +307,15 @@ public class Pagamento {
 		if (getClass() != obj.getClass())
 			return false;
 		Pagamento other = (Pagamento) obj;
-		if (cartao == null) {
-			if (other.cartao != null)
+		if (debito == null) {
+			if (other.debito != null)
 				return false;
-		} else if (!cartao.equals(other.cartao))
+		} else if (!debito.equals(other.debito))
 			return false;
-		if (cheque == null) {
-			if (other.cheque != null)
+		if (credito == null) {
+			if (other.credito != null)
 				return false;
-		} else if (!cheque.equals(other.cheque))
+		} else if (!credito.equals(other.credito))
 			return false;
 		if (cliente == null) {
 			if (other.cliente != null)
@@ -371,8 +356,6 @@ public class Pagamento {
 			if (other.subTotal != null)
 				return false;
 		} else if (!subTotal.equals(other.subTotal))
-			return false;
-		if (tipoPagamentoCartao != other.tipoPagamentoCartao)
 			return false;
 		if (totalApagar == null) {
 			if (other.totalApagar != null)

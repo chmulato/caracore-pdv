@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-03-18T14:41:35 -->
+<!-- 2017-03-24T10:07:53 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorio_compras" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="b1c7f85b-da37-4605-bdb5-86d7aca6701d">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -15,9 +15,8 @@
 	<parameter name="Titulo" class="java.lang.String"/>
 	<parameter name="DataHora" class="java.lang.String"/>
 	<parameter name="Dinheiro" class="java.math.BigDecimal"/>
-	<parameter name="CartaoDebito" class="java.math.BigDecimal"/>
-	<parameter name="CartaoCredito" class="java.math.BigDecimal"/>
-	<parameter name="Cheque" class="java.math.BigDecimal"/>
+	<parameter name="Debito" class="java.math.BigDecimal"/>
+	<parameter name="Credito" class="java.math.BigDecimal"/>
 	<parameter name="Outros" class="java.math.BigDecimal"/>
 	<parameter name="Cliente" class="java.lang.String"/>
 	<parameter name="Vendedor" class="java.lang.String"/>
@@ -331,7 +330,7 @@
 		</band>
 	</lastPageFooter>
 	<summary>
-		<band height="78" splitType="Prevent">
+		<band height="63" splitType="Prevent">
 			<textField pattern="#,##0.00">
 				<reportElement x="414" y="3" width="120" height="14" uuid="85e2f4f7-90d6-4024-a61a-f2277dde2bf4"/>
 				<textElement textAlignment="Right">
@@ -446,10 +445,10 @@
 				<textElement textAlignment="Right" verticalAlignment="Top">
 					<font fontName="Arial" size="10" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Cartão Débito:]]></text>
+				<text><![CDATA[Débito:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-2" x="0" y="47" width="70" height="15" uuid="6644a2e3-c3d1-4ec4-a437-49623c3e54a7"/>
+				<reportElement key="staticText-2" x="0" y="47" width="70" height="16" uuid="4c2c347a-07c1-4716-abd5-fd7183df1d24"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -459,20 +458,7 @@
 				<textElement textAlignment="Right" verticalAlignment="Top">
 					<font fontName="Arial" size="10" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Cheque:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement key="staticText-2" x="0" y="62" width="70" height="16" uuid="4c2c347a-07c1-4716-abd5-fd7183df1d24"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Top">
-					<font fontName="Arial" size="10" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Outros:]]></text>
+				<text><![CDATA[Vale:]]></text>
 			</staticText>
 			<textField pattern="">
 				<reportElement x="103" y="3" width="120" height="15" uuid="3a921517-55e5-48e7-9303-a07715365c40"/>
@@ -486,17 +472,10 @@
 				<textElement textAlignment="Right">
 					<font fontName="Arial"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new java.text.DecimalFormat("#,##0.00", new java.text.DecimalFormatSymbols(new Locale("pt", "BR"))).format($P{CartaoDebito})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new java.text.DecimalFormat("#,##0.00", new java.text.DecimalFormatSymbols(new Locale("pt", "BR"))).format($P{Debito})]]></textFieldExpression>
 			</textField>
 			<textField pattern="">
-				<reportElement x="103" y="48" width="120" height="15" uuid="bd9b307c-edfb-444c-b828-aa1cdfa99cb0"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial"/>
-				</textElement>
-				<textFieldExpression><![CDATA[new java.text.DecimalFormat("#,##0.00", new java.text.DecimalFormatSymbols(new Locale("pt", "BR"))).format($P{Cheque})]]></textFieldExpression>
-			</textField>
-			<textField pattern="">
-				<reportElement x="103" y="63" width="120" height="15" uuid="2f2d2626-2f01-4df7-9f8d-8fae323311d8"/>
+				<reportElement x="103" y="48" width="120" height="15" uuid="2f2d2626-2f01-4df7-9f8d-8fae323311d8"/>
 				<textElement textAlignment="Right">
 					<font fontName="Arial"/>
 				</textElement>
@@ -513,14 +492,14 @@
 				<textElement textAlignment="Right" verticalAlignment="Top">
 					<font fontName="Arial" size="10" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Cartão Crédito:]]></text>
+				<text><![CDATA[Crédito:]]></text>
 			</staticText>
 			<textField pattern="">
 				<reportElement x="103" y="33" width="120" height="15" uuid="13bebc66-cc48-445f-910d-2f1eb121acb9"/>
 				<textElement textAlignment="Right">
 					<font fontName="Arial"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new java.text.DecimalFormat("#,##0.00", new java.text.DecimalFormatSymbols(new Locale("pt", "BR"))).format($P{CartaoCredito})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new java.text.DecimalFormat("#,##0.00", new java.text.DecimalFormatSymbols(new Locale("pt", "BR"))).format($P{Credito})]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>
