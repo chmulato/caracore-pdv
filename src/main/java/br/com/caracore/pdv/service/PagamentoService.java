@@ -113,8 +113,8 @@ public class PagamentoService {
 		double totalApagar = 0d;
 		double valores = 0d;
 		double dinheiro = 0d;
-		double cartao = 0d;
-		double cheque = 0d;
+		double debito = 0d;
+		double credito = 0d;
 		double outros = 0d;
 		validarPorcentagem(pagamento);
 		if (Util.validar(pagamento)) {
@@ -125,20 +125,20 @@ public class PagamentoService {
 				dinheiro = pagamento.getDinheiro().doubleValue();
 			}
 			if (Util.validar(pagamento.getDebito())) {
-				cartao = pagamento.getDebito().doubleValue();
+				debito = pagamento.getDebito().doubleValue();
 			}
 			if (Util.validar(pagamento.getCredito())) {
-				cheque = pagamento.getCredito().doubleValue();
+				credito = pagamento.getCredito().doubleValue();
 			}
 			if (Util.validar(pagamento.getOutros())) {
 				outros = pagamento.getOutros().doubleValue();
 			}
-			valores = dinheiro + cartao + cheque + outros;
+			valores = dinheiro + debito + credito + outros;
 			troco = valores - totalApagar;
+			troco = Util.round(troco, DUAS_CASAS_DECIMAIS);
 			if (troco < ZERO) {
 				throw new ValorInvalidoException("Valores inválidos!");
 			}
-			troco = Util.round(troco, DUAS_CASAS_DECIMAIS);
 			if ((dinheiro == ZERO) && (troco > ZERO)) {
 				throw new TrocoInvalidoException("Troco somente com pagamento em dinheiro!");
 			}
