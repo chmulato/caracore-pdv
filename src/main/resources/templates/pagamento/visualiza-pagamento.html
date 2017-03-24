@@ -63,9 +63,9 @@
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="form-group">
-								<label for="outro" th:if="${pagamento.ok}">Total Pago</label>
-								<label for="outro" th:if="${!pagamento.ok}">Total A Pagar</label>
-								<input id="outro" type="text" th:field="*{totalApagar}" class="form-control js-moeda" readonly="readonly" />
+								<label for="totalApagar" th:if="${pagamento.ok}">Total Pago</label>
+								<label for="totalApagar" th:if="${!pagamento.ok}">Total A Pagar</label>
+								<input id="totalApagar" type="text" th:field="*{totalApagar}" class="form-control js-moeda" readonly="readonly" />
 							</div>
 						</div>
 					</div>
@@ -82,8 +82,8 @@
 
 						<div class="col-sm-3">
 							<div class="form-group">
-								<label for="cartao">Débito</label>
-								<input id="cartao" type="text" th:field="*{debito}" class="form-control js-moeda" readonly="readonly" />
+								<label for="debito">Débito</label>
+								<input id="debito" type="text" th:field="*{debito}" class="form-control js-moeda" readonly="readonly" />
 							</div>
 						</div>
 					</div>
@@ -91,15 +91,15 @@
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="form-group">
-								<label for="cheque">Crédito</label>
-								<input id="cheque" type="text" th:field="*{credito}" class="form-control js-moeda" readonly="readonly" />
+								<label for="credito">Crédito</label>
+								<input id="credito" type="text" th:field="*{credito}" class="form-control js-moeda" readonly="readonly" />
 							</div>
 						</div>
 
 						<div class="col-sm-3">
 							<div class="form-group">
-								<label for="outro">Vale</label>
-								<input id="outro" type="text" th:field="*{outros}" class="form-control js-moeda" readonly="readonly" />
+								<label for="outros">Vale</label>
+								<input id="outros" type="text" th:field="*{outros}" class="form-control js-moeda" readonly="readonly" />
 							</div>
 						</div>
 					</div>

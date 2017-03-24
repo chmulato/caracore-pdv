@@ -90,8 +90,9 @@
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="form-group">
-								<label for="outro">Total A pagar</label>
-								<input id="outro" type="text" th:field="*{totalApagar}" class="form-control js-moeda js-total" placeholder="R$" readonly="readonly" />
+								<label for="totalApagar" th:if="${pagamento.ok}">Total Pago</label>
+								<label for="totalApagar" th:if="${!pagamento.ok}">Total A Pagar</label>
+								<input id="totalApagar" type="text" th:field="*{totalApagar}" class="form-control js-moeda js-total" placeholder="R$" readonly="readonly" />
 							</div>
 						</div>
 					</div>
@@ -124,8 +125,8 @@
 
 						<div class="col-sm-3">
 							<div class="form-group" th:classappend="${#fields.hasErrors('outros')} ? has-error">
-								<label for="outro">Vale</label>
-								<input id="outro" type="text" th:field="*{outros}" class="form-control js-moeda js-somar-valor" placeholder="R$" />
+								<label for="outros">Vale</label>
+								<input id="outros" type="text" th:field="*{outros}" class="form-control js-moeda js-somar-valor" placeholder="R$" />
 							</div>
 						</div>
 					</div>
@@ -135,7 +136,8 @@
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="form-group">
-								<label for="totalPago">A Pagar</label>
+								<label for="totalPago" th:if="${!pagamento.ok}">A Pagar</label>
+								<label for="totalPago" th:if="${pagamento.ok}">Pago</label>
 								<input id="totalPago" type="text" name="totalPago" class="form-control js-moeda js-a-pagar" placeholder="R$" readonly="readonly" />
 							</div>
 						</div>
