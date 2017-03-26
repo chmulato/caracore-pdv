@@ -95,9 +95,11 @@ public class VendaService {
 			}
 		}
 		if (pesquisaDefault) {
-			dataInicial = Util.dataHoraInicialDoMes(new Date());
-			dataFinal = Util.dataHoraFinalDoMes(new Date());
-			lista = vendaRepository.findByDataBetween(dataInicial, dataFinal);
+			if ((!Util.validar(dataInicial)) || (!Util.validar(dataFinal))) {
+				dataInicial = Util.dataHoraInicialDoMes(new Date());
+				dataFinal = Util.dataHoraFinalDoMes(new Date());
+			}
+			lista = vendaRepository.findByDataBetweenByOrderByDataDesc(dataInicial, dataFinal);
 		} else {
 			if ((!Util.validar(dataInicial) && (!Util.validar(dataFinal)))) {
 				dataInicial = Util.dataHoraInicialDoMes(new Date());
@@ -106,13 +108,13 @@ public class VendaService {
 			Vendedor vendedor = vendedorService.pesquisar(nomeVendedor);
 			Loja loja = lojaService.pesquisarPorNome(nomeLoja);
 			if ((Util.validar(vendedor)) && (Util.validar(loja))) {
-				lista = vendaRepository.findByDataBetweenAndVendedorAndLoja(dataInicial, dataFinal, vendedor, loja);
+				lista = vendaRepository.findByDataBetweenAndVendedorAndLojaByOrderByDataDesc(dataInicial, dataFinal, vendedor, loja);
 			}
 			if ((Util.validar(vendedor)) && (!Util.validar(loja))) {
-				lista = vendaRepository.findByDataBetweenAndVendedor(dataInicial, dataFinal, vendedor);
+				lista = vendaRepository.findByDataBetweenAndVendedorByOrderByDataDesc(dataInicial, dataFinal, vendedor);
 			}
 			if ((!Util.validar(vendedor)) && (Util.validar(loja))) {
-				lista = vendaRepository.findByDataBetweenAndLoja(dataInicial, dataFinal, loja);
+				lista = vendaRepository.findByDataBetweenAndLojaByOrderByDataDesc(dataInicial, dataFinal, loja);
 			}
 		}
 		return lista;
