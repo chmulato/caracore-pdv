@@ -27,12 +27,12 @@ import br.com.caracore.pdv.util.Util;
 @Service
 public class VendaService {
 
+	final public int QUANTIDADE_UNITARIA = 1;
+
 	final private boolean PESQUISA_DEFAULT = true;
-	
-	final private int QUANTIDADE_UNITARIA = 1;
 
 	final private double ZERO = 0.0d;
-	
+
 	final private double PORCENTAGEM = 100.0d;
 
 	final private Date DATA_DE_HOJE = new Date();
@@ -108,7 +108,8 @@ public class VendaService {
 			Vendedor vendedor = vendedorService.pesquisar(nomeVendedor);
 			Loja loja = lojaService.pesquisarPorNome(nomeLoja);
 			if ((Util.validar(vendedor)) && (Util.validar(loja))) {
-				lista = vendaRepository.findByDataBetweenAndVendedorAndLojaByOrderByDataDesc(dataInicial, dataFinal, vendedor, loja);
+				lista = vendaRepository.findByDataBetweenAndVendedorAndLojaByOrderByDataDesc(dataInicial, dataFinal,
+						vendedor, loja);
 			}
 			if ((Util.validar(vendedor)) && (!Util.validar(loja))) {
 				lista = vendaRepository.findByDataBetweenAndVendedorByOrderByDataDesc(dataInicial, dataFinal, vendedor);
@@ -135,7 +136,7 @@ public class VendaService {
 		}
 		return venda;
 	}
-	
+
 	/**
 	 * Método externo para pesquisar lista de vendedores
 	 * 
@@ -147,7 +148,7 @@ public class VendaService {
 	}
 
 	/**
-	 * Método externo para selecionar vendedor 
+	 * Método externo para selecionar vendedor
 	 * 
 	 * @param codigo
 	 * @return
@@ -157,7 +158,7 @@ public class VendaService {
 		vendedor = vendedorService.pesquisarPorCodigo(codigo);
 		return vendedor;
 	}
-	
+
 	/**
 	 * Método externo para recuperar ultimo item da cesta
 	 * 
@@ -167,7 +168,7 @@ public class VendaService {
 	public ItemVenda recuperarUltimoItemVendaDaCesta(Venda venda) {
 		ItemVenda ultimoItem = null;
 		if (Util.validar(venda) && Util.validar(venda.getCodigo())) {
-			List <ItemVenda> itens = itemVendaService.buscarItens(venda);
+			List<ItemVenda> itens = itemVendaService.buscarItens(venda);
 			if (Util.validar(itens)) {
 				long codigo = 0;
 				long ultimoCodigo = 0;
@@ -184,8 +185,7 @@ public class VendaService {
 		}
 		return ultimoItem;
 	}
-	
-	
+
 	/**
 	 * Formatar Data
 	 * 
@@ -201,16 +201,15 @@ public class VendaService {
 		}
 		return strData;
 	}
-	
+
 	/**
-	 * Metodo para recuperar venda em aberto informando o vendedor
+	 * Metodo para recuperar venda em aberto informando codigo da venda
 	 * 
 	 * @param vendedor
 	 * @return
 	 */
 	public Venda recuperarVendaEmAberto(Vendedor vendedor) {
 		Venda result = new Venda();
-		result.setVendedor(vendedor);
 		List<Venda> lista = vendaRepository.findByVendedorAndDataAndStatus(vendedor, DATA_DE_HOJE, StatusVenda.EM_ABERTO);
 		if (Util.validar(lista)) {
 			if (lista.size() == QUANTIDADE_UNITARIA) {
@@ -228,10 +227,36 @@ public class VendaService {
 		}
 		return result;
 	}
-	
+
 	/**
-	 * Método para recuperar o vendedor do operador, 
-	 * se não encontrar recupera o vendedor padrão da loja
+	 * Metodo para recuperar venda em aberto informando codigo da venda
+	 * 
+	 * @param codigoVenda
+	 * @return
+	 */
+	public Venda recuperarVendaEmAberto(Long codigoVenda) {
+		Venda result = new Venda();
+		List<Venda> lista = vendaRepository.findByCodigoAndDataAndStatus(codigoVenda, DATA_DE_HOJE, StatusVenda.EM_ABERTO);
+		if (Util.validar(lista)) {
+			if (lista.size() == QUANTIDADE_UNITARIA) {
+				for (Venda venda : lista) {
+					if (!Util.validar(venda.getItens())) {
+						List<ItemVenda> itens = itemVendaService.buscarItens(venda);
+						if (Util.validar(itens)) {
+							venda.setItens(itens);
+						}
+					}
+					venda = totalizar(venda);
+					result = venda;
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Método para recuperar o vendedor do operador, se não encontrar recupera o
+	 * vendedor padrão da loja
 	 * 
 	 * @param operador
 	 * @return
@@ -249,7 +274,7 @@ public class VendaService {
 		}
 		return vendedor;
 	}
-	
+
 	/**
 	 * Método interno para recuperar lista de vendedores da loja
 	 * 
@@ -269,13 +294,13 @@ public class VendaService {
 	public Operador recuperarOperador(String login) {
 		Operador operador = null;
 		if (Util.validar(login)) {
-			operador = operadorService.pesquisarPorNome(login); 
+			operador = operadorService.pesquisarPorNome(login);
 		}
 		return operador;
 	}
-	
+
 	/**
-	 *	Método para validar se existe um venda com itens de compra
+	 * Método para validar se existe um venda com itens de compra
 	 * 
 	 * @param venda
 	 * @return
@@ -283,14 +308,17 @@ public class VendaService {
 	public boolean validarVendaEmAndamento(Venda venda) {
 		boolean validar = false;
 		if (Util.validar(venda)) {
-			if (Util.validar(venda.getCodigo())) {
-				if (Util.validar(venda.getItens())) {
-					validar = true;
+			if (Util.validar(venda.getVendedor())) {
+				if (Util.validar(venda.getCodigo())) {
+					if (Util.validar(venda.getItens())) {
+						validar = true;
+					}
 				}
 			}
 		}
 		return validar;
 	}
+
 	/**
 	 * Método para atualizar o desconto total da compra
 	 * 
@@ -315,7 +343,7 @@ public class VendaService {
 			}
 		}
 	}
-	
+
 	/**
 	 * Método para recuperar lista de vendas por periodo e por vendedor
 	 * 
@@ -327,9 +355,10 @@ public class VendaService {
 	public List<Venda> listarVendasPorPeriodoPorVendedor(Vendedor vendedor, Date dataInicial, Date dataFinal) {
 		dataInicial = Util.dataHoraInicial(dataInicial);
 		dataFinal = Util.dataHoraFinal(dataFinal);
-		return vendaRepository.findByDataBetweenAndVendedorAndStatus(dataInicial, dataFinal, vendedor, StatusVenda.FINALIZADO);
+		return vendaRepository.findByDataBetweenAndVendedorAndStatus(dataInicial, dataFinal, vendedor,
+				StatusVenda.FINALIZADO);
 	}
-	
+
 	/**
 	 * Método para recuperar lista de vendas por vendedor
 	 * 
@@ -340,7 +369,8 @@ public class VendaService {
 	public List<Venda> listarVendasPorVendedor(Vendedor vendedor, Date data) {
 		Date dataInicial = Util.dataHoraInicial(data);
 		Date dataFinal = Util.dataHoraFinal(data);
-		return vendaRepository.findByDataBetweenAndVendedorAndStatus(dataInicial, dataFinal, vendedor, StatusVenda.FINALIZADO);
+		return vendaRepository.findByDataBetweenAndVendedorAndStatus(dataInicial, dataFinal, vendedor,
+				StatusVenda.FINALIZADO);
 	}
 
 	/**
@@ -390,9 +420,9 @@ public class VendaService {
 			}
 		}
 	}
-	
+
 	/**
-	 * Método externo para salvar vendas. Salva a data atualizada de hoje 
+	 * Método externo para salvar vendas. Salva a data atualizada de hoje
 	 * 
 	 * @param venda
 	 * @return
@@ -433,10 +463,11 @@ public class VendaService {
 		Venda venda = vendaRepository.findOne(codigo);
 		return buscarPagamento(venda);
 	}
-	
+
 	/**
-	 * Método para recuperar lista de vendedores da loja informando o operador da loja.
-	 * No caso de nenhum operador for encontrado recupera vendedor gerente
+	 * Método para recuperar lista de vendedores da loja informando o operador
+	 * da loja. No caso de nenhum operador for encontrado recupera vendedor
+	 * gerente
 	 * 
 	 * @param operador
 	 * @return
@@ -462,21 +493,20 @@ public class VendaService {
 	private BigDecimal subTotal(ItemVenda item) {
 		double subTotal = 0;
 		if (Util.validar(item)) {
-			if (Util.validar(item.getPrecoUnitario()) 
-					&& (Util.validar(item.getDesconto())) 
+			if (Util.validar(item.getPrecoUnitario()) && (Util.validar(item.getDesconto()))
 					&& (Util.validar(item.getQuantidade()))) {
 				double precoTotal = item.getPrecoUnitario().doubleValue();
 				double desconto = item.getDesconto().doubleValue();
 				long intQuantidade = item.getQuantidade().longValue();
 				if (desconto >= ZERO && desconto <= PORCENTAGEM) {
 					precoTotal = precoTotal * intQuantidade;
-					subTotal = precoTotal - (precoTotal * (desconto/PORCENTAGEM));
+					subTotal = precoTotal - (precoTotal * (desconto / PORCENTAGEM));
 				}
 			}
 		}
 		return BigDecimal.valueOf(subTotal);
 	}
-	
+
 	/**
 	 * Metodo interno para adicionar item de produto na cesta de compras
 	 * 
@@ -507,57 +537,55 @@ public class VendaService {
 		}
 		return item;
 	}
-	
+
 	/**
 	 * Metodo externo para carregar os itens de venda na cesta
 	 * 
 	 * @param codigoProduto
-	 * @param operador
+	 * @param quantidade
+	 * @param codigoBarra
+	 * @param codigoVenda
+	 * @param codigoVendedor
 	 * @return
 	 */
-	public Venda comprar(Long codigoProduto, Integer quantidade, String codigoBarra, Operador operador) {
+	public Venda comprar(Long codigoProduto, Integer quantidade, String codigoBarra, Long codigoVenda,
+			Long codigoVendedor) {
 		Venda result = null;
+		Vendedor vendedor = null;
+		if (Util.validar(codigoVendedor)) {
+			vendedor = vendedorService.pesquisarPorCodigo(codigoVendedor);
+		}
 		ItemVenda novoItem = carregarItem(codigoProduto, quantidade, codigoBarra);
-		if (Util.validar(operador)) {
-			Vendedor vendedor = buscarVendedor(operador);
+		Venda venda = recuperarVendaEmAberto(codigoVenda);
+		if (Util.validar(venda)) {
+			List<ItemVenda> itens = new ArrayList<>();
+			venda.setDescontoTotal(BigDecimal.ZERO);
+			venda.setStatus(StatusVenda.EM_ABERTO);
+			if (Util.validar(venda.getItens())) {
+				itens = venda.getItens();
+				itens.add(novoItem);
+			} else {
+				itens.add(novoItem);
+			}
 			if (Util.validar(vendedor)) {
-				Venda venda = recuperarVendaEmAberto(vendedor);
-				if (Util.validar(venda)) {
-
-					List<ItemVenda> itens = new ArrayList<>();
-					
-					// setar valores defaults
-					venda.setVendedor(vendedor);
-					venda.setDescontoTotal(BigDecimal.ZERO);
-					venda.setStatus(StatusVenda.EM_ABERTO);
-					
-					if (Util.validar(venda.getItens())) {
-						itens = venda.getItens();
-						itens.add(novoItem);
-					} else {
-						itens.add(novoItem);
-					}
-					
+				venda.setVendedor(vendedor);
+			}
+			venda.setItens(itens);
+			venda = salvar(venda);
+			if (Util.validar(venda.getCodigo())) {
+				itens = itemVendaService.buscarItens(venda);
+				itens.add(novoItem);
+				itens = itemVendaService.salvarItens(itens, venda);
+				if (Util.validar(itens)) {
 					venda.setItens(itens);
-					venda = salvar(venda);
-					
-					if (Util.validar(venda.getCodigo())) {
-						itens = itemVendaService.buscarItens(venda);
-						itens.add(novoItem);
-						itens = itemVendaService.salvarItens(itens, venda);
-						if (Util.validar(itens)) {
-							venda.setItens(itens);
-						}
-					}
 				}
-				venda = totalizar(venda);
-				result = venda;
 			}
 		}
+		venda = totalizar(venda);
+		result = venda;
 		return result;
 	}
 
-	
 	/**
 	 * Método interno para totalizar valores da compra
 	 * 
@@ -582,7 +610,7 @@ public class VendaService {
 				double subTotal = venda.getSubTotal().doubleValue();
 				double desconto = venda.getDescontoTotal().doubleValue();
 				if (desconto >= ZERO && desconto <= PORCENTAGEM) {
-					dblTotal = subTotal - (subTotal * (desconto/PORCENTAGEM));
+					dblTotal = subTotal - (subTotal * (desconto / PORCENTAGEM));
 				}
 			}
 			venda.setTotal(BigDecimal.valueOf(dblTotal));

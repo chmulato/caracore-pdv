@@ -62,7 +62,7 @@ public class ProdutosController {
 		ModelAndView mv = new ModelAndView("produto/pesquisa-produtos");
 		if (filtroProduto != null) {
 			mv.addObject("produtos", produtoService.pesquisar(filtroProduto));
-			mv.addObject("produtoFilter", new ProdutoFilter("", Integer.valueOf(QUANTIDADE_UNITARIA), "", ""));
+			mv.addObject("produtoFilter", new ProdutoFilter("", Integer.valueOf(QUANTIDADE_UNITARIA), "", "", null, null));
 		} else {
 			filtroProduto = new ProdutoFilter();
 			filtroProduto.setDescricao("%");
