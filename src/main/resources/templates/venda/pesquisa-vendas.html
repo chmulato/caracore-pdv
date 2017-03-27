@@ -91,9 +91,9 @@
 								<a th:href="@{/vendas/{codigo}(codigo=${venda.codigo})}" th:text="${venda.codigo}" ></a>
 							</td>
 							<td class="text-left">
-								<span th:text="${venda.status}" th:if="${#strings.toString(venda.status) == 'FINALIZADO'}" style="color: red"    ></span>
+								<span th:text="${venda.status}" th:if="${#strings.toString(venda.status) == 'CANCELADA'}" style="color: red"    ></span>
 								<span th:text="${venda.status}" th:if="${#strings.toString(venda.status) == 'EM_ABERTO' }" style="color: #1e94d2"></span>
-								<span th:text="${venda.status}" th:if="${#strings.toString(venda.status) == 'CANCELADA' }"></span>
+								<span th:text="${venda.status}" th:if="${#strings.toString(venda.status) == 'FINALIZADO' }"></span>
 							</td>
 							<td class="text-left">
 								<span th:text="${venda.dataFormatada}"></span>
