@@ -95,7 +95,7 @@
 					<div class="col-sm-4">
 						<div class="form-group">
 							<a th:href="@{/vendas/vendas}" class="btn  btn-default  btn-venda">Retornar</a>
-							<a th:href="@{/pagamentos/{codigo}(codigo=${venda?.pagamento?.codigo})}" class="btn  btn-primary  btn-venda">Pagamento</a>
+							<a th:href="@{/pagamentos/{codigo}(codigo=${venda?.pagamento?.codigo})}" class="btn  btn-primary  btn-venda" th:if="${venda.pagamento != null}">Pagamento</a>
 						</div>
 					</div>
 				</form>
