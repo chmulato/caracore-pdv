@@ -25,6 +25,7 @@ import br.com.caracore.pdv.repository.filter.VendaFilter;
 import br.com.caracore.pdv.repository.filter.VendedorFilter;
 import br.com.caracore.pdv.service.VendaService;
 import br.com.caracore.pdv.service.exception.ProdutoNaoCadastradoException;
+import br.com.caracore.pdv.service.exception.VendedorNaoEncontradoException;
 import br.com.caracore.pdv.util.Util;
 
 @Controller
@@ -41,27 +42,33 @@ public class VendasController {
 		String codigoBarra = null;
 		Long codigoVenda = null;
 		Long codigoVendedor = null;
-		if (Util.validar(produtoFilter)) {
-			if (Util.validar(produtoFilter.getCodigo())) {
-				codigoProduto = Long.valueOf(produtoFilter.getCodigo());
-			}
-			if (Util.validar(produtoFilter.getQuantidade())) {
-				quantidade = produtoFilter.getQuantidade();
-			}
-			if (Util.validar(produtoFilter.getCodigoBarra())) {
-				codigoBarra = produtoFilter.getCodigoBarra();
-			}
-			if (Util.validar(produtoFilter.getCodigoVenda())) {
-				codigoVenda = Long.valueOf(produtoFilter.getCodigoVenda());
-			}
-			if (Util.validar(produtoFilter.getCodigoVendedor())) {
-				codigoVendedor = Long.valueOf(produtoFilter.getCodigoVendedor());
-			}
-		}
 		try {
+			if (Util.validar(produtoFilter)) {
+				if (Util.validar(produtoFilter.getCodigo())) {
+					codigoProduto = Long.valueOf(produtoFilter.getCodigo());
+				}
+				if (Util.validar(produtoFilter.getQuantidade())) {
+					quantidade = produtoFilter.getQuantidade();
+				}
+				if (Util.validar(produtoFilter.getCodigoBarra())) {
+					codigoBarra = produtoFilter.getCodigoBarra();
+				}
+				if (Util.validar(produtoFilter.getCodigoVenda())) {
+					codigoVenda = Long.valueOf(produtoFilter.getCodigoVenda());
+				}
+				if (Util.validar(produtoFilter.getCodigoVendedor())) {
+					codigoVendedor = Long.valueOf(produtoFilter.getCodigoVendedor());
+				}
+			}
 			Venda venda = vendaService.comprar(codigoProduto, quantidade, codigoBarra, codigoVenda, codigoVendedor);
 			return novo(venda);
 		} catch (ProdutoNaoCadastradoException ex) {
+			attributes.addFlashAttribute("error", ex.getMessage());
+			return new ModelAndView("redirect:/vendas/novo");
+		} catch (VendedorNaoEncontradoException ex) {
+			attributes.addFlashAttribute("error", ex.getMessage());
+			return new ModelAndView("redirect:/vendas/novo");
+		} catch (NumberFormatException ex) {
 			attributes.addFlashAttribute("error", ex.getMessage());
 			return new ModelAndView("redirect:/vendas/novo");
 		}

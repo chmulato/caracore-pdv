@@ -22,6 +22,7 @@ import br.com.caracore.pdv.repository.filter.VendaFilter;
 import br.com.caracore.pdv.repository.filter.VendedorFilter;
 import br.com.caracore.pdv.service.exception.DescontoInvalidoException;
 import br.com.caracore.pdv.service.exception.ProdutoNaoCadastradoException;
+import br.com.caracore.pdv.service.exception.VendedorNaoEncontradoException;
 import br.com.caracore.pdv.util.Util;
 
 @Service
@@ -548,12 +549,16 @@ public class VendaService {
 	 * @param codigoVendedor
 	 * @return
 	 */
-	public Venda comprar(Long codigoProduto, Integer quantidade, String codigoBarra, Long codigoVenda,
-			Long codigoVendedor) {
+	public Venda comprar(Long codigoProduto, Integer quantidade, String codigoBarra, Long codigoVenda, Long codigoVendedor) {
 		Venda result = null;
 		Vendedor vendedor = null;
 		if (Util.validar(codigoVendedor)) {
 			vendedor = vendedorService.pesquisarPorCodigo(codigoVendedor);
+			if (!Util.validar(vendedor)) {
+				throw new VendedorNaoEncontradoException("Vendedor não encontrado!");
+			}
+		} else {
+			throw new VendedorNaoEncontradoException("Vendedor não informado!");
 		}
 		ItemVenda novoItem = carregarItem(codigoProduto, quantidade, codigoBarra);
 		Venda venda = recuperarVendaEmAberto(codigoVenda);
