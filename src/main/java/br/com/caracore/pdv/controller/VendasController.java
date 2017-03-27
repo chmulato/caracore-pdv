@@ -99,6 +99,17 @@ public class VendasController {
 		return mv;
 	}
 
+	@GetMapping("/status/{codigo}")
+	public ModelAndView cancelarVenda(@PathVariable Long codigo) {
+		VendaFilter filtroVenda = new VendaFilter();
+		filtroVenda.setVendedor("");
+		filtroVenda.setLoja("");
+		if (Util.validar(codigo)) {
+			vendaService.cancelar(codigo);
+		}
+		return pesquisarVendas(filtroVenda);
+	}
+
 	@GetMapping("{codigo}")
 	public ModelAndView pesquisarVenda(@PathVariable Long codigo) {
 		ModelAndView mv = new ModelAndView("venda/visualiza-venda");

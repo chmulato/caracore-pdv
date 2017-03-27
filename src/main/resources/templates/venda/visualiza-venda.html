@@ -91,16 +91,16 @@
 							<input id="vendedor" type="text" class="form-control" th:field="*{vendedor.nome}" readonly="readonly" />
 						</div>
 					</div>
-					
 					<div class="col-sm-4">
 						<div class="form-group">
 							<a th:href="@{/vendas/vendas}" class="btn  btn-default  btn-venda">Retornar</a>
+							<a th:href="@{/vendas/status/{codigo}(codigo=${venda.codigo})}" class="btn  btn-danger  btn-venda" th:if="${#strings.toString(venda.status) == 'EM_ABERTO' }">Cancelar Venda</a>
 							<a th:href="@{/pagamentos/{codigo}(codigo=${venda?.pagamento?.codigo})}" class="btn  btn-primary  btn-venda" th:if="${venda.pagamento != null}">Pagamento</a>
 						</div>
 					</div>
 				</form>
 			</div>
-			
+
 		</section>
 
 </html>

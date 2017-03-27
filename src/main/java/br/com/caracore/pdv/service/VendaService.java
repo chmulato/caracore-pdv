@@ -62,6 +62,21 @@ public class VendaService {
 	private ItemVendaService itemVendaService;
 
 	/**
+	 * Método para cancelar venda
+	 * 
+	 * @param codigo
+	 */
+	public void cancelar(Long codigo) {
+		if (Util.validar(codigo)) {
+			Venda venda = vendaRepository.findOne(codigo);
+			if (Util.validar(venda)) {
+				venda.setStatus(StatusVenda.CANCELADA);
+				vendaRepository.save(venda);
+			}
+		}
+	}
+	
+	/**
 	 * Método para buscar vendas por parâmetros
 	 * 
 	 * @param codigo
