@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import br.com.caracore.pdv.model.ItemVenda;
@@ -24,6 +26,7 @@ import br.com.caracore.pdv.service.exception.DescontoInvalidoException;
 import br.com.caracore.pdv.service.exception.ProdutoNaoCadastradoException;
 import br.com.caracore.pdv.service.exception.VendedorNaoEncontradoException;
 import br.com.caracore.pdv.util.Util;
+import br.com.caracore.pdv.vo.SessionVO;
 
 @Service
 public class VendaService {
@@ -61,6 +64,38 @@ public class VendaService {
 	@Autowired
 	private ItemVendaService itemVendaService;
 
+	/**
+	 * Método externo para recuperar dados da sessão
+	 * 
+	 * @return
+	 */
+	public SessionVO recuperarSessao() {
+		SessionVO sessionVO = null;
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null && auth.getName() != null) {
+			String login = auth.getName();
+			Operador operador = recuperarOperador(login);
+			if (Util.validar(operador)) {
+				sessionVO = getSession();
+			}
+		}
+		return sessionVO;
+	}
+
+	/**
+	 * Método externo para salvar dados na sessão
+	 * 
+	 * @param vendaId
+	 * @param vendedorId
+	 */
+	public void salvarNaSessao(Long vendaId, Long vendedorId) {
+		SessionVO vo = recuperarSessao();
+		if ((Util.validar(vo)) && (Util.validar(vo.getOperadorId()))) {
+			Long operadorId = vo.getOperadorId();
+			operadorService.setSession(operadorId, vendaId, vendedorId);
+		}
+	}
+	
 	/**
 	 * Método para cancelar venda
 	 * 
@@ -164,15 +199,27 @@ public class VendaService {
 	}
 
 	/**
-	 * Método externo para selecionar vendedor
+	 * Método externo para recuperar vendedor
 	 * 
 	 * @param codigo
 	 * @return
 	 */
-	public Vendedor selecionarPorId(Long codigo) {
+	public Vendedor recuperarVendedorPorId(Long codigo) {
 		Vendedor vendedor = null;
 		vendedor = vendedorService.pesquisarPorCodigo(codigo);
 		return vendedor;
+	}
+
+	/**
+	 * Método externo para recuperar operador
+	 * 
+	 * @param codigo
+	 * @return
+	 */
+	public Operador recuperarOperadorPorId(Long codigo) {
+		Operador operador = null;
+		operador = operadorService.pesquisarPorId(codigo);
+		return operador;
 	}
 
 	/**
@@ -604,6 +651,19 @@ public class VendaService {
 		venda = totalizar(venda);
 		result = venda;
 		return result;
+	}
+
+	/**
+	 * Recuperar dados da sessão
+	 * 
+	 * @return
+	 */
+	private SessionVO getSession() {
+		SessionVO vo = null;
+		if (Util.validar(operadorService.getSession())) {
+			vo = operadorService.getSession();
+		}
+		return vo;
 	}
 
 	/**

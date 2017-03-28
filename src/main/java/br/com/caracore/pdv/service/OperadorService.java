@@ -16,43 +16,52 @@ import br.com.caracore.pdv.service.exception.EmailInvalidoException;
 import br.com.caracore.pdv.service.exception.LoginExistenteException;
 import br.com.caracore.pdv.service.exception.SenhaInvalidaException;
 import br.com.caracore.pdv.util.Util;
+import br.com.caracore.pdv.vo.SessionVO;
 
 @Service
 public class OperadorService {
 
+	private Boolean OPERADOR_AUTENTICADO = Boolean.TRUE;
+	
 	@Autowired
 	private OperadorRepository operadorRepository;
 
 	@Autowired
 	private LojaRepository lojaRepository;
 	
-	private Operador retornarOperador(List<Operador> listar) {
-		Operador result = null;
-		if (listar != null && listar.size() == 1) {
-			for(Operador operador : listar) {
-				result = operador;
+	@Autowired
+	private SessionService sessionService;
+
+	public SessionVO getSession() {
+		return sessionService.getSessionVO();
+	}
+
+	public void setSession(Long operadorId, Long vendaId, Long vendedorId) {
+		if (Util.validar(operadorId)) {
+			if (Util.validar(sessionService.getSessionVO())) {
+				SessionVO vo = sessionService.getSessionVO();
+				if (Util.validar(vo.getOperadorId())) {
+					Long voId = vo.getOperadorId();
+					if (voId.equals(operadorId)) {
+						if (Util.validar(vendaId)) {
+							vo.setVendaId(vendaId);
+						}
+						if (Util.validar(vendedorId)) {
+							vo.setVendedorId(vendedorId);
+						}
+					}
+				}
 			}
 		}
-		return result;
 	}
-	
-	private Operador buscarAdministrador() {
-		Operador operadorAdmin = null;
-		TipoOperador perfil = TipoOperador.ADMINISTRADOR;
-		operadorAdmin = operadorRepository.findByPerfil(perfil);
-		return operadorAdmin;
-	}
-	
-	private boolean verificarLogin(String login) {
-		boolean result = false;
-		if (login != null && !login.equals("")) {
-			List<Operador> listar = pesquisarPorLogin(login);
-			Operador operador = retornarOperador(listar);
-			if (operador != null) {
-				result = true;
-			}
+
+	public void setAutenticado(Operador operador) {
+		if ((Util.validar(operador)) && (Util.validar(operador.getCodigo()))) {
+			SessionVO vo = new SessionVO();
+			vo.setAutenticado(OPERADOR_AUTENTICADO);
+			vo.setOperadorId(operador.getCodigo());
+			sessionService.setSessionVO(vo);
 		}
-		return result;
 	}
 	
 	public Operador pesquisarPorNome(String login) {
@@ -151,5 +160,34 @@ public class OperadorService {
 
 	public Operador pesquisarPorId(Long codigo) {
 		return operadorRepository.findOne(codigo);
+	}
+	
+	private Operador retornarOperador(List<Operador> listar) {
+		Operador result = null;
+		if (listar != null && listar.size() == 1) {
+			for(Operador operador : listar) {
+				result = operador;
+			}
+		}
+		return result;
+	}
+	
+	private Operador buscarAdministrador() {
+		Operador operadorAdmin = null;
+		TipoOperador perfil = TipoOperador.ADMINISTRADOR;
+		operadorAdmin = operadorRepository.findByPerfil(perfil);
+		return operadorAdmin;
+	}
+	
+	private boolean verificarLogin(String login) {
+		boolean result = false;
+		if (login != null && !login.equals("")) {
+			List<Operador> listar = pesquisarPorLogin(login);
+			Operador operador = retornarOperador(listar);
+			if (operador != null) {
+				result = true;
+			}
+		}
+		return result;
 	}
 }

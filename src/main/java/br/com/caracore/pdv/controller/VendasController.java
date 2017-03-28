@@ -5,8 +5,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +25,7 @@ import br.com.caracore.pdv.service.VendaService;
 import br.com.caracore.pdv.service.exception.ProdutoNaoCadastradoException;
 import br.com.caracore.pdv.service.exception.VendedorNaoEncontradoException;
 import br.com.caracore.pdv.util.Util;
+import br.com.caracore.pdv.vo.SessionVO;
 
 @Controller
 @RequestMapping("/vendas")
@@ -63,6 +62,9 @@ public class VendasController {
 					codigoVendedor = Long.valueOf(produtoFilter.getCodigoVendedor());
 				}
 			}
+			if ((Util.validar(codigoVenda)) && (Util.validar(codigoVendedor))) {
+				vendaService.salvarNaSessao(codigoVenda, codigoVendedor);
+			}
 			venda = vendaService.comprar(codigoProduto, quantidade, codigoBarra, codigoVenda, codigoVendedor);
 			return novo(venda);
 		} catch (ProdutoNaoCadastradoException ex) {
@@ -72,9 +74,10 @@ public class VendasController {
 		} catch (NumberFormatException ex) {
 			error = ex.getMessage();
 		}
-		Operador operador = recuperarOperador();
+		SessionVO sessao = vendaService.recuperarSessao();
+		Long operadorId = sessao.getOperadorId();
 		venda = vendaService.recuperarVendaEmAberto(codigoVenda);
-		mv.addObject("vendedores", buscarVendedores(operador));
+		mv.addObject("vendedores", buscarVendedores(operadorId));
 		mv.addObject(prepararFiltro(venda));
 		mv.addObject(venda);
 		mv.addObject("error", error);
@@ -84,9 +87,10 @@ public class VendasController {
 	@GetMapping("/novo")
 	public ModelAndView novo(Venda venda) {
 		ModelAndView mv = new ModelAndView("venda/cadastro-venda");
-		Operador operador = recuperarOperador();
+		SessionVO sessao = vendaService.recuperarSessao();
+		Long operadorId = sessao.getOperadorId();
 		venda = buscarVendaEmAberto(venda);
-		mv.addObject("vendedores", buscarVendedores(operador));
+		mv.addObject("vendedores", buscarVendedores(operadorId));
 		mv.addObject(prepararFiltro(venda));
 		mv.addObject(venda);
 		return mv;
@@ -120,8 +124,9 @@ public class VendasController {
 	@GetMapping("{codigo}")
 	public ModelAndView pesquisarVenda(@PathVariable Long codigo) {
 		ModelAndView mv = new ModelAndView("venda/visualiza-venda");
-		Operador operador = recuperarOperador();
-		mv.addObject("vendedores", buscarVendedores(operador));
+		SessionVO sessao = vendaService.recuperarSessao();
+		Long operadorId = sessao.getOperadorId();
+		mv.addObject("vendedores", buscarVendedores(operadorId));
 		Venda venda = vendaService.pesquisarPorId(codigo);
 		mv.addObject(venda);
 		return mv;
@@ -156,7 +161,7 @@ public class VendasController {
 	public ModelAndView selecionar(@PathVariable Long codigo) {
 		Venda venda = null;
 		ModelAndView mv = new ModelAndView("venda/cadastro-venda");
-		Vendedor vendedor = vendaService.selecionarPorId(codigo);
+		Vendedor vendedor = vendaService.recuperarVendedorPorId(codigo);
 		if (Util.validar(vendedor)) {
 			venda = vendaService.recuperarVendaEmAberto(vendedor);
 			if (!Util.validar(venda)) {
@@ -193,20 +198,6 @@ public class VendasController {
 		return venda;
 	}
 
-	/**
-	 * Método para recuperar operador logado
-	 * 
-	 * @return
-	 */
-	private Operador recuperarOperador() {
-		Operador operador = null;
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth != null && auth.getName() != null) {
-			String login = auth.getName();
-			operador = vendaService.recuperarOperador(login);
-		}
-		return operador;
-	}
 
 	/**
 	 * Método para auxiliar no filtro de tela de pesquisa de vendas em aberto
@@ -247,10 +238,14 @@ public class VendasController {
 	 * @param operador
 	 * @return
 	 */
-	private List<Vendedor> buscarVendedores(Operador operador) {
-		List<Vendedor> vendedores = vendaService.listarVendedoresPorOperador(operador);
-		if (!Util.validar(vendedores)) {
-			vendedores = Util.criarListaDeVendedores();
+	private List<Vendedor> buscarVendedores(Long codigo) {
+		List<Vendedor> vendedores = Util.criarListaDeVendedores();
+		Operador operador = vendaService.recuperarOperadorPorId(codigo);
+		if (Util.validar(operador)) {
+			vendedores = vendaService.listarVendedoresPorOperador(operador);
+			if (!Util.validar(vendedores)) {
+				vendedores = Util.criarListaDeVendedores();
+			}
 		}
 		return vendedores;
 	}
