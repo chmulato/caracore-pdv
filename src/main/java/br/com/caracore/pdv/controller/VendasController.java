@@ -42,7 +42,9 @@ public class VendasController {
 		String codigoBarra = null;
 		Long codigoVenda = null;
 		Long codigoVendedor = null;
-		ModelAndView mv = new ModelAndView("redirect:/vendas/novo");
+		Venda venda = null;
+		String error = null;
+		ModelAndView mv = new ModelAndView("venda/cadastro-venda");
 		try {
 			if (Util.validar(produtoFilter)) {
 				if (Util.validar(produtoFilter.getCodigo())) {
@@ -61,15 +63,21 @@ public class VendasController {
 					codigoVendedor = Long.valueOf(produtoFilter.getCodigoVendedor());
 				}
 			}
-			Venda venda = vendaService.comprar(codigoProduto, quantidade, codigoBarra, codigoVenda, codigoVendedor);
+			venda = vendaService.comprar(codigoProduto, quantidade, codigoBarra, codigoVenda, codigoVendedor);
 			return novo(venda);
 		} catch (ProdutoNaoCadastradoException ex) {
-			attributes.addFlashAttribute("error", ex.getMessage());
+			error = ex.getMessage();
 		} catch (VendedorNaoEncontradoException ex) {
-			attributes.addFlashAttribute("error", ex.getMessage());
+			error = ex.getMessage();
 		} catch (NumberFormatException ex) {
-			attributes.addFlashAttribute("error", ex.getMessage());
+			error = ex.getMessage();
 		}
+		Operador operador = recuperarOperador();
+		venda = vendaService.recuperarVendaEmAberto(codigoVenda);
+		mv.addObject("vendedores", buscarVendedores(operador));
+		mv.addObject(prepararFiltro(venda));
+		mv.addObject(venda);
+		mv.addObject("error", error);
 		return mv;
 	}
 
