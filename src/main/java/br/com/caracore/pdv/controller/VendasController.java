@@ -42,6 +42,7 @@ public class VendasController {
 		String codigoBarra = null;
 		Long codigoVenda = null;
 		Long codigoVendedor = null;
+		ModelAndView mv = new ModelAndView("redirect:/vendas/novo");
 		try {
 			if (Util.validar(produtoFilter)) {
 				if (Util.validar(produtoFilter.getCodigo())) {
@@ -64,14 +65,12 @@ public class VendasController {
 			return novo(venda);
 		} catch (ProdutoNaoCadastradoException ex) {
 			attributes.addFlashAttribute("error", ex.getMessage());
-			return new ModelAndView("redirect:/vendas/novo");
 		} catch (VendedorNaoEncontradoException ex) {
 			attributes.addFlashAttribute("error", ex.getMessage());
-			return new ModelAndView("redirect:/vendas/novo");
 		} catch (NumberFormatException ex) {
 			attributes.addFlashAttribute("error", ex.getMessage());
-			return new ModelAndView("redirect:/vendas/novo");
 		}
+		return mv;
 	}
 
 	@GetMapping("/novo")
