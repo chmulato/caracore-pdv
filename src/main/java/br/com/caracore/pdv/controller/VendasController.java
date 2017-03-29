@@ -63,7 +63,7 @@ public class VendasController {
 				}
 			}
 			if ((Util.validar(codigoVenda)) && (Util.validar(codigoVendedor))) {
-				vendaService.salvarVendaIdEVendedorIdNaSessao(codigoVenda, codigoVendedor);
+				vendaService.salvarVendaEVendedorNaSessao(codigoVenda, codigoVendedor);
 			}
 			venda = vendaService.comprar(codigoProduto, quantidade, codigoBarra, codigoVenda, codigoVendedor);
 			return novo(venda);
@@ -199,7 +199,7 @@ public class VendasController {
 		ModelAndView mv = new ModelAndView("venda/cadastro-venda");
 		Vendedor vendedor = vendaService.recuperarVendedorPorId(codigo);
 		if (Util.validar(vendedor)) {
-			vendaService.salvarVendedorIdNaSessao(codigo);
+			vendaService.salvarVendedorNaSessao(codigo);
 			venda = vendaService.recuperarVendaEmAberto(vendedor);
 			if (!Util.validar(venda)) {
 				venda = new Venda();

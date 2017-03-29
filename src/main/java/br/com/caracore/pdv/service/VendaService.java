@@ -89,11 +89,11 @@ public class VendaService {
 	/**
 	 * Método externo para salvar dados na sessão
 	 * 
-	 * @param vendedorId
+	 * @param codigoVendedor
 	 */
-	public void salvarVendedorIdNaSessao(Long vendedorId) {
-		if (Util.validar(vendedorId)) {
-			Vendedor vendedor = vendedorService.pesquisarPorCodigo(vendedorId);
+	public void salvarVendedorNaSessao(Long codigoVendedor) {
+		if (Util.validar(codigoVendedor)) {
+			Vendedor vendedor = vendedorService.pesquisarPorCodigo(codigoVendedor);
 			if (Util.validar(vendedor)) {
 				CompraVO vo = recuperarSessao();
 				if ((Util.validar(vo)) && (Util.validar(vo.getOperador()))) {
@@ -106,13 +106,13 @@ public class VendaService {
 	/**
 	 * Método externo para salvar dados na sessão
 	 * 
-	 * @param vendaId
-	 * @param vendedorId
+	 * @param codigoVenda
+	 * @param codigoVendedor
 	 */
-	public void salvarVendaIdEVendedorIdNaSessao(Long vendaId, Long vendedorId) {
-		if ((Util.validar(vendaId)) && (Util.validar(vendedorId))) {
-			Venda venda = vendaRepository.findOne(vendaId);
-			Vendedor vendedor = vendedorService.pesquisarPorCodigo(vendedorId);
+	public void salvarVendaEVendedorNaSessao(Long codigoVenda, Long codigoVendedor) {
+		if ((Util.validar(codigoVenda)) && (Util.validar(codigoVendedor))) {
+			Venda venda = vendaRepository.findOne(codigoVenda);
+			Vendedor vendedor = vendedorService.pesquisarPorCodigo(codigoVendedor);
 			if ((Util.validar(venda)) && (Util.validar(vendedor))) {
 				CompraVO vo = recuperarSessao();
 				if ((Util.validar(vo)) && (Util.validar(vo.getOperador()))) {
