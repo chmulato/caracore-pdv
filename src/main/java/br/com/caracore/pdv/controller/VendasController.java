@@ -36,11 +36,11 @@ public class VendasController {
 
 	@PostMapping("/produto")
 	public ModelAndView pesquisarProduto(ProdutoFilter produtoFilter, BindingResult result, RedirectAttributes attributes) {
-		Long codigoProduto = null;
 		Integer quantidade = null;
 		String codigoBarra = null;
 		Long codigoVenda = null;
 		Long codigoVendedor = null;
+		Long codigoProduto = null;
 		Venda venda = null;
 		String error = null;
 		ModelAndView mv = new ModelAndView("venda/cadastro-venda");

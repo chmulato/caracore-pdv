@@ -73,17 +73,17 @@ public class VendaService {
 	 * @return
 	 */
 	public CompraVO recuperarSessao() {
-		CompraVO sessionVO = null;
+		CompraVO compraVO = null;
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth != null && auth.getName() != null) {
 			String login = auth.getName();
 			Operador operador = recuperarOperador(login);
 			if (Util.validar(operador)) {
 				sessionService.setSession(operador);
-				sessionVO = sessionService.getSessionVO();
+				compraVO = sessionService.getSessionVO();
 			}
 		}
-		return sessionVO;
+		return compraVO;
 	}
 
 	/**
@@ -185,8 +185,7 @@ public class VendaService {
 			Vendedor vendedor = vendedorService.pesquisar(nomeVendedor);
 			Loja loja = lojaService.pesquisarPorNome(nomeLoja);
 			if ((Util.validar(vendedor)) && (Util.validar(loja))) {
-				lista = vendaRepository.findByDataBetweenAndVendedorAndLojaByOrderByDataDesc(dataInicial, dataFinal,
-						vendedor, loja);
+				lista = vendaRepository.findByDataBetweenAndVendedorAndLojaByOrderByDataDesc(dataInicial, dataFinal, vendedor, loja);
 			}
 			if ((Util.validar(vendedor)) && (!Util.validar(loja))) {
 				lista = vendaRepository.findByDataBetweenAndVendedorByOrderByDataDesc(dataInicial, dataFinal, vendedor);
