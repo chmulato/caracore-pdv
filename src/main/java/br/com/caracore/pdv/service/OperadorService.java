@@ -16,53 +16,15 @@ import br.com.caracore.pdv.service.exception.EmailInvalidoException;
 import br.com.caracore.pdv.service.exception.LoginExistenteException;
 import br.com.caracore.pdv.service.exception.SenhaInvalidaException;
 import br.com.caracore.pdv.util.Util;
-import br.com.caracore.pdv.vo.SessionVO;
 
 @Service
 public class OperadorService {
-
-	private Boolean OPERADOR_AUTENTICADO = Boolean.TRUE;
 	
 	@Autowired
 	private OperadorRepository operadorRepository;
 
 	@Autowired
 	private LojaRepository lojaRepository;
-	
-	@Autowired
-	private SessionService sessionService;
-
-	public SessionVO getSession() {
-		return sessionService.getSessionVO();
-	}
-
-	public void setSession(Long operadorId, Long vendaId, Long vendedorId) {
-		if (Util.validar(operadorId)) {
-			if (Util.validar(sessionService.getSessionVO())) {
-				SessionVO vo = sessionService.getSessionVO();
-				if (Util.validar(vo.getOperadorId())) {
-					Long voId = vo.getOperadorId();
-					if (voId.equals(operadorId)) {
-						if (Util.validar(vendaId)) {
-							vo.setVendaId(vendaId);
-						}
-						if (Util.validar(vendedorId)) {
-							vo.setVendedorId(vendedorId);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	public void setAutenticado(Operador operador) {
-		if ((Util.validar(operador)) && (Util.validar(operador.getCodigo()))) {
-			SessionVO vo = new SessionVO();
-			vo.setAutenticado(OPERADOR_AUTENTICADO);
-			vo.setOperadorId(operador.getCodigo());
-			sessionService.setSessionVO(vo);
-		}
-	}
 	
 	public Operador pesquisarPorNome(String login) {
 		Operador result = null;

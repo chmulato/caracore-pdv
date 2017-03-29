@@ -26,7 +26,7 @@ import br.com.caracore.pdv.service.exception.DescontoInvalidoException;
 import br.com.caracore.pdv.service.exception.ProdutoNaoCadastradoException;
 import br.com.caracore.pdv.service.exception.VendedorNaoEncontradoException;
 import br.com.caracore.pdv.util.Util;
-import br.com.caracore.pdv.vo.SessionVO;
+import br.com.caracore.pdv.vo.CompraVO;
 
 @Service
 public class VendaService {
@@ -44,7 +44,13 @@ public class VendaService {
 	final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
 
 	@Autowired
-	private VendaRepository vendaRepository;
+	private ItemVendaService itemVendaService;
+
+	@Autowired
+	private LojaService lojaService;
+
+	@Autowired
+	private OperadorService operadorService;
 
 	@Autowired
 	private PagamentoService pagamentoService;
@@ -53,30 +59,28 @@ public class VendaService {
 	private ProdutoService produtoService;
 
 	@Autowired
-	private OperadorService operadorService;
-
+	private SessionService sessionService;
+	
 	@Autowired
-	private LojaService lojaService;
+	private VendaRepository vendaRepository;
 
 	@Autowired
 	private VendedorService vendedorService;
-
-	@Autowired
-	private ItemVendaService itemVendaService;
 
 	/**
 	 * Método externo para recuperar dados da sessão
 	 * 
 	 * @return
 	 */
-	public SessionVO recuperarSessao() {
-		SessionVO sessionVO = null;
+	public CompraVO recuperarSessao() {
+		CompraVO sessionVO = null;
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth != null && auth.getName() != null) {
 			String login = auth.getName();
 			Operador operador = recuperarOperador(login);
 			if (Util.validar(operador)) {
-				sessionVO = getSession();
+				sessionService.setSession(operador);
+				sessionVO = sessionService.getSessionVO();
 			}
 		}
 		return sessionVO;
@@ -85,14 +89,36 @@ public class VendaService {
 	/**
 	 * Método externo para salvar dados na sessão
 	 * 
+	 * @param vendedorId
+	 */
+	public void salvarVendedorIdNaSessao(Long vendedorId) {
+		if (Util.validar(vendedorId)) {
+			Vendedor vendedor = vendedorService.pesquisarPorCodigo(vendedorId);
+			if (Util.validar(vendedor)) {
+				CompraVO vo = recuperarSessao();
+				if ((Util.validar(vo)) && (Util.validar(vo.getOperador()))) {
+					sessionService.setSession(vo.getOperador(), vendedor);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Método externo para salvar dados na sessão
+	 * 
 	 * @param vendaId
 	 * @param vendedorId
 	 */
-	public void salvarNaSessao(Long vendaId, Long vendedorId) {
-		SessionVO vo = recuperarSessao();
-		if ((Util.validar(vo)) && (Util.validar(vo.getOperadorId()))) {
-			Long operadorId = vo.getOperadorId();
-			operadorService.setSession(operadorId, vendaId, vendedorId);
+	public void salvarVendaIdEVendedorIdNaSessao(Long vendaId, Long vendedorId) {
+		if ((Util.validar(vendaId)) && (Util.validar(vendedorId))) {
+			Venda venda = vendaRepository.findOne(vendaId);
+			Vendedor vendedor = vendedorService.pesquisarPorCodigo(vendedorId);
+			if ((Util.validar(venda)) && (Util.validar(vendedor))) {
+				CompraVO vo = recuperarSessao();
+				if ((Util.validar(vo)) && (Util.validar(vo.getOperador()))) {
+					sessionService.setSession(vo.getOperador(), venda, vendedor);
+				}
+			}
 		}
 	}
 	
@@ -206,7 +232,9 @@ public class VendaService {
 	 */
 	public Vendedor recuperarVendedorPorId(Long codigo) {
 		Vendedor vendedor = null;
-		vendedor = vendedorService.pesquisarPorCodigo(codigo);
+		if (Util.validar(codigo)) {
+			vendedor = vendedorService.pesquisarPorCodigo(codigo);
+		}
 		return vendedor;
 	}
 
@@ -218,7 +246,9 @@ public class VendaService {
 	 */
 	public Operador recuperarOperadorPorId(Long codigo) {
 		Operador operador = null;
-		operador = operadorService.pesquisarPorId(codigo);
+		if (Util.validar(codigo)) {
+			operador = operadorService.pesquisarPorId(codigo);
+		}
 		return operador;
 	}
 
@@ -360,26 +390,6 @@ public class VendaService {
 			operador = operadorService.pesquisarPorNome(login);
 		}
 		return operador;
-	}
-
-	/**
-	 * Método para validar se existe um venda com itens de compra
-	 * 
-	 * @param venda
-	 * @return
-	 */
-	public boolean validarVendaEmAndamento(Venda venda) {
-		boolean validar = false;
-		if (Util.validar(venda)) {
-			if (Util.validar(venda.getVendedor())) {
-				if (Util.validar(venda.getCodigo())) {
-					if (Util.validar(venda.getItens())) {
-						validar = true;
-					}
-				}
-			}
-		}
-		return validar;
 	}
 
 	/**
@@ -651,19 +661,6 @@ public class VendaService {
 		venda = totalizar(venda);
 		result = venda;
 		return result;
-	}
-
-	/**
-	 * Recuperar dados da sessão
-	 * 
-	 * @return
-	 */
-	private SessionVO getSession() {
-		SessionVO vo = null;
-		if (Util.validar(operadorService.getSession())) {
-			vo = operadorService.getSession();
-		}
-		return vo;
 	}
 
 	/**

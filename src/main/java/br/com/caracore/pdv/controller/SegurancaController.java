@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import br.com.caracore.pdv.model.Operador;
 import br.com.caracore.pdv.service.EmailService;
 import br.com.caracore.pdv.service.OperadorService;
+import br.com.caracore.pdv.service.SessionService;
 import br.com.caracore.pdv.service.exception.EmailInvalidoException;
 import br.com.caracore.pdv.service.exception.LoginInvalidoException;
 import br.com.caracore.pdv.util.Mail;
@@ -28,6 +29,9 @@ public class SegurancaController {
 
 	@Autowired
 	public OperadorService operadorService;
+
+	@Autowired
+	public SessionService sessionService;
 	
 	@RequestMapping("/login")
 	public String login(@AuthenticationPrincipal User user) {
@@ -35,7 +39,7 @@ public class SegurancaController {
 			String nome = user.getUsername();
 			Operador operador = operadorService.buscar(nome);
 			if (Util.validar(operador)) {
-				operadorService.setAutenticado(operador);
+				sessionService.setSession(operador);
 				return "redirect:/vendas/vendedores";
 			}
 		}

@@ -18,6 +18,7 @@ import br.com.caracore.pdv.model.Operador;
 import br.com.caracore.pdv.model.Produto;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
+import br.com.caracore.pdv.vo.CompraVO;
 import br.com.caracore.pdv.vo.VendaDiariaVO;
 
 public class Util {
@@ -41,6 +42,60 @@ public class Util {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Método para validar dados da sessão
+	 * 
+	 * @param compraVO
+	 * @return
+	 */
+	public static boolean validarOperador(CompraVO compraVO) {
+		boolean valido = false;
+		if (Util.validar(compraVO)) {
+			if (Util.validar(compraVO.getOperador())) {
+				if (Util.validar(compraVO.getOperador().getCodigo())) {
+					valido = true;
+				}
+			}
+		}
+		return valido;
+	}
+
+	/**
+	 * Método para validar dados da sessão
+	 * 
+	 * @param compraVO
+	 * @return
+	 */
+	public static boolean validarVenda(CompraVO compraVO) {
+		boolean valido = false;
+		if (Util.validar(compraVO)) {
+			if (Util.validar(compraVO.getVenda())) {
+				if ((Util.validar(compraVO.getVenda().getCodigo()))) {
+					valido = true;
+				}
+			}
+		}
+		return valido;
+	}
+
+	/**
+	 * Método para validar dados da sessão
+	 * 
+	 * @param compraVO
+	 * @return
+	 */
+	public static boolean validarVendedor(CompraVO compraVO) {
+		boolean valido = false;
+		if (Util.validar(compraVO)) {
+			if (Util.validar(compraVO.getVendedor())) {
+				if ((Util.validar(compraVO.getVendedor().getCodigo()))) {
+					valido = true;
+				}
+			}
+		}
+		return valido;
 	}
 
 	/**
@@ -343,6 +398,18 @@ public class Util {
 		c.setTime(data);
         setTimeToEndofDay(c);
 		return c.getTime();
+	}
+	
+	/**
+	 * Método para criar uma venda vazia padrão
+	 * 
+	 * @param vendedor
+	 * @return
+	 */
+	public static Venda criarVendaVazia(Vendedor vendedor) {
+		Venda venda = new Venda();
+		venda.setVendedor(vendedor);
+		return venda;
 	}
 	
 	/**

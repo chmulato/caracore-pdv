@@ -25,7 +25,7 @@ import br.com.caracore.pdv.service.VendaService;
 import br.com.caracore.pdv.service.exception.ProdutoNaoCadastradoException;
 import br.com.caracore.pdv.service.exception.VendedorNaoEncontradoException;
 import br.com.caracore.pdv.util.Util;
-import br.com.caracore.pdv.vo.SessionVO;
+import br.com.caracore.pdv.vo.CompraVO;
 
 @Controller
 @RequestMapping("/vendas")
@@ -63,7 +63,7 @@ public class VendasController {
 				}
 			}
 			if ((Util.validar(codigoVenda)) && (Util.validar(codigoVendedor))) {
-				vendaService.salvarNaSessao(codigoVenda, codigoVendedor);
+				vendaService.salvarVendaIdEVendedorIdNaSessao(codigoVenda, codigoVendedor);
 			}
 			venda = vendaService.comprar(codigoProduto, quantidade, codigoBarra, codigoVenda, codigoVendedor);
 			return novo(venda);
@@ -74,23 +74,59 @@ public class VendasController {
 		} catch (NumberFormatException ex) {
 			error = ex.getMessage();
 		}
-		SessionVO sessao = vendaService.recuperarSessao();
-		Long operadorId = sessao.getOperadorId();
-		venda = vendaService.recuperarVendaEmAberto(codigoVenda);
-		mv.addObject("vendedores", buscarVendedores(operadorId));
-		mv.addObject(prepararFiltro(venda));
-		mv.addObject(venda);
+		CompraVO compraVO = vendaService.recuperarSessao();
+		if ((Util.validarOperador(compraVO)) && (Util.validarVenda(compraVO)) && (Util.validarVendedor(compraVO))) {
+			Long codigoOperador = compraVO.getOperador().getCodigo();
+			codigoVenda = compraVO.getVenda().getCodigo();
+			codigoVendedor = compraVO.getVendedor().getCodigo();
+			venda = buscarVendaEmAberto(codigoVenda, codigoVendedor);
+			mv.addObject("vendedores", buscarVendedores(codigoOperador));
+			mv.addObject(prepararFiltro(venda));
+			mv.addObject(venda);
+		} else {
+			if ((Util.validarOperador(compraVO)) && (Util.validarVendedor(compraVO))) {
+				Long codigoOperador = compraVO.getOperador().getCodigo();
+				venda = Util.criarVendaVazia(compraVO.getVendedor());
+				mv.addObject("vendedores", buscarVendedores(codigoOperador));
+				mv.addObject(prepararFiltro(venda));
+				mv.addObject(venda);
+			}
+		}
 		mv.addObject("error", error);
 		return mv;
 	}
-
+	
 	@GetMapping("/novo")
 	public ModelAndView novo(Venda venda) {
+		CompraVO compraVO = vendaService.recuperarSessao();
 		ModelAndView mv = new ModelAndView("venda/cadastro-venda");
-		SessionVO sessao = vendaService.recuperarSessao();
-		Long operadorId = sessao.getOperadorId();
-		venda = buscarVendaEmAberto(venda);
-		mv.addObject("vendedores", buscarVendedores(operadorId));
+		if ((Util.validar(venda)) && (Util.validar(venda.getCodigo()))) {
+			if (Util.validar(venda.getVendedor())) {
+				Long codigoVenda = venda.getCodigo();
+				Long codigoVendedor = venda.getVendedor().getCodigo();
+				venda = buscarVendaEmAberto(codigoVenda, codigoVendedor);
+				if (Util.validarOperador(compraVO)) {
+					Long codigoOperador = compraVO.getOperador().getCodigo();
+					mv.addObject("vendedores", buscarVendedores(codigoOperador));
+				}
+			}
+		} else {
+			if ((Util.validarOperador(compraVO)) && (Util.validarVenda(compraVO)) && (Util.validarVendedor(compraVO))) {
+				Long codigoOperador = compraVO.getOperador().getCodigo();
+				Long codigoVenda = compraVO.getVenda().getCodigo();
+				Long codigoVendedor = compraVO.getVendedor().getCodigo();
+				venda = buscarVendaEmAberto(codigoVenda, codigoVendedor);
+				mv.addObject("vendedores", buscarVendedores(codigoOperador));
+			} else {
+				if ((Util.validarOperador(compraVO)) && (Util.validarVendedor(compraVO))) {
+					Long codigoOperador = compraVO.getOperador().getCodigo();
+					venda = Util.criarVendaVazia(compraVO.getVendedor());
+					mv.addObject("vendedores", buscarVendedores(codigoOperador));
+					mv.addObject(prepararFiltro(venda));
+					mv.addObject(venda);
+				}
+			}
+		}
 		mv.addObject(prepararFiltro(venda));
 		mv.addObject(venda);
 		return mv;
@@ -124,8 +160,8 @@ public class VendasController {
 	@GetMapping("{codigo}")
 	public ModelAndView pesquisarVenda(@PathVariable Long codigo) {
 		ModelAndView mv = new ModelAndView("venda/visualiza-venda");
-		SessionVO sessao = vendaService.recuperarSessao();
-		Long operadorId = sessao.getOperadorId();
+		CompraVO sessao = vendaService.recuperarSessao();
+		Long operadorId = sessao.getOperador().getCodigo();
 		mv.addObject("vendedores", buscarVendedores(operadorId));
 		Venda venda = vendaService.pesquisarPorId(codigo);
 		mv.addObject(venda);
@@ -163,6 +199,7 @@ public class VendasController {
 		ModelAndView mv = new ModelAndView("venda/cadastro-venda");
 		Vendedor vendedor = vendaService.recuperarVendedorPorId(codigo);
 		if (Util.validar(vendedor)) {
+			vendaService.salvarVendedorIdNaSessao(codigo);
 			venda = vendaService.recuperarVendaEmAberto(vendedor);
 			if (!Util.validar(venda)) {
 				venda = new Venda();
@@ -182,22 +219,25 @@ public class VendasController {
 		attributes.addFlashAttribute("mensagem", "Venda salva com sucesso!");
 		return new ModelAndView("redirect:/vendas/novo");
 	}
-
+	
 	/**
 	 * Método interno para recuperar a venda
 	 * 
-	 * @param venda
+	 * @param codigoVenda
+	 * @param codigoVendedor
 	 * @return
 	 */
-	private Venda buscarVendaEmAberto(Venda venda) {
-		if (!vendaService.validarVendaEmAndamento(venda)) {
-			Vendedor vendedor = venda.getVendedor();
-			venda = vendaService.recuperarVendaEmAberto(venda.getCodigo());
-			venda.setVendedor(vendedor);
+	private Venda buscarVendaEmAberto(Long codigoVenda, Long codigoVendedor) {
+		Venda venda = null;
+		if ((Util.validar(codigoVenda)) && (Util.validar(codigoVendedor))) {
+			Vendedor vendedor = vendaService.recuperarVendedorPorId(codigoVendedor);
+			if (Util.validar(vendedor)) {
+				venda = vendaService.recuperarVendaEmAberto(codigoVenda);
+				venda.setVendedor(vendedor);
+			}
 		}
 		return venda;
 	}
-
 
 	/**
 	 * Método para auxiliar no filtro de tela de pesquisa de vendas em aberto
@@ -249,5 +289,4 @@ public class VendasController {
 		}
 		return vendedores;
 	}
-
 }
