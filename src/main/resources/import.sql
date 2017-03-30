@@ -13,6 +13,6 @@ INSERT INTO OPERADOR (codigo,nome,perfil,senha,email,loja_id)	VALUES (1,'master'
 INSERT INTO OPERADOR (codigo,nome,perfil,senha,email,loja_id)	VALUES (2,'maria','OPERADOR','1234','chmulato@hotmail.com',1);
 INSERT INTO OPERADOR (codigo,nome,perfil,senha,email,loja_id)	VALUES (3,'joao','VISITANTE','1234','chmulato@hotmail.com',1);
 
-INSERT INTO PRODUTO  (codigo,descricao,valor) VALUES (1,'CamisaPolo',80.9);
-INSERT INTO PRODUTO  (codigo,descricao,valor) VALUES (2,'CamisaSocial',134.9);
-INSERT INTO PRODUTO  (codigo,descricao,valor) VALUES (3,'ShortEsporte',40.9);
+INSERT INTO PRODUTO  (codigo,descricao,valor,unidade) VALUES (1,'CamisaPolo',80.9,'UNITARIO');
+INSERT INTO PRODUTO  (codigo,descricao,valor,unidade) VALUES (2,'CamisaSocial',134.9,'UNITARIO');
+INSERT INTO PRODUTO  (codigo,descricao,valor,unidade) VALUES (3,'ShortEsporte',40.9,'UNITARIO');

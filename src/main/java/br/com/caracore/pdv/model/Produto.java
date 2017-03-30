@@ -3,6 +3,8 @@ package br.com.caracore.pdv.model;
 import java.math.BigDecimal;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
@@ -11,6 +13,8 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.NumberFormat;
+
+import br.com.caracore.pdv.model.types.Unidade;
 
 @Entity
 public class Produto {
@@ -30,6 +34,10 @@ public class Produto {
 	@DecimalMax(value = "9999999.99", message = "Valor não pode ser maior que 9.999.999,99")
 	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal valor;
+	
+	@NotNull(message = "Unidade é obrigatório!")
+	@Enumerated(EnumType.STRING)
+	private Unidade unidade;
 
 	public Long getCodigo() {
 		return codigo;
@@ -63,6 +71,14 @@ public class Produto {
 		this.valor = valor;
 	}
 
+	public Unidade getUnidade() {
+		return unidade;
+	}
+
+	public void setUnidade(Unidade unidade) {
+		this.unidade = unidade;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -70,6 +86,7 @@ public class Produto {
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
 		result = prime * result + ((codigoBarra == null) ? 0 : codigoBarra.hashCode());
 		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
+		result = prime * result + ((unidade == null) ? 0 : unidade.hashCode());
 		result = prime * result + ((valor == null) ? 0 : valor.hashCode());
 		return result;
 	}
@@ -97,6 +114,8 @@ public class Produto {
 			if (other.descricao != null)
 				return false;
 		} else if (!descricao.equals(other.descricao))
+			return false;
+		if (unidade != other.unidade)
 			return false;
 		if (valor == null) {
 			if (other.valor != null)

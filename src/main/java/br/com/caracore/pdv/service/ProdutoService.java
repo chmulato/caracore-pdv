@@ -12,6 +12,7 @@ import br.com.caracore.pdv.repository.filter.ProdutoFilter;
 import br.com.caracore.pdv.service.exception.CodigoBarraExistenteException;
 import br.com.caracore.pdv.service.exception.CodigoExistenteException;
 import br.com.caracore.pdv.service.exception.ProdutoExistenteException;
+import br.com.caracore.pdv.service.exception.UnidadeInvalidaException;
 import br.com.caracore.pdv.util.Util;
 
 @Service
@@ -35,6 +36,9 @@ public class ProdutoService {
 		valida = pesquisarCodigoBarra(produto);
 		if (valida) {
 			throw new CodigoBarraExistenteException("Código de barra existente!");
+		}
+		if (!Util.validar(produto.getUnidade())) {
+			throw new UnidadeInvalidaException("Unidade inválida!!");
 		}
 	}
 

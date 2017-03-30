@@ -58,12 +58,21 @@
 					</div>		
 				</div>
 			</div>
-	
+
 			<div class="row">
 				<div class="col-sm-4">
 					<div class="form-group">
 						<label for="valor">Preço de Venda</label>
 						<input id="valor" type="text" class="form-control js-moeda" placeholder="R$" th:field="*{valor}" />
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="form-group" th:classappend="${#fields.hasErrors('unidade')} ? has-error">
+						<label for="unidade">Perfil</label>
+						<select id="unidade" class="form-control" th:field="*{unidade}">
+							<option value="">Selecione a unidade</option>
+							<option th:each="unidade : ${unidades}" th:value="${unidade}" th:text="#{|unidade.${unidade}|}"></option>
+						</select>
 					</div>
 				</div>
 			</div>

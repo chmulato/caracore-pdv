@@ -14,11 +14,13 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.caracore.pdv.model.Produto;
+import br.com.caracore.pdv.model.types.Unidade;
 import br.com.caracore.pdv.repository.filter.ProdutoFilter;
 import br.com.caracore.pdv.service.ProdutoService;
 import br.com.caracore.pdv.service.exception.CodigoBarraExistenteException;
 import br.com.caracore.pdv.service.exception.CodigoExistenteException;
 import br.com.caracore.pdv.service.exception.ProdutoExistenteException;
+import br.com.caracore.pdv.service.exception.UnidadeInvalidaException;
 
 @Controller
 @RequestMapping("/produtos")
@@ -32,6 +34,7 @@ public class ProdutosController {
 	@GetMapping("/novo")
 	public ModelAndView novo(Produto produto) {
 		ModelAndView mv = new ModelAndView("produto/cadastro-produto");
+		mv.addObject("unidades", Unidade.values());
 		mv.addObject(produto);
 		return mv;
 	}
@@ -45,6 +48,9 @@ public class ProdutosController {
 			produtoService.salvar(produto);
 			attributes.addFlashAttribute("mensagem", "Produto salvo com sucesso!");
 			return new ModelAndView("redirect:/produtos/novo");
+		} catch (UnidadeInvalidaException ex) {
+			errors.rejectValue("unidade", " ", ex.getMessage());
+			return novo(produto);
 		} catch (CodigoExistenteException ex) {
 			errors.rejectValue("codigo", " ", ex.getMessage());
 			return novo(produto);

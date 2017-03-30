@@ -69,6 +69,7 @@
 							<th class="text-left">Código Barra</th>
 							<th class="text-left">Descrição</th>
 							<th class="text-right">Valor de Venda</th>
+							<th class="text-left">Unidade</th>
 							<th class="text-left" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')"></th>
 						</tr>
 					</thead>
@@ -81,6 +82,7 @@
 								<span th:text="${produto.descricao}" sec:authorize="not hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')"></span>
 							</td>
 							<td th:text="|R$${{produto.valor}}|" class="text-right">55,00</td>
+							<td th:text="#{|unidade.${produto.unidade}|}" class="text-left">Unitário</td>
 							<td class="text-center" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')">
 								<i class="fa  fa-trash" style="cursor:pointer"
 									data-toggle="modal" data-target="#confirmaExclusaoModal"
@@ -89,7 +91,7 @@
 							</td>
 						</tr>
 						<tr th:if="${produtos.empty}">
-							<td colspan="5">Nenhum produto cadastrado</td>
+							<td colspan="6">Nenhum produto cadastrado</td>
 						</tr>
 					</tbody>
 				</table>
