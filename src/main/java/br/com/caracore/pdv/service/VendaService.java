@@ -114,21 +114,6 @@ public class VendaService {
 			}
 		}
 	}
-
-	/**
-	 * Método externo para salvar dados na sessão
-	 * 
-	 * @param venda
-	 * @param vendedor
-	 */
-	public void salvarVendaEVendedorNaSessao(Venda venda, Vendedor vendedor) {
-		if ((Util.validar(venda)) && (Util.validar(vendedor))) {
-			CompraVO vo = recuperarSessao();
-			if ((Util.validar(vo)) && (Util.validar(vo.getOperador()))) {
-				sessionService.setSession(vo.getOperador(), venda, vendedor);
-			}
-		}
-	}
 	
 	/**
 	 * Método para cancelar venda
