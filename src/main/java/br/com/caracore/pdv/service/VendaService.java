@@ -89,16 +89,14 @@ public class VendaService {
 	/**
 	 * Método externo para salvar dados na sessão
 	 * 
-	 * @param codigoVendedor
+	 * @param venda
 	 */
-	public void salvarVendedorNaSessao(Long codigoVendedor) {
-		if (Util.validar(codigoVendedor)) {
-			Vendedor vendedor = vendedorService.pesquisarPorCodigo(codigoVendedor);
-			if (Util.validar(vendedor)) {
-				CompraVO vo = recuperarSessao();
-				if ((Util.validar(vo)) && (Util.validar(vo.getOperador()))) {
-					sessionService.setSession(vo.getOperador(), vendedor);
-				}
+	public void salvarVendaNaSessao(Venda venda) {
+		if ((Util.validar(venda)) && (Util.validar(venda.getVendedor()))) {
+			Vendedor vendedor = venda.getVendedor();
+			CompraVO vo = recuperarSessao();
+			if ((Util.validar(vo)) && (Util.validar(vo.getOperador()))) {
+				sessionService.setSession(vo.getOperador(), venda, vendedor);
 			}
 		}
 	}
@@ -106,18 +104,28 @@ public class VendaService {
 	/**
 	 * Método externo para salvar dados na sessão
 	 * 
-	 * @param codigoVenda
 	 * @param codigoVendedor
 	 */
-	public void salvarVendaEVendedorNaSessao(Long codigoVenda, Long codigoVendedor) {
-		if ((Util.validar(codigoVenda)) && (Util.validar(codigoVendedor))) {
-			Venda venda = vendaRepository.findOne(codigoVenda);
-			Vendedor vendedor = vendedorService.pesquisarPorCodigo(codigoVendedor);
-			if ((Util.validar(venda)) && (Util.validar(vendedor))) {
-				CompraVO vo = recuperarSessao();
-				if ((Util.validar(vo)) && (Util.validar(vo.getOperador()))) {
-					sessionService.setSession(vo.getOperador(), venda, vendedor);
-				}
+	public void salvarVendedorNaSessao(Vendedor vendedor) {
+		if (Util.validar(vendedor)) {
+			CompraVO vo = recuperarSessao();
+			if ((Util.validar(vo)) && (Util.validar(vo.getOperador()))) {
+				sessionService.setSession(vo.getOperador(), vendedor);
+			}
+		}
+	}
+
+	/**
+	 * Método externo para salvar dados na sessão
+	 * 
+	 * @param venda
+	 * @param vendedor
+	 */
+	public void salvarVendaEVendedorNaSessao(Venda venda, Vendedor vendedor) {
+		if ((Util.validar(venda)) && (Util.validar(vendedor))) {
+			CompraVO vo = recuperarSessao();
+			if ((Util.validar(vo)) && (Util.validar(vo.getOperador()))) {
+				sessionService.setSession(vo.getOperador(), venda, vendedor);
 			}
 		}
 	}
@@ -344,6 +352,20 @@ public class VendaService {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Método para recuperar o vendedor
+	 * 
+	 * @param codigoVendedor
+	 * @return
+	 */
+	public Vendedor buscarVendedorPorCodigo(Long codigoVendedor) {
+		Vendedor vendedor = null;
+		if (Util.validar(codigoVendedor)) {
+			vendedor = vendedorService.buscarPorCodigo(codigoVendedor);
+		}
+		return vendedor;
 	}
 
 	/**
@@ -617,19 +639,13 @@ public class VendaService {
 	 * @param quantidade
 	 * @param codigoBarra
 	 * @param codigoVenda
-	 * @param codigoVendedor
+	 * @param vendedor
 	 * @return
 	 */
-	public Venda comprar(Long codigoProduto, Integer quantidade, String codigoBarra, Long codigoVenda, Long codigoVendedor) {
+	public Venda comprar(Long codigoProduto, Integer quantidade, String codigoBarra, Long codigoVenda, Vendedor vendedor) {
 		Venda result = null;
-		Vendedor vendedor = null;
-		if (Util.validar(codigoVendedor)) {
-			vendedor = vendedorService.pesquisarPorCodigo(codigoVendedor);
-			if (!Util.validar(vendedor)) {
-				throw new VendedorNaoEncontradoException("Vendedor não encontrado!");
-			}
-		} else {
-			throw new VendedorNaoEncontradoException("Vendedor não informado!");
+		if (vendedor == null) {
+			throw new VendedorNaoEncontradoException("Vendedor não encontrado!");
 		}
 		ItemVenda novoItem = carregarItem(codigoProduto, quantidade, codigoBarra);
 		Venda venda = recuperarVendaEmAberto(codigoVenda);

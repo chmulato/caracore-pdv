@@ -36,12 +36,16 @@ public class VendasController {
 
 	@PostMapping("/produto")
 	public ModelAndView pesquisarProduto(ProdutoFilter produtoFilter, BindingResult result, RedirectAttributes attributes) {
+
 		Integer quantidade = null;
-		String codigoBarra = null;
 		Long codigoVenda = null;
 		Long codigoVendedor = null;
 		Long codigoProduto = null;
+		String codigoBarra = null;
+		
 		Venda venda = null;
+		Vendedor vendedor = null;
+		
 		String error = null;
 		ModelAndView mv = new ModelAndView("venda/cadastro-venda");
 		try {
@@ -62,11 +66,24 @@ public class VendasController {
 					codigoVendedor = Long.valueOf(produtoFilter.getCodigoVendedor());
 				}
 			}
-			if ((Util.validar(codigoVenda)) && (Util.validar(codigoVendedor))) {
-				vendaService.salvarVendaEVendedorNaSessao(codigoVenda, codigoVendedor);
+			
+			// salvar vendedor na sessão
+			if (Util.validar(codigoVendedor)) {
+				vendedor = vendaService.buscarVendedorPorCodigo(codigoVendedor);
+				if (Util.validar(vendedor)) {
+					vendaService.salvarVendedorNaSessao(vendedor);
+				}
 			}
-			venda = vendaService.comprar(codigoProduto, quantidade, codigoBarra, codigoVenda, codigoVendedor);
+			
+			venda = vendaService.comprar(codigoProduto, quantidade, codigoBarra, codigoVenda, vendedor);
+			
+			// salvar venda na sessão
+			if (Util.validar(venda)) {
+				vendaService.salvarVendaNaSessao(venda);
+			}
+			
 			return novo(venda);
+			
 		} catch (ProdutoNaoCadastradoException ex) {
 			error = ex.getMessage();
 		} catch (VendedorNaoEncontradoException ex) {
@@ -199,7 +216,7 @@ public class VendasController {
 		ModelAndView mv = new ModelAndView("venda/cadastro-venda");
 		Vendedor vendedor = vendaService.recuperarVendedorPorId(codigo);
 		if (Util.validar(vendedor)) {
-			vendaService.salvarVendedorNaSessao(codigo);
+			vendaService.salvarVendedorNaSessao(vendedor);
 			venda = vendaService.recuperarVendaEmAberto(vendedor);
 			if (!Util.validar(venda)) {
 				venda = new Venda();

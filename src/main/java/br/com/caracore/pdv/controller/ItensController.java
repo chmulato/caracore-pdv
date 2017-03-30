@@ -29,7 +29,7 @@ public class ItensController {
 
 	@GetMapping("/novo")
 	public ModelAndView novo(ItemVenda item) {
-		ModelAndView mv = new ModelAndView("item/cadastro-item");
+		ModelAndView mv = new ModelAndView("item/atualiza-item");
 		mv.addObject(item);
 		return mv;
 	}

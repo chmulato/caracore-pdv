@@ -49,9 +49,19 @@ public class VendedorService {
 		return lista;
 	}
 	
+	public Vendedor buscarPorCodigo(Long codigo) {
+		Vendedor vendedor = null;
+		if (Util.validar(codigo)) {
+			vendedor = vendedorRepository.findOne(codigo);
+		}
+		return vendedor;
+	}
+	
 	public Vendedor buscarPorOperador(Operador operador) {
 		Vendedor vendedor = null;
-		vendedor = vendedorRepository.findByOperador(operador);
+		if (Util.validar(operador)) {
+			vendedor = vendedorRepository.findByOperador(operador);
+		}
 		return vendedor;
 	}
 	
