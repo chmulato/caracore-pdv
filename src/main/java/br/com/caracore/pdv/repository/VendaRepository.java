@@ -22,20 +22,16 @@ public interface VendaRepository extends JpaRepository<Venda, Long> {
 	public List<Venda> findByVendedorAndDataAndStatus(Vendedor vendedor, Date data, StatusVenda status);
 
 	@Query("select v from Venda v where (v.data between ?1 and ?2) and v.vendedor = ?3 and v.status = ?4")
-	public List<Venda> findByDataBetweenAndVendedorAndStatus(Date dataInicial, Date dataFinal, Vendedor vendedor,
-			StatusVenda status);
+	public List<Venda> findByDataBetweenAndVendedorAndStatus(Date dataInicial, Date dataFinal, Vendedor vendedor, StatusVenda status);
 
 	@Query("select v from Venda v where (v.data between ?1 and ?2) and v.vendedor.loja = ?3 and v.status = ?4")
-	public List<Venda> findByDataBetweenAndLojaAndStatus(Date dataInicial, Date dataFinal, Loja loja,
-			StatusVenda status);
+	public List<Venda> findByDataBetweenAndLojaAndStatus(Date dataInicial, Date dataFinal, Loja loja, StatusVenda status);
 
 	@Query("select v from Venda v where (v.data between ?1 and ?2) and (v.vendedor = ?3) and (v.vendedor.loja = ?4) order by v.data desc")
-	public List<Venda> findByDataBetweenAndVendedorAndLojaByOrderByDataDesc(Date dataInicial, Date dataFinal,
-			Vendedor vendedor, Loja loja);
+	public List<Venda> findByDataBetweenAndVendedorAndLojaByOrderByDataDesc(Date dataInicial, Date dataFinal, Vendedor vendedor, Loja loja);
 
 	@Query("select v from Venda v where (v.data between ?1 and ?2) and (v.vendedor = ?3) order by v.data desc")
-	public List<Venda> findByDataBetweenAndVendedorByOrderByDataDesc(Date dataInicial, Date dataFinal,
-			Vendedor vendedor);
+	public List<Venda> findByDataBetweenAndVendedorByOrderByDataDesc(Date dataInicial, Date dataFinal, Vendedor vendedor);
 
 	@Query("select v from Venda v where (v.data between ?1 and ?2) and (v.vendedor.loja = ?3) order by v.data desc")
 	public List<Venda> findByDataBetweenAndLojaByOrderByDataDesc(Date dataInicial, Date dataFinal, Loja loja);

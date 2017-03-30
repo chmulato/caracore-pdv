@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt" 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout-padrao}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	
+<body>
+<section layout:fragment="conteudo">
+
+	<div class="page-header">
+		<div class="container-fluid">
+			<h1>
+				Cadastro de Estoque
+			</h1>
+		</div>
+	</div>
+
+	<div class="container-fluid">
+	
+		<form method="post" class="form-vertical  js-form-loading" th:object="${estoque}" th:action="@{/estoques/novo}">
+	
+			<div class="alert  alert-danger  alert-dismissible" role="alert" th:if="${#fields.hasAnyErrors()}">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<th:block th:each="error : ${#fields.detailedErrors()}">
+					<div>
+						<i class="fa  fa-exclamation-circle"></i>
+						<span th:text="${error.message}"></span>
+					</div>
+				</th:block>
+			</div>
+			
+			<div class="alert  alert-success" th:if="${!#strings.isEmpty(mensagem)}">
+				<span th:text="${mensagem}"></span>
+			</div>
+	
+			<input type="hidden" th:field="*{codigo}" />
+			
+			<div class="row">
+				<div class="col-sm-4">
+					<div class="form-group" th:classappend="${#fields.hasErrors('produto')} ? has-error">
+						<label for="produto">Produto</label>
+						<select id="produto" class="form-control" th:field="*{produto}">
+							<option value="">Selecione o produto</option>
+							<option th:each="produto : ${produtos}" th:value="${produto?.codigo}" th:text="${produto?.descricao}"></option>
+						</select>
+					</div>
+				</div>
+
+				<div class="col-sm-4">
+					<div class="form-group" th:classappend="${#fields.hasErrors('loja')} ? has-error">
+						<label for="loja">Loja</label>
+						<select id="loja" class="form-control" th:field="*{loja}">
+							<option value="">Selecione a loja</option>
+							<option th:each="loja : ${lojas}" th:value="${loja?.codigo}" th:text="${loja?.nome}"></option>
+						</select>
+					</div>
+				</div>
+			</div>
+	
+			<div class="row">
+				<div class="col-sm-4">
+					<div class="form-group" th:classappend="${#fields.hasErrors('quantidade')} ? has-error">
+						<label for="quantidade">Quantidade</label>
+						<input id="quantidade" type="text" class="form-control" th:field="*{quantidade}" onkeypress='return event.charCode >= 48 && event.charCode <= 57' />
+					</div>
+				</div>
+	
+				<div class="col-sm-4">
+					<div class="form-group" th:classappend="${#fields.hasErrors('estoqueMinimo')} ? has-error">
+						<label for="estoqueMinimo">Estoque Mínimo</label>
+						<input id="estoqueMinimo" type="text" class="form-control" th:field="*{estoqueMinimo}" onkeypress='return event.charCode >= 48 && event.charCode <= 57' />
+					</div>
+				</div>
+
+				<div class="col-sm-4">
+					<div class="form-group" th:classappend="${#fields.hasErrors('estoqueMaxima')} ? has-error">
+						<label for="estoqueMaximo">Estoque Máximo</label>
+						<input id="estoqueMaximo" type="text" class="form-control" th:field="*{estoqueMaximo}" onkeypress='return event.charCode >= 48 && event.charCode <= 57' />
+					</div>
+				</div>
+			</div>
+	
+			<div class="form-group">
+				<button class="btn  btn-primary" type="submit">Salvar</button>
+				<a th:href="@{/operadores}" class="btn  btn-default">Cancelar</a>
+			</div>
+	
+		</form>
+	
+	</div>
+
+</section>
+</body>
+</html>

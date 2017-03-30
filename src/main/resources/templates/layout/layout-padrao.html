@@ -78,6 +78,19 @@
 				          </ul>
 				        </li>
 
+				        <li class="aw-menu__item  is-expanded  is-active">
+				          <a href="#">
+				            <i class="fa  fa-fw  fa-file-text"></i><span>Estoque</span>
+				            <i class="aw-menu__navigation-icon  fa"></i>
+				          </a>
+				      
+				          <ul class="aw-menu__list  aw-menu__list--sublist">
+						        <li class="aw-menu__item" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR','ROLE_VISITANTE')">
+						          <a th:href="@{/estoques/estoques}"><i class="fa  fa-fw  fa-home"></i><span>Estoque</span></a>
+						        </li>
+				          </ul>
+				        </li>
+
 				        <li class="aw-menu__item  is-expanded">
 				          <a href="#">
 				            <i class="fa  fa-fw  fa-file-text"></i><span>Cadastros</span>
