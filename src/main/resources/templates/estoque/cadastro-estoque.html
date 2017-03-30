@@ -66,7 +66,9 @@
 						<input id="quantidade" type="text" class="form-control" th:field="*{quantidade}" onkeypress='return event.charCode >= 48 && event.charCode <= 57' />
 					</div>
 				</div>
+			</div>
 	
+			<div class="row">
 				<div class="col-sm-4">
 					<div class="form-group" th:classappend="${#fields.hasErrors('estoqueMinimo')} ? has-error">
 						<label for="estoqueMinimo">Estoque Mínimo</label>
@@ -75,7 +77,7 @@
 				</div>
 
 				<div class="col-sm-4">
-					<div class="form-group" th:classappend="${#fields.hasErrors('estoqueMaxima')} ? has-error">
+					<div class="form-group" th:classappend="${#fields.hasErrors('estoqueMaximo')} ? has-error">
 						<label for="estoqueMaximo">Estoque Máximo</label>
 						<input id="estoqueMaximo" type="text" class="form-control" th:field="*{estoqueMaximo}" onkeypress='return event.charCode >= 48 && event.charCode <= 57' />
 					</div>
@@ -84,7 +86,7 @@
 	
 			<div class="form-group">
 				<button class="btn  btn-primary" type="submit">Salvar</button>
-				<a th:href="@{/operadores}" class="btn  btn-default">Cancelar</a>
+				<a th:href="@{/estoques}" class="btn  btn-default">Cancelar</a>
 			</div>
 	
 		</form>

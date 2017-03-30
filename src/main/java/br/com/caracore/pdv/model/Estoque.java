@@ -2,14 +2,12 @@ package br.com.caracore.pdv.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
@@ -49,12 +47,6 @@ public class Estoque {
 	
 	@NotNull(message = "Estoque mínimo é obrigatório!")
 	private Integer estoqueMinimo;
-
-	@OneToMany(mappedBy = "estoque")
-	private List<Loja> lojas;
-
-	@OneToMany(mappedBy = "estoque")
-	private List<Produto> produtos;
 
 	@Transient
 	private Boolean situacao;
@@ -127,22 +119,6 @@ public class Estoque {
 		this.estoqueMinimo = estoqueMinimo;
 	}
 
-	public List<Loja> getLojas() {
-		return lojas;
-	}
-
-	public void setLojas(List<Loja> lojas) {
-		this.lojas = lojas;
-	}
-
-	public List<Produto> getProdutos() {
-		return produtos;
-	}
-
-	public void setProdutos(List<Produto> produtos) {
-		this.produtos = produtos;
-	}
-
 	public Boolean getSituacao() {
 		return situacao;
 	}
@@ -160,9 +136,7 @@ public class Estoque {
 		result = prime * result + ((estoqueMaximo == null) ? 0 : estoqueMaximo.hashCode());
 		result = prime * result + ((estoqueMinimo == null) ? 0 : estoqueMinimo.hashCode());
 		result = prime * result + ((loja == null) ? 0 : loja.hashCode());
-		result = prime * result + ((lojas == null) ? 0 : lojas.hashCode());
 		result = prime * result + ((produto == null) ? 0 : produto.hashCode());
-		result = prime * result + ((produtos == null) ? 0 : produtos.hashCode());
 		result = prime * result + ((quantidade == null) ? 0 : quantidade.hashCode());
 		result = prime * result + ((situacao == null) ? 0 : situacao.hashCode());
 		result = prime * result + ((valorUnitario == null) ? 0 : valorUnitario.hashCode());
@@ -203,20 +177,10 @@ public class Estoque {
 				return false;
 		} else if (!loja.equals(other.loja))
 			return false;
-		if (lojas == null) {
-			if (other.lojas != null)
-				return false;
-		} else if (!lojas.equals(other.lojas))
-			return false;
 		if (produto == null) {
 			if (other.produto != null)
 				return false;
 		} else if (!produto.equals(other.produto))
-			return false;
-		if (produtos == null) {
-			if (other.produtos != null)
-				return false;
-		} else if (!produtos.equals(other.produtos))
 			return false;
 		if (quantidade == null) {
 			if (other.quantidade != null)
