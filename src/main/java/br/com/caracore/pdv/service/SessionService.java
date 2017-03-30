@@ -14,14 +14,29 @@ public class SessionService {
 	
 	private CompraVO sessionVO;
 
+	/**
+	 * Método interno para alterar os dados da sessão
+	 * 
+	 * @param sessionVO
+	 */
 	private void setSessionVO(CompraVO sessionVO) {
 		this.sessionVO = sessionVO;
 	}
 
+	/**
+	 * Método externo para recuperar os dados da sessão
+	 * 
+	 * @return
+	 */
 	public CompraVO getSessionVO() {
 		return sessionVO;
 	}
 
+	/**
+	 * Método para salvar o operador da sessão
+	 * 
+	 * @param operador
+	 */
 	public void setSession(Operador operador) {
 		if ((Util.validar(operador)) && (Util.validar(operador.getCodigo()))) {
 			CompraVO vo = null;
@@ -35,6 +50,12 @@ public class SessionService {
 		}
 	}
 
+	/**
+	 * Método para salvar o vendedor após salvar o operador
+	 * 
+	 * @param operador
+	 * @param vendedor
+	 */
 	public void setSession(Operador operador, Vendedor vendedor) {
 		if (Util.validar(operador)) {
 			if (Util.validar(getSessionVO())) {
@@ -51,6 +72,13 @@ public class SessionService {
 		}
 	}
 
+	/**
+	 * Método para salvar o vendedor e a venda após salvar o operador
+	 * 
+	 * @param operador
+	 * @param venda
+	 * @param vendedor
+	 */
 	public void setSession(Operador operador, Venda venda, Vendedor vendedor) {
 		if (Util.validar(operador)) {
 			if (Util.validar(getSessionVO())) {
