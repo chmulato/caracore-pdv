@@ -1,14 +1,19 @@
 package br.com.caracore.pdv.model;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 public class Estoque {
@@ -16,6 +21,11 @@ public class Estoque {
 	@Id
 	@NotNull(message = "Código é obrigatório!")
 	private Long codigo;
+
+	@NotNull(message = "Data é obrigatória!")
+	@DateTimeFormat(pattern = "dd/MM/yyyy hh:mm:ss")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date data;
 
 	@NotNull(message = "Quantidade é obrigatória!")
 	private Integer quantidade;
@@ -46,6 +56,14 @@ public class Estoque {
 
 	public void setCodigo(Long codigo) {
 		this.codigo = codigo;
+	}
+
+	public Date getData() {
+		return data;
+	}
+
+	public void setData(Date data) {
+		this.data = data;
 	}
 
 	public Integer getQuantidade() {
@@ -101,6 +119,7 @@ public class Estoque {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+		result = prime * result + ((data == null) ? 0 : data.hashCode());
 		result = prime * result + ((estoqueMaximo == null) ? 0 : estoqueMaximo.hashCode());
 		result = prime * result + ((estoqueMinimo == null) ? 0 : estoqueMinimo.hashCode());
 		result = prime * result + ((produto == null) ? 0 : produto.hashCode());
@@ -123,6 +142,11 @@ public class Estoque {
 			if (other.codigo != null)
 				return false;
 		} else if (!codigo.equals(other.codigo))
+			return false;
+		if (data == null) {
+			if (other.data != null)
+				return false;
+		} else if (!data.equals(other.data))
 			return false;
 		if (estoqueMaximo == null) {
 			if (other.estoqueMaximo != null)
@@ -156,5 +180,4 @@ public class Estoque {
 			return false;
 		return true;
 	}
-		
 }
