@@ -111,14 +111,14 @@ public class EstoqueService {
 			if ((Util.validar(estoque.getQuantidade())) && (Util.validar(estoque.getEstoqueMinimo()))) {
 				int quantidade = estoque.getQuantidade().intValue();
 				int estoqueMinimo = estoque.getEstoqueMinimo().intValue();
-				if (quantidade > estoqueMinimo) {
+				if (quantidade < estoqueMinimo) {
 					throw new QuantidadeMinimaInvalidaException("Quantidade mínima inválida!");
 				}
 			}
 			if ((Util.validar(estoque.getEstoqueMinimo())) && (Util.validar(estoque.getEstoqueMaximo()))) {
 				int estoqueMinimo = estoque.getEstoqueMinimo().intValue();
 				int estoqueMaximo = estoque.getEstoqueMaximo().intValue();
-				if (estoqueMinimo > estoqueMaximo) {
+				if (estoqueMaximo < estoqueMinimo ) {
 					throw new QuantidadeMaximaInvalidaException("Quantidade máxima inválida!");
 				}
 			}
