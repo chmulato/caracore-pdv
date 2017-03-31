@@ -94,6 +94,7 @@
 							<th class="text-right">Estoque Máximo</th>
 							<th class="text-right">Data</th>
 							<th class="text-right">Valor Total</th>
+							<th class="text-left" sec:authorize="hasRole('ROLE_ADMINISTRADOR')"></th>
 						</tr>
 					</thead>
 					<tbody id="table_pesquisa_estoques">
@@ -122,9 +123,15 @@
 							<td class="text-right">
 								<span th:text="|R$${{estoque.valorTotal}}|"></span>
 							</td>
+							<td class="text-center" sec:authorize="hasRole('ROLE_ADMINISTRADOR')">
+								<i class="fa  fa-trash" style="cursor:pointer"
+									data-toggle="modal" data-target="#confirmaExclusaoModal"
+									data:nome="${estoque?.produto?.descricao}" 
+									data:url-apagar="@{/estoques/{codigo}(codigo=${estoque.codigo})}"></i>
+							</td>
 						</tr>
 						<tr th:if="${estoques.empty}">
-							<td colspan="8">Nenhum estoque cadastrado</td>
+							<td colspan="9">Nenhum estoque cadastrado</td>
 						</tr>
 					</tbody>
 				</table>
@@ -133,6 +140,33 @@
       			<ul class="pagination pagination-lg pager" id="pagination_estoque"></ul>
       		</div>
 		</div>
+	
+		<div class="modal  fade" id="confirmaExclusaoModal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+		  		<div class="modal-content">
+		  			<form th:action="@{/estoques}" method="POST">
+		  				
+		  				<input type="hidden" name="_method" value="DELETE"/>
+		     			
+		     			<div class="modal-header">
+			       			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			       				<span aria-hidden="true">&times;</span>
+			       			</button>
+			       			<h4 class="modal-title" id="myModalLabel">Excluir estoque</h4>
+		     			</div>
+		     			
+		     			<div class="modal-body">
+		       				<span>Tem certeza?</span>
+		     			</div>
+		     			
+		     			<div class="modal-footer">
+		       				<button type="button" class="btn  btn-default" data-dismiss="modal">Cancelar</button>
+		       				<button type="submit" class="btn  btn-primary">Excluir</button>
+		     			</div>
+		     		</form>
+		  		</div>
+			</div>
+		</div>	
 		
 	</section>
 	
