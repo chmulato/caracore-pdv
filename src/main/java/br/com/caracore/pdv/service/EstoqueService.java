@@ -1,6 +1,5 @@
 package br.com.caracore.pdv.service;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -40,28 +39,6 @@ public class EstoqueService {
 	private ProdutoRepository produtoRepository;
 
 	
-	/**
-	 * Método externo para calcular o total do estoque
-	 * 
-	 * @param estoques
-	 * @return
-	 */
-	public BigDecimal totalEmEstoque(List<Estoque> estoques) {
-		double total = 0.0d;
-		if (Util.validar(estoques)) {
-			double soma = 0.0d;
-			for (Estoque estoque : estoques) {
-				if ((Util.validar(estoque.getQuantidade())) && (Util.validar(estoque.getValorUnitario()))) {
-					int quantidade = estoque.getQuantidade().intValue();
-					double valorUnitario = estoque.getValorUnitario().doubleValue();
-					soma = quantidade * valorUnitario;
-				}
-				total = soma + total;
-			}
-		}
-		return BigDecimal.valueOf(total);
-	}
-
 	/**
 	 * Método externo para recuperar lista de lojas cadastradas
 	 * 
@@ -185,14 +162,6 @@ public class EstoqueService {
 	
 	public List<Estoque> listarEstoque(Loja loja) {
 		return estoqueRepository.findByLoja(loja);
-	}
-	
-	public List<Estoque> listarEstoque(Produto produto) {
-		return estoqueRepository.findByProduto(produto);
-	}
-
-	public List<Estoque> listarEstoque(Loja loja, Produto produto) {
-		return estoqueRepository.findByLojaAndProduto(loja, produto);
 	}
 
 	/**

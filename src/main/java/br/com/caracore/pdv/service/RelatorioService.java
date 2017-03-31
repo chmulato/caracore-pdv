@@ -9,12 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.caracore.pdv.model.Cliente;
+import br.com.caracore.pdv.model.Estoque;
 import br.com.caracore.pdv.model.ItemVenda;
 import br.com.caracore.pdv.model.Loja;
 import br.com.caracore.pdv.model.Pagamento;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.util.Util;
+import br.com.caracore.pdv.vo.EstoqueVO;
 import br.com.caracore.pdv.vo.VendaDiariaVO;
 
 @Service
@@ -22,6 +24,9 @@ public class RelatorioService {
 
 	@Autowired
 	private ClienteService clienteService;
+
+	@Autowired
+	private EstoqueService estoqueService;
 
 	@Autowired
 	private ItemVendaService itemVendaService;
@@ -346,6 +351,94 @@ public class RelatorioService {
 	 */
 	public List<Venda> listarVendasDoDiaPorLoja(Loja loja) {
 		return vendaService.listarVendasPorLoja(loja, new Date());
+	}
+	
+
+	/**
+	 * Método externo para recuperar lista de estoque da loja
+	 * 
+	 * @param loja
+	 * @return
+	 */
+	public List<EstoqueVO> listarEstoqueDaLoja(Loja loja) {
+		List<EstoqueVO> lista = null;
+		if (Util.validar(loja)) {
+			List<Estoque> estoques = estoqueService.listarEstoque(loja);
+			if (Util.validar(estoques)) {
+				lista = listarEstoqueDaLoja(estoques);
+			}
+		}
+		return lista;
+	}
+
+	/**
+	 * Método externo para calcular o total do estoque
+	 * 
+	 * @param estoques
+	 * @return
+	 */
+	public BigDecimal totalEmEstoque(List<EstoqueVO> estoques) {
+		double total = 0.0d;
+		if (Util.validar(estoques)) {
+			double soma = 0.0d;
+			for (EstoqueVO estoque : estoques) {
+				if ((Util.validar(estoque.getQuantidade())) && (Util.validar(estoque.getValorUnitario()))) {
+					int quantidade = estoque.getQuantidade().intValue();
+					double valorUnitario = estoque.getValorUnitario().doubleValue();
+					soma = quantidade * valorUnitario;
+				}
+				total = soma + total;
+			}
+		}
+		return BigDecimal.valueOf(total);
+	}
+
+	
+	/**
+	 * Método interno para preparar lista de estoque
+	 * 
+	 * @param estoques
+	 * @return
+	 */
+	private List<EstoqueVO> listarEstoqueDaLoja(List<Estoque> estoques) {
+		List<EstoqueVO> lista = null;
+		if (Util.validar(estoques)) {
+			lista = new ArrayList<>();
+			for (Estoque estoque : estoques) {
+				EstoqueVO vo = new EstoqueVO();
+				if (Util.validar(estoque.getProduto())) {
+					String produto = estoque.getProduto().getDescricao();
+					vo.setProduto(produto);
+				}
+				if (Util.validar(estoque.getValorUnitario())) {
+					BigDecimal valorUnitario = estoque.getValorUnitario();
+					vo.setValorUnitario(valorUnitario);
+				}
+				if (Util.validar(estoque.getQuantidade())) {
+					Integer quantidade = estoque.getQuantidade();
+					vo.setQuantidade(quantidade);
+				}
+				if (Util.validar(estoque.getEstoqueMinimo())) {
+					Integer  estoqueMinimo = estoque.getEstoqueMinimo();
+					vo.setEstoqueMinimo(estoqueMinimo);
+				}
+				if (Util.validar(estoque.getEstoqueMaximo())) {
+					Integer  estoqueMaximo = estoque.getEstoqueMaximo();
+					vo.setEstoqueMaximo(estoqueMaximo);
+				}
+				if (Util.validar(estoque.getData())) {
+					Date  data = estoque.getData();
+					vo.setData(data);
+				}
+				if ((Util.validar(estoque.getValorUnitario())) && (Util.validar(estoque.getQuantidade()))) {
+					double valorUnitario = estoque.getValorUnitario().doubleValue();
+					int quantidade = estoque.getQuantidade().intValue();
+					double total = valorUnitario * quantidade;
+					vo.setTotal(BigDecimal.valueOf(total));
+				}
+			}
+		}
+		return lista;
 	}
 	
 	/**
