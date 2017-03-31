@@ -78,6 +78,10 @@
 						<input id="estoqueMinimo" type="text" class="form-control" th:field="*{estoqueMinimo}" onkeypress='return event.charCode >= 48 && event.charCode <= 57' />
 					</div>
 				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-2">
+				</div>
 				<div class="col-sm-2">
 					<div class="form-group" th:classappend="${#fields.hasErrors('estoqueMaximo')} ? has-error">
 						<label for="estoqueMaximo">Estoque Máximo</label>
