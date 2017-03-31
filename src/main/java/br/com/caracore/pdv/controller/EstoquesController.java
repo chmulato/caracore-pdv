@@ -78,19 +78,7 @@ public class EstoquesController {
 	
 	@GetMapping
 	public ModelAndView pesquisar(EstoqueFilter filtroEstoque) {
-		List<Estoque> estoques = null;
-		ModelAndView mv = new ModelAndView("estoque/pesquisa-estoques");
-		if (Util.validar(estoqueService.pesquisar(filtroEstoque))) {
-			estoques = estoqueService.pesquisar(filtroEstoque);
-		} else {
-			estoques = Util.criarListaDeEstoques();
-		}
-		if (filtroEstoque != null) {
-			mv.addObject("estoques", estoques);
-		} else {
-			filtroEstoque = new EstoqueFilter();
-		}
-		return mv;		
+		return pesquisarEstoques(filtroEstoque);		
 	}
 
 	@PostMapping("/estoques")
