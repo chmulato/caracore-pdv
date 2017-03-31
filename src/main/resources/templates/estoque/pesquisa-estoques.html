@@ -17,8 +17,16 @@
 				<div class="row">
 					<div class="col-xs-10">
 						<h1>
-							Pesquisar Vendas
+							Pesquisar Estoques
 						</h1>
+					</div>
+					
+					<div class="col-xs-2" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')">
+						<div class="aw-page-header-controls">
+							<a class="btn btn-primary" th:href="@{/estoques/novo}">
+								<i class="fa  fa-plus-circle"></i> <span class="hidden-xs  hidden-sm">Novo item em estoque</span>
+							</a>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -26,12 +34,12 @@
 		
 		<div class="container-fluid">
 
-			<form method="post" class="form-vertical  js-form-loading" th:object="${vendaFilter}" th:action="@{/vendas/vendas}">
+			<form method="post" class="form-vertical  js-form-loading" th:object="${estoqueFilter}" th:action="@{/estoques/estoques}">
 				<div class="row">
 					<div class="col-sm-2">
 						<div class="form-group">
-							<label for="vendedor" class="control-label">Vendedor</label>
-							<input id="vendedor" type="text" th:field="*{vendedor}" class="form-control" />
+							<label for="produto" class="control-label">Produto</label>
+							<input id="produto" type="text" th:field="*{produto}" class="form-control" />
 						</div>
 					</div>
 					<div class="col-sm-2">
@@ -51,7 +59,7 @@
 							<label for="dataInicial" class="control-label">Data Inicial</label>
 							<input id="dataInicial" type="text" class="form-control" th:field="*{dataInicial}"
 								data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR"
-								data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" />
+								data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" required="required" />
 						</div>
 					</div>
 					<div class="col-sm-2">
@@ -59,7 +67,7 @@
 							<label for="dataFinal" class="control-label">Data Final</label>
 							<input id="dataFinal" type="text" class="form-control" th:field="*{dataFinal}"
 								data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR"
-								data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" />
+								data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" required="required" />
 						</div>
 					</div>
 					<div class="col-sm-2">
@@ -78,41 +86,51 @@
 				<table id="tabela-vendedores" class="table  table-striped  table-bordered  table-hover">
 					<thead>
 						<tr>
-							<th class="text-center">Código</th>
-							<th class="text-left">Status</th>
-							<th class="text-left">Data</th>
-							<th class="text-left">Vendedor</th>
+							<th class="text-left">Produto</th>
 							<th class="text-left">Loja</th>
+							<th class="text-right">Valor Unitário</th>
+							<th class="text-right">Quantidade</th>
+							<th class="text-right">Estoque Mínimo</th>
+							<th class="text-right">Estoque Máximo</th>
+							<th class="text-right">Data</th>
+							<th class="text-right">Valor Total</th>
 						</tr>
 					</thead>
-					<tbody id="table_pesquisa_vendas">
-						<tr th:each="venda : ${vendas}">
-							<td class="text-center">
-								<a th:href="@{/vendas/{codigo}(codigo=${venda.codigo})}" th:text="${venda.codigo}" ></a>
+					<tbody id="table_pesquisa_estoques">
+						<tr th:each="estoque : ${estoques}">
+							<td class="text-left">
+								<a th:href="@{/estoques/{codigo}(codigo=${estoque.codigo})}" th:text="${estoque?.produto?.descricao}" ></a>
 							</td>
 							<td class="text-left">
-								<span th:text="${venda.status}" th:if="${#strings.toString(venda.status) == 'CANCELADA'}" style="color: red"    ></span>
-								<span th:text="${venda.status}" th:if="${#strings.toString(venda.status) == 'EM_ABERTO' }" style="color: #1e94d2"></span>
-								<span th:text="${venda.status}" th:if="${#strings.toString(venda.status) == 'FINALIZADO' }"></span>
+								<span th:text="${estoque?.loja?.nome}"></span>
 							</td>
-							<td class="text-left">
-								<span th:text="|${{venda.data}}|"></span>
+							<td class="text-right">
+								<span th:text="|R$${{estoque.valorUnitario}}|"></span>
 							</td>
-							<td class="text-left">
-								<span th:text="${venda?.vendedor?.nome}"></span>
+							<td class="text-right">
+								<span th:text="${estoque.quantidade}"></span>
 							</td>
-							<td class="text-left">
-								<span th:text="${venda?.vendedor?.loja?.nome}"></span>
+							<td class="text-right">
+								<span th:text="${estoque.estoqueMinimo}"></span>
+							</td>
+							<td class="text-right">
+								<span th:text="${estoque.estoqueMaximo}"></span>
+							</td>
+							<td class="text-right">
+								<span th:text="|${{estoque.data}}|"></span>
+							</td>
+							<td class="text-right">
+								<span th:text="|R$${{estoque.valorTotal}}|"></span>
 							</td>
 						</tr>
-						<tr th:if="${vendas.empty}">
-							<td colspan="5">Nenhum venda efetuada</td>
+						<tr th:if="${estoques.empty}">
+							<td colspan="8">Nenhum estoque cadastrado</td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 	        <div class="col-md-12 text-center">
-      			<ul class="pagination pagination-lg pager" id="pagination_venda"></ul>
+      			<ul class="pagination pagination-lg pager" id="pagination_estoque"></ul>
       		</div>
 		</div>
 		

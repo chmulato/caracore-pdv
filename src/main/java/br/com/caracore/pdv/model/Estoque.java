@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -14,15 +16,17 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
+
+import br.com.caracore.pdv.util.Util;
 
 @Entity
 public class Estoque {
 
 	@Id
-	@NotNull(message = "Código é obrigatório!")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
 
-	@NotNull(message = "Data é obrigatória!")
 	@DateTimeFormat(pattern = "dd/MM/yyyy hh:mm:ss")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date data;
@@ -40,7 +44,7 @@ public class Estoque {
 	@JoinColumn(name = "LOJA_ID")
 	private Loja loja;
 	
-	@NotNull(message = "Valor unitário é obrigatório!")
+	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal valorUnitario;
 	
 	private Integer estoqueMaximo;
@@ -49,8 +53,15 @@ public class Estoque {
 	private Integer estoqueMinimo;
 
 	@Transient
+	private String dataFormatada;
+
+	@Transient
 	private Boolean situacao;
 
+	@Transient
+	@NumberFormat(pattern = "#,##0.00")
+	private BigDecimal valorTotal;
+	
 	public Estoque() {
 		super();
 	}
@@ -119,6 +130,18 @@ public class Estoque {
 		this.estoqueMinimo = estoqueMinimo;
 	}
 
+	public String getDataFormatada() {
+		dataFormatada = "";
+		if (data != null) {
+			dataFormatada = Util.formatarData(data, "dd/MM/yyyy hh:mm:ss");
+		}
+		return dataFormatada;
+	}
+
+	public void setDataFormatada(String dataFormatada) {
+		this.dataFormatada = dataFormatada;
+	}
+
 	public Boolean getSituacao() {
 		return situacao;
 	}
@@ -127,18 +150,36 @@ public class Estoque {
 		this.situacao = situacao;
 	}
 
+	public BigDecimal getValorTotal() {
+		double _valorTotal = 0.0d;
+		double _valorUnitario = 0.0d;
+		int _quantidade = 0;
+		if ((valorUnitario != null) && (quantidade != null)) {
+			_valorUnitario = valorUnitario.doubleValue();
+			_quantidade = quantidade.intValue();
+			_valorTotal = _valorUnitario * _quantidade;
+		}
+		return BigDecimal.valueOf(_valorTotal);
+	}
+
+	public void setValorTotal(BigDecimal valorTotal) {
+		this.valorTotal = valorTotal;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
 		result = prime * result + ((data == null) ? 0 : data.hashCode());
+		result = prime * result + ((dataFormatada == null) ? 0 : dataFormatada.hashCode());
 		result = prime * result + ((estoqueMaximo == null) ? 0 : estoqueMaximo.hashCode());
 		result = prime * result + ((estoqueMinimo == null) ? 0 : estoqueMinimo.hashCode());
 		result = prime * result + ((loja == null) ? 0 : loja.hashCode());
 		result = prime * result + ((produto == null) ? 0 : produto.hashCode());
 		result = prime * result + ((quantidade == null) ? 0 : quantidade.hashCode());
 		result = prime * result + ((situacao == null) ? 0 : situacao.hashCode());
+		result = prime * result + ((valorTotal == null) ? 0 : valorTotal.hashCode());
 		result = prime * result + ((valorUnitario == null) ? 0 : valorUnitario.hashCode());
 		return result;
 	}
@@ -161,6 +202,11 @@ public class Estoque {
 			if (other.data != null)
 				return false;
 		} else if (!data.equals(other.data))
+			return false;
+		if (dataFormatada == null) {
+			if (other.dataFormatada != null)
+				return false;
+		} else if (!dataFormatada.equals(other.dataFormatada))
 			return false;
 		if (estoqueMaximo == null) {
 			if (other.estoqueMaximo != null)
@@ -191,6 +237,11 @@ public class Estoque {
 			if (other.situacao != null)
 				return false;
 		} else if (!situacao.equals(other.situacao))
+			return false;
+		if (valorTotal == null) {
+			if (other.valorTotal != null)
+				return false;
+		} else if (!valorTotal.equals(other.valorTotal))
 			return false;
 		if (valorUnitario == null) {
 			if (other.valorUnitario != null)

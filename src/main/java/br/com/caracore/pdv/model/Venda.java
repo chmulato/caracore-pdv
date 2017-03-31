@@ -193,6 +193,7 @@ public class Venda {
 		result = prime * result + ((cliente == null) ? 0 : cliente.hashCode());
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
 		result = prime * result + ((data == null) ? 0 : data.hashCode());
+		result = prime * result + ((dataFormatada == null) ? 0 : dataFormatada.hashCode());
 		result = prime * result + ((descontoTotal == null) ? 0 : descontoTotal.hashCode());
 		result = prime * result + ((itens == null) ? 0 : itens.hashCode());
 		result = prime * result + ((pagamento == null) ? 0 : pagamento.hashCode());
@@ -226,6 +227,11 @@ public class Venda {
 			if (other.data != null)
 				return false;
 		} else if (!data.equals(other.data))
+			return false;
+		if (dataFormatada == null) {
+			if (other.dataFormatada != null)
+				return false;
+		} else if (!dataFormatada.equals(other.dataFormatada))
 			return false;
 		if (descontoTotal == null) {
 			if (other.descontoTotal != null)

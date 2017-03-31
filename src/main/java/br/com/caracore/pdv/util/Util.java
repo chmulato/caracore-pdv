@@ -12,6 +12,7 @@ import java.util.GregorianCalendar;
 import java.util.InputMismatchException;
 import java.util.List;
 
+import br.com.caracore.pdv.model.Estoque;
 import br.com.caracore.pdv.model.ItemVenda;
 import br.com.caracore.pdv.model.Loja;
 import br.com.caracore.pdv.model.Operador;
@@ -501,4 +502,15 @@ public class Util {
 		return lista;
 	}
 	
+	/**
+	 * Método para criar uma lista default vazia
+	 * 
+	 * @return
+	 */
+	public static List<Estoque> criarListaDeEstoques() {
+		Estoque estoque = new Estoque();
+		List<Estoque> lista = new ArrayList<>();
+		lista.add(estoque);
+		return lista;
+	}
 }

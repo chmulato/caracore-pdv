@@ -1,5 +1,7 @@
 package br.com.caracore.pdv.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,8 @@ import br.com.caracore.pdv.service.exception.LojaNaoCadastradaException;
 import br.com.caracore.pdv.service.exception.ProdutoNaoCadastradoException;
 import br.com.caracore.pdv.service.exception.QuantidadeInvalidaException;
 import br.com.caracore.pdv.service.exception.QuantidadeMaximaInvalidaException;
+import br.com.caracore.pdv.service.exception.QuantidadeMinimaInvalidaException;
+import br.com.caracore.pdv.util.Util;
 
 @Controller
 @RequestMapping("/estoques")
@@ -43,10 +47,18 @@ public class EstoquesController {
 			return novo(estoque);
 		}
 		try {
-			estoqueService.salvar(estoque);
-			attributes.addFlashAttribute("mensagem", "Estoque salva com sucesso!");
+			estoque = estoqueService.salvar(estoque);
+			if ((Util.validar(estoque)) && (Util.validar(estoque.getSituacao()))) {
+				attributes.addFlashAttribute("atualizado", "Estoque atualizado com sucesso!");
+			} else {
+				attributes.addFlashAttribute("mensagem", "Estoque salva com sucesso!");
+			}
 			return new ModelAndView("redirect:/estoques/novo");
 		} catch (QuantidadeInvalidaException ex) {
+			errors.rejectValue("quantidade", " ", ex.getMessage());
+			errors.rejectValue("estoqueMinimo", " ", ex.getMessage());
+			return novo(estoque);
+		} catch (QuantidadeMinimaInvalidaException ex) {
 			errors.rejectValue("quantidade", " ", ex.getMessage());
 			errors.rejectValue("estoqueMinimo", " ", ex.getMessage());
 			return novo(estoque);
@@ -66,9 +78,32 @@ public class EstoquesController {
 	
 	@GetMapping
 	public ModelAndView pesquisar(EstoqueFilter filtroEstoque) {
+		List<Estoque> estoques = null;
 		ModelAndView mv = new ModelAndView("estoque/pesquisa-estoques");
+		if (Util.validar(estoqueService.pesquisar(filtroEstoque))) {
+			estoques = estoqueService.pesquisar(filtroEstoque);
+		} else {
+			estoques = Util.criarListaDeEstoques();
+		}
 		if (filtroEstoque != null) {
-			mv.addObject("estoques", estoqueService.pesquisar(filtroEstoque));
+			mv.addObject("estoques", estoques);
+		} else {
+			filtroEstoque = new EstoqueFilter();
+		}
+		return mv;		
+	}
+
+	@PostMapping("/estoques")
+	public ModelAndView pesquisarEstoques(EstoqueFilter filtroEstoque) {
+		List<Estoque> estoques = null;
+		ModelAndView mv = new ModelAndView("estoque/pesquisa-estoques");
+		if (Util.validar(estoqueService.pesquisar(filtroEstoque))) {
+			estoques = estoqueService.pesquisar(filtroEstoque);
+		} else {
+			estoques = Util.criarListaDeEstoques();
+		}
+		if (filtroEstoque != null) {
+			mv.addObject("estoques", estoques);
 		} else {
 			filtroEstoque = new EstoqueFilter();
 		}

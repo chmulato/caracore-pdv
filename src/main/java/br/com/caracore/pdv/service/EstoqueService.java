@@ -17,12 +17,15 @@ import br.com.caracore.pdv.service.exception.LojaNaoCadastradaException;
 import br.com.caracore.pdv.service.exception.ProdutoNaoCadastradoException;
 import br.com.caracore.pdv.service.exception.QuantidadeInvalidaException;
 import br.com.caracore.pdv.service.exception.QuantidadeMaximaInvalidaException;
+import br.com.caracore.pdv.service.exception.QuantidadeMinimaInvalidaException;
 import br.com.caracore.pdv.util.Util;
 
 @Service
 public class EstoqueService {
 
 	final private Date DATA_DE_HOJE = new Date();
+
+	final private Boolean ESTOQUE_ATUALIZADO = Boolean.TRUE;
 	
 	@Autowired
 	private EstoqueRepository estoqueRepository;
@@ -80,6 +83,13 @@ public class EstoqueService {
 			if (!Util.validar(estoque.getEstoqueMinimo())) {
 				throw new QuantidadeInvalidaException("Estoque mínimo não cadastrado!");
 			}
+			if ((Util.validar(estoque.getQuantidade())) && (Util.validar(estoque.getEstoqueMinimo()))) {
+				int quantidade = estoque.getQuantidade().intValue();
+				int estoqueMinimo = estoque.getEstoqueMinimo().intValue();
+				if (quantidade > estoqueMinimo) {
+					throw new QuantidadeMinimaInvalidaException("Quantidade mínima inválida!");
+				}
+			}
 			if ((Util.validar(estoque.getEstoqueMinimo())) && (Util.validar(estoque.getEstoqueMaximo()))) {
 				int estoqueMinimo = estoque.getEstoqueMinimo().intValue();
 				int estoqueMaximo = estoque.getEstoqueMaximo().intValue();
@@ -92,17 +102,52 @@ public class EstoqueService {
 			Long codigoProduto = estoque.getProduto().getCodigo();
 			produto = produtoRepository.findOne(codigoProduto);
 			estoque.setValorUnitario(produto.getValor());
+			estoque.setData(DATA_DE_HOJE);
 		}
+	}
+
+	/**
+	 * Método interno para recuperar estoque por produto e loja
+	 * 
+	 * @param loja
+	 * @param produto
+	 * @return
+	 */
+	private Estoque buscarProdutoEmEstoque(Loja loja, Produto produto) {
+		Estoque estoque = null;
+		if ((Util.validar(loja)) && (Util.validar(produto))) {
+			List<Estoque> estoqueDB = estoqueRepository.findByLojaAndProduto(loja, produto);
+			if (Util.validar(estoqueDB)) {
+				for (Estoque _estoque : estoqueDB) {
+					estoque = _estoque;
+					break;
+				}
+			}
+		}
+		return estoque;
 	}
 	
 	/**
-	 * Método esterno para salvar estoque informado
+	 * Método esterno para salvar ou atualizar estoque informado
 	 * 
 	 * @param estoque
+	 * @return
 	 */
-	public void salvar(Estoque estoque) {
+	public Estoque salvar(Estoque estoque) {
+		boolean atualizado = false;
 		validarEstoque(estoque);
+		Loja loja = estoque.getLoja();
+		Produto produto = estoque.getProduto();
+		Estoque estoqueDB = buscarProdutoEmEstoque(loja, produto);
+		if (Util.validar(estoqueDB) &&(Util.validar(estoqueDB.getCodigo()))) {
+			estoque.setCodigo(estoqueDB.getCodigo());
+			atualizado = ESTOQUE_ATUALIZADO.booleanValue();
+		}
 		estoqueRepository.save(estoque);
+		if (atualizado) {
+			estoque.setSituacao(ESTOQUE_ATUALIZADO);
+		}
+		return estoque;
 	}
 
 	public void excluir(Long codigo) {

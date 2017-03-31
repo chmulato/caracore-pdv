@@ -21,7 +21,7 @@
 							</h1>
 						</div>
 						
-						<div class="col-xs-2" sec:authorize="hasRole('ROLE_ADMINISTRADOR')">
+						<div class="col-xs-2" sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR')">
 							<div class="aw-page-header-controls">
 								<a class="btn btn-primary" th:href="@{/operadores/novo}">
 									<i class="fa  fa-plus-circle"></i> <span class="hidden-xs  hidden-sm">Novo operador</span>
