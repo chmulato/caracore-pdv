@@ -19,7 +19,10 @@ Aplicação PDV da Cara Core.
  
 #"Projeto PDV Cara Core"
 
-Este projeto tem como objetivo executar uma aplicação local de PDV (point-of-sale system) e controle de estoque (inventory control).
+Este projeto tem como objetivo executar uma aplicação local de:
+
+- PDV (point-of-sale system); e
+- Controle de estoque (inventory control).
 
 A aplicação será acessada via browser do sistema operacional na url: http://localhost:8080/
 
