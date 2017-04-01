@@ -12,7 +12,7 @@ import br.com.caracore.pdv.model.Produto;
 
 public interface EstoqueRepository extends JpaRepository<Estoque, Long> {
 
-	List<Estoque> findByLoja(Loja loja);
+	List<Estoque> findByLojaOrderByProduto(Loja loja);
 
 	List<Estoque> findByProduto(Produto produto);
 

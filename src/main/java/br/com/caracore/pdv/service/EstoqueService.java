@@ -161,7 +161,7 @@ public class EstoqueService {
 	}
 	
 	public List<Estoque> listarEstoque(Loja loja) {
-		return estoqueRepository.findByLoja(loja);
+		return estoqueRepository.findByLojaOrderByProduto(loja);
 	}
 
 	/**
