@@ -436,6 +436,7 @@ public class RelatorioService {
 					double total = valorUnitario * quantidade;
 					vo.setTotal(BigDecimal.valueOf(total));
 				}
+				lista.add(vo);
 			}
 		}
 		return lista;

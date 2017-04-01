@@ -17,7 +17,7 @@
 					<div class="row">
 						<div class="col-xs-10">
 							<h1>
-								Pesquisa de Clientes
+								Pesquisa de Lojas
 							</h1>
 						</div>
 						
@@ -81,6 +81,13 @@
 										data-toggle="modal" data-target="#relatorioLojaPeriodoModal"
 										data:nome="${loja.nome}" 
 										data:url-selecionar="@{/relatorios/loja/{codigo}(codigo=${loja.codigo})}">
+										<span class="glyphicon glyphicon-file"></span>
+									</a>
+									<a class="btn  btn-link  btn-xs" style="cursor:pointer; color: green;"
+										title="Estoque da loja" rel="tooltip"
+										data-toggle="modal" data-target="#relatorioEstoqueLojaModal"
+										data:nome="${loja.nome}" 
+										data:url-selecionar="@{/relatorios/estoque/{codigo}(codigo=${loja.codigo})}">
 										<span class="glyphicon glyphicon-file"></span>
 									</a>
 								</td>
@@ -177,6 +184,28 @@
 										data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" required="required" />
 					        	</div>
 					      	</div>
+			     			<div class="modal-footer">
+			       				<button type="button" class="btn  btn-default" data-dismiss="modal">Fechar</button>
+			       				<button type="submit" class="btn  btn-primary">Imprimir</button>
+			     			</div>
+			     		</form>
+			  		</div>
+				</div>
+			</div>	
+
+			<div class="modal  fade" id="relatorioEstoqueLojaModal" tabindex="-1" role="dialog">
+				<div class="modal-dialog" role="document">
+			  		<div class="modal-content">
+			  			<form th:action="@{/relatorios}" method="GET">
+			     			<div class="modal-header">
+				       			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				       				<span aria-hidden="true">&times;</span>
+				       			</button>
+				       			<h4 class="modal-title" id="myModalRelatorio03">Selecionar loja</h4>
+			     			</div>
+			     			<div class="modal-body">
+			       				<span>Qual relatório?</span>
+			     			</div>
 			     			<div class="modal-footer">
 			       				<button type="button" class="btn  btn-default" data-dismiss="modal">Fechar</button>
 			       				<button type="submit" class="btn  btn-primary">Imprimir</button>

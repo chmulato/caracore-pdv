@@ -29,6 +29,7 @@ import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.service.RelatorioService;
 import br.com.caracore.pdv.util.Util;
+import br.com.caracore.pdv.vo.EstoqueVO;
 import br.com.caracore.pdv.vo.VendaDiariaVO;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -486,6 +487,55 @@ public class RelatoriosController {
 
 			response.setContentType("application/x-pdf");
 			response.setHeader("Content-disposition", "inline; filename=vendas_da_loja_" + codigoLoja + ".pdf");
+
+			final OutputStream outStream = response.getOutputStream();
+			
+			JasperExportManager.exportReportToPdfStream(jasperPrint, outStream);
+
+		}
+		
+	}
+	
+	@GetMapping("/estoque/{codigoLoja}")
+	@ResponseBody
+	public void getReportEstoqueLoja(HttpServletResponse response, @PathVariable Long codigoLoja) throws JRException, IOException {
+
+		BigDecimal totalEstoques = ZERO_REAL;
+		
+		Loja loja = relatorioService.buscarLoja(codigoLoja);
+		
+		if (Util.validar(loja) && (Util.validar(loja.getCodigo()))) {
+			
+			String nomeLoja = loja.getNome();
+			List<EstoqueVO> estoquesVO = relatorioService.listarEstoqueDaLoja(loja);
+			
+			if (Util.validar(estoquesVO)) {
+				totalEstoques = relatorioService.totalEmEstoque(estoquesVO);
+			} else {
+				estoquesVO = Util.criarListaDeEstoquesVO();
+			}
+			
+			InputStream jasperStream = this.getClass().getResourceAsStream("/reports/relatorio_estoques_por_loja.jasper");
+
+			JRBeanCollectionDataSource dados = new JRBeanCollectionDataSource(estoquesVO, false);
+			
+			Map<String, Object> parameters = new HashMap<>();
+	        
+			if (logomarca.exists()) {
+		        parameters.put("logo", logomarca.getURL());
+			}
+			
+	        parameters.put("Titulo", "ESTOQUE DA LOJA");
+	        parameters.put("DataHora", Util.formatarData(new Date(), "dd/MM/yyyy hh:mm:ss"));
+	        parameters.put("Loja", nomeLoja);
+	        parameters.put("TotalEstoques", totalEstoques);
+	        parameters.put(DS_KEY, dados);
+			
+			JasperReport jasperReport = (JasperReport) JRLoader.loadObject(jasperStream);
+			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dados);
+
+			response.setContentType("application/x-pdf");
+			response.setHeader("Content-disposition", "inline; filename=estoques_da_loja_" + codigoLoja + ".pdf");
 
 			final OutputStream outStream = response.getOutputStream();
 			

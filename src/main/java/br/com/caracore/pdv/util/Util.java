@@ -20,6 +20,7 @@ import br.com.caracore.pdv.model.Produto;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.vo.CompraVO;
+import br.com.caracore.pdv.vo.EstoqueVO;
 import br.com.caracore.pdv.vo.VendaDiariaVO;
 
 public class Util {
@@ -411,6 +412,25 @@ public class Util {
 		Venda venda = new Venda();
 		venda.setVendedor(vendedor);
 		return venda;
+	}
+	
+	/**
+	 * Método para criar uma lista default vazia
+	 * 
+	 * @return
+	 */
+	public static List<EstoqueVO> criarListaDeEstoquesVO() {
+		EstoqueVO vo = new EstoqueVO();
+		vo.setProduto("");
+		vo.setValorUnitario(BigDecimal.ZERO);
+		vo.setQuantidade(Integer.valueOf(0));
+		vo.setEstoqueMinimo(Integer.valueOf(0));
+		vo.setEstoqueMaximo(Integer.valueOf(0));
+		vo.setData(new Date());
+		vo.setTotal(BigDecimal.ZERO);
+		List<EstoqueVO> lista = new ArrayList<>();
+		lista.add(vo);
+		return lista;
 	}
 	
 	/**
