@@ -56,22 +56,6 @@
 				<div class="row">
 					<div class="col-sm-2">
 						<div class="form-group">
-							<label for="dataInicial" class="control-label">Data Inicial</label>
-							<input id="dataInicial" type="text" class="form-control" th:field="*{dataInicial}"
-								data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR"
-								data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" required="required" />
-						</div>
-					</div>
-					<div class="col-sm-2">
-						<div class="form-group">
-							<label for="dataFinal" class="control-label">Data Final</label>
-							<input id="dataFinal" type="text" class="form-control" th:field="*{dataFinal}"
-								data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR"
-								data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" required="required" />
-						</div>
-					</div>
-					<div class="col-sm-2">
-						<div class="form-group">
 							<button class="btn  btn-primary  btn-venda" type="submit">Pesquisar</button>
 						</div>
 					</div>
@@ -92,7 +76,6 @@
 							<th class="text-right">Quantidade</th>
 							<th class="text-right">Estoque Mínimo</th>
 							<th class="text-right">Estoque Máximo</th>
-							<th class="text-right">Data</th>
 							<th class="text-right">Valor Total</th>
 							<th class="text-left" sec:authorize="hasRole('ROLE_ADMINISTRADOR')"></th>
 						</tr>
@@ -116,9 +99,6 @@
 							</td>
 							<td class="text-right">
 								<span th:text="${estoque.estoqueMaximo}"></span>
-							</td>
-							<td class="text-right">
-								<span th:text="|${{estoque.data}}|"></span>
 							</td>
 							<td class="text-right">
 								<span th:text="|R$${{estoque.valorTotal}}|"></span>

@@ -176,75 +176,31 @@ public class EstoqueService {
 		
 		if (Util.validar(filtro)) {
 			
-			String dataInicial = null;
-			String dataFinal = null;
 			String strProduto = null;
 			String strLoja = null;
 
-			if ((!Util.validar(filtro.getDataInicial())) && (!Util.validar(filtro.getDataFinal())) && (!Util.validar(filtro.getLoja())) && (!Util.validar(filtro.getProduto()))) {
+			if ((!Util.validar(filtro.getLoja())) && (!Util.validar(filtro.getProduto()))) {
 				
-				Date data = DATA_DE_HOJE;
-				
-				Date dataI = Util.dataHoraInicialDoMes(data);
-				Date dataF = Util.dataHoraFinalDoMes(data);
-				
-				lista = estoqueRepository.findByDataBetweenByOrderByDataDesc(dataI, dataF);
+				lista = estoqueRepository.findAll();
 			
-			} else if ((Util.validar(filtro.getDataInicial())) && (Util.validar(filtro.getDataFinal())) && (!Util.validar(filtro.getLoja())) && (!Util.validar(filtro.getProduto()))) {
-				
-				dataInicial = filtro.getDataInicial();
-				dataFinal = filtro.getDataFinal();
-				
-				Date dataI = Util.formataData(dataInicial);
-				Date dataF = Util.formataData(dataFinal);
-				
-				dataI = Util.dataHoraInicial(dataI);
-				dataF = Util.dataHoraFinal(dataF);
-				
-				lista = estoqueRepository.findByDataBetweenByOrderByDataDesc(dataI, dataF);
-			
-			} else if ((Util.validar(filtro.getDataInicial())) && (Util.validar(filtro.getDataFinal())) && (Util.validar(filtro.getLoja())) && (!Util.validar(filtro.getProduto()))) {
-				
-				dataInicial = filtro.getDataInicial();
-				dataFinal = filtro.getDataFinal();
-				
-				Date dataI = Util.formataData(dataInicial);
-				Date dataF = Util.formataData(dataFinal);
-				dataI = Util.dataHoraInicial(dataI);
-				dataF = Util.dataHoraFinal(dataF);
+			} else if ((Util.validar(filtro.getLoja())) && (!Util.validar(filtro.getProduto()))) {
 				
 				strLoja = FILTRO_LIKE +  filtro.getLoja() + FILTRO_LIKE;
 				
-				lista = estoqueRepository.findByDataBetweenAndLojaByOrderByDataDesc(dataI, dataF, strLoja);
+				lista = estoqueRepository.findByLojaByOrderByProduto(strLoja);
 			
-			} else if ((Util.validar(filtro.getDataInicial())) && (Util.validar(filtro.getDataFinal())) && (!Util.validar(filtro.getLoja())) && (Util.validar(filtro.getProduto()))) {
-				
-				dataInicial = filtro.getDataInicial();
-				dataFinal = filtro.getDataFinal();
-				
-				Date dataI = Util.formataData(dataInicial);
-				Date dataF = Util.formataData(dataFinal);
-				dataI = Util.dataHoraInicial(dataI);
-				dataF = Util.dataHoraFinal(dataF);
+			} else if ((!Util.validar(filtro.getLoja())) && (Util.validar(filtro.getProduto()))) {
 				
 				strProduto = FILTRO_LIKE + filtro.getProduto() + FILTRO_LIKE;
 				
-				lista = estoqueRepository.findByDataBetweenAndProdutoByOrderByDataDesc(dataI, dataF, strProduto);
+				lista = estoqueRepository.findByProdutoByOrderByProduto(strProduto);
 
-			} else if ((Util.validar(filtro.getDataInicial())) && (Util.validar(filtro.getDataFinal())) && (Util.validar(filtro.getLoja())) && (Util.validar(filtro.getProduto()))) {
-				
-				dataInicial = filtro.getDataInicial();
-				dataFinal = filtro.getDataFinal();
-				
-				Date dataI = Util.formataData(dataInicial);
-				Date dataF = Util.formataData(dataFinal);
-				dataI = Util.dataHoraInicial(dataI);
-				dataF = Util.dataHoraFinal(dataF);
+			} else if ((Util.validar(filtro.getLoja())) && (Util.validar(filtro.getProduto()))) {
 				
 				strLoja = FILTRO_LIKE + filtro.getLoja() + FILTRO_LIKE;
 				strProduto = FILTRO_LIKE + filtro.getProduto() + FILTRO_LIKE;
 
-				lista = estoqueRepository.findByDataBetweenAndLojaAndProdutoByOrderByDataDesc(dataI, dataF, strLoja, strProduto);
+				lista = estoqueRepository.findByLojaAndProdutoByOrderByProduto(strLoja, strProduto);
 			
 			}
 		

@@ -426,10 +426,6 @@ public class RelatorioService {
 					Integer  estoqueMaximo = estoque.getEstoqueMaximo();
 					vo.setEstoqueMaximo(estoqueMaximo);
 				}
-				if (Util.validar(estoque.getData())) {
-					Date  data = estoque.getData();
-					vo.setData(data);
-				}
 				if ((Util.validar(estoque.getValorUnitario())) && (Util.validar(estoque.getQuantidade()))) {
 					double valorUnitario = estoque.getValorUnitario().doubleValue();
 					int quantidade = estoque.getQuantidade().intValue();

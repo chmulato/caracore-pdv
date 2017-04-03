@@ -426,7 +426,6 @@ public class Util {
 		vo.setQuantidade(Integer.valueOf(0));
 		vo.setEstoqueMinimo(Integer.valueOf(0));
 		vo.setEstoqueMaximo(Integer.valueOf(0));
-		vo.setData(new Date());
 		vo.setTotal(BigDecimal.ZERO);
 		List<EstoqueVO> lista = new ArrayList<>();
 		lista.add(vo);

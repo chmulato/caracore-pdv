@@ -1,7 +1,6 @@
 package br.com.caracore.pdv.vo;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 import org.springframework.stereotype.Component;
 
@@ -17,8 +16,6 @@ public class EstoqueVO {
 	private Integer estoqueMinimo;
 
 	private Integer estoqueMaximo;
-	
-	private Date data;
 
 	private BigDecimal total;
 
@@ -64,14 +61,6 @@ public class EstoqueVO {
 
 	public void setEstoqueMaximo(Integer estoqueMaximo) {
 		this.estoqueMaximo = estoqueMaximo;
-	}
-
-	public Date getData() {
-		return data;
-	}
-
-	public void setData(Date data) {
-		this.data = data;
 	}
 
 	public BigDecimal getTotal() {
