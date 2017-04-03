@@ -18,6 +18,7 @@ import br.com.caracore.pdv.model.ItemVenda;
 import br.com.caracore.pdv.service.ItemVendaService;
 import br.com.caracore.pdv.service.exception.DescontoInvalidoException;
 import br.com.caracore.pdv.service.exception.QuantidadeInvalidaException;
+import br.com.caracore.pdv.service.exception.QuantidadeNaoExistenteEmEstoqueException;
 import br.com.caracore.pdv.util.Util;
 
 @Controller
@@ -47,6 +48,9 @@ public class ItensController {
 			errors.rejectValue("desconto", " ", ex.getMessage());
 			return novo(item);
 		} catch (QuantidadeInvalidaException ex) {
+			errors.rejectValue("quantidade", " ", ex.getMessage());
+			return novo(item);
+		} catch (QuantidadeNaoExistenteEmEstoqueException ex) {
 			errors.rejectValue("quantidade", " ", ex.getMessage());
 			return novo(item);
 		}
@@ -80,6 +84,8 @@ public class ItensController {
 			attributes.addFlashAttribute("error", "Desconto inválido!");
 		} catch (QuantidadeInvalidaException ex) {
 			attributes.addFlashAttribute("error", "Quantidade inválida!");
+		} catch (QuantidadeNaoExistenteEmEstoqueException ex) {
+			attributes.addFlashAttribute("error", "Quantidade do produto não existente em estoque!");
 		}
 		return "redirect:/vendas/novo";
 	}

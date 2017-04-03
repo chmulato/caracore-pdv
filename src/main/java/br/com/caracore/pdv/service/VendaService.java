@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import br.com.caracore.pdv.model.Estoque;
 import br.com.caracore.pdv.model.ItemVenda;
 import br.com.caracore.pdv.model.Loja;
 import br.com.caracore.pdv.model.Operador;
@@ -19,11 +20,17 @@ import br.com.caracore.pdv.model.Produto;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.model.types.StatusVenda;
+import br.com.caracore.pdv.repository.EstoqueRepository;
+import br.com.caracore.pdv.repository.ProdutoRepository;
 import br.com.caracore.pdv.repository.VendaRepository;
 import br.com.caracore.pdv.repository.filter.VendaFilter;
 import br.com.caracore.pdv.repository.filter.VendedorFilter;
 import br.com.caracore.pdv.service.exception.DescontoInvalidoException;
+import br.com.caracore.pdv.service.exception.LojaNaoEncontradaException;
 import br.com.caracore.pdv.service.exception.ProdutoNaoCadastradoException;
+import br.com.caracore.pdv.service.exception.ProdutoNaoEncontradoException;
+import br.com.caracore.pdv.service.exception.QuantidadeInvalidaException;
+import br.com.caracore.pdv.service.exception.QuantidadeNaoExistenteEmEstoqueException;
 import br.com.caracore.pdv.service.exception.VendedorNaoEncontradoException;
 import br.com.caracore.pdv.util.Util;
 import br.com.caracore.pdv.vo.CompraVO;
@@ -44,6 +51,9 @@ public class VendaService {
 	final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
 
 	@Autowired
+	private EstoqueRepository estoqueRepository;
+
+	@Autowired
 	private ItemVendaService itemVendaService;
 
 	@Autowired
@@ -56,7 +66,7 @@ public class VendaService {
 	private PagamentoService pagamentoService;
 
 	@Autowired
-	private ProdutoService produtoService;
+	private ProdutoRepository produtoRepository;
 
 	@Autowired
 	private SessionService sessionService;
@@ -86,6 +96,28 @@ public class VendaService {
 		return compraVO;
 	}
 
+	
+	/**
+	 * Método publico para recuperar produto por código
+	 * 
+	 * @param codigo
+	 * @return
+	 */
+	public Produto recuperarProdutoPorCodigo(Long codigo) {
+		return produtoRepository.findOne(codigo);
+	}
+	
+	
+	/**
+	 * Método publico para recuperar produto por código de barra
+	 * 
+	 * @param codigo
+	 * @return
+	 */
+	public Produto recuperarProdutoPorCodigoBarra(String codigoBarra) {
+		return produtoRepository.findByCodigoBarra(codigoBarra);
+	}
+	
 	/**
 	 * Método externo para salvar dados na sessão
 	 * 
@@ -589,17 +621,18 @@ public class VendaService {
 	/**
 	 * Metodo interno para adicionar item de produto na cesta de compras
 	 * 
-	 * @param codigoProduto
-	 * @param codigoBarra
+	 * @param produto
+	 * @param quantidade
 	 * @return
 	 */
-	private ItemVenda carregarItem(Long codigoProduto, Integer quantidade, String codigoBarra) {
-		Produto produto = null;
+	private ItemVenda carregarItem(Produto produto, Integer quantidade) {
 		ItemVenda item = new ItemVenda();
-		if (Util.validar(codigoProduto)) {
-			produto = produtoService.pesquisarPorCodigo(codigoProduto);
-		} else if (Util.validar(codigoBarra)) {
-			produto = produtoService.pesquisarPorCodigoBarra(codigoBarra);
+		if (Util.validar(produto.getCodigo())) {
+			Long codigoProduto = produto.getCodigo();
+			produto = produtoRepository.findOne(codigoProduto);
+		} else if (Util.validar(produto.getCodigoBarra())) {
+			String codigoBarra = produto.getCodigoBarra();
+			produto = produtoRepository.findByCodigoBarra(codigoBarra);
 		}
 		if (Util.validar(produto)) {
 			item.setDesconto(BigDecimal.ZERO);
@@ -618,48 +651,117 @@ public class VendaService {
 	}
 
 	/**
+	 * Método interno para validar se existe o produto em estoque
+	 * 
+	 * @param produto
+	 * @param loja
+	 * @param quantidade
+	 */
+	private void validarProdutoEmEstoque(Produto produto, Loja loja, Integer quantidade) {
+		long codigoProduto = 0;
+		if ((Util.validar(produto)) && (Util.validar(produto.getCodigo()))) {
+			codigoProduto = produto.getCodigo().longValue();
+		}
+		CompraVO session = sessionService.getSessionVO();
+		if (Util.validar(session)) {
+			if (Util.validar(session.getVenda())) {
+				Venda venda = session.getVenda();
+				List<ItemVenda> itens = itemVendaService.buscarItens(venda);
+				if (Util.validar(itens)) {
+					int _quantidade = 0;
+					for (ItemVenda item : itens) {
+						if ((Util.validar(item)) && (Util.validar(item.getProduto()))) {
+							long _codigoProduto = item.getProduto().getCodigo().longValue();
+							if (codigoProduto == _codigoProduto) {
+								_quantidade = item.getQuantidade().intValue() + _quantidade;
+							}
+						}
+					}
+					quantidade = Integer.valueOf(quantidade.intValue() + _quantidade);
+				}
+			}
+		}
+		Estoque estoque = estoqueRepository.findByLojaAndProduto(loja, produto);
+		if (Util.validar(estoque)) {
+			if (Util.validar(estoque.getQuantidade())) {
+				int _quantidade = quantidade.intValue();
+				int _quantidadeEstoque = estoque.getQuantidade().intValue();
+				if (_quantidade > _quantidadeEstoque) {
+					throw new QuantidadeNaoExistenteEmEstoqueException("Quantidade de produto não existente em estoque!");
+				}
+			} else {
+				throw new QuantidadeInvalidaException("Quantidade invalida!");
+			}
+		} else {
+			throw new QuantidadeNaoExistenteEmEstoqueException("Quantidade de produto não existente em estoque!");
+		}
+	}
+	
+	/**
 	 * Metodo externo para carregar os itens de venda na cesta
 	 * 
-	 * @param codigoProduto
+	 * @param produto
 	 * @param quantidade
-	 * @param codigoBarra
 	 * @param codigoVenda
 	 * @param vendedor
 	 * @return
 	 */
-	public Venda comprar(Long codigoProduto, Integer quantidade, String codigoBarra, Long codigoVenda, Vendedor vendedor) {
+	public Venda comprar(Produto produto, Integer quantidade, Long codigoVenda, Vendedor vendedor) {
+		
+		Loja loja = null;
 		Venda result = null;
-		if (vendedor == null) {
+		
+		if (!Util.validar(vendedor)) {
 			throw new VendedorNaoEncontradoException("Vendedor não encontrado!");
 		}
-		ItemVenda novoItem = carregarItem(codigoProduto, quantidade, codigoBarra);
-		Venda venda = recuperarVendaEmAberto(codigoVenda);
-		if (Util.validar(venda)) {
-			List<ItemVenda> itens = new ArrayList<>();
-			venda.setDescontoTotal(BigDecimal.ZERO);
-			venda.setStatus(StatusVenda.EM_ABERTO);
-			if (Util.validar(venda.getItens())) {
-				itens = venda.getItens();
-				itens.add(novoItem);
-			} else {
-				itens.add(novoItem);
-			}
-			if (Util.validar(vendedor)) {
-				venda.setVendedor(vendedor);
-			}
-			venda.setItens(itens);
-			venda = salvar(venda);
-			if (Util.validar(venda.getCodigo())) {
-				itens = itemVendaService.buscarItens(venda);
-				itens.add(novoItem);
-				itens = itemVendaService.salvarItens(itens, venda);
-				if (Util.validar(itens)) {
-					venda.setItens(itens);
+
+		if (!Util.validar(produto)) {
+			throw new ProdutoNaoEncontradoException("Produto não encontrado!");
+		}
+		
+		if (!Util.validar(vendedor.getLoja())) {
+			throw new LojaNaoEncontradaException("Loja não encontrada!");
+		} else {
+			loja = vendedor.getLoja();
+		}
+		
+		if ((Util.validar(produto)) && (Util.validar(loja)) && (Util.validar(quantidade))) {
+			validarProdutoEmEstoque(produto, loja, quantidade);
+		}
+		
+		if (Util.validar(produto)) {
+		
+			ItemVenda novoItem = carregarItem(produto, quantidade);
+			Venda venda = recuperarVendaEmAberto(codigoVenda);
+			
+			if (Util.validar(venda)) {
+				List<ItemVenda> itens = new ArrayList<>();
+				venda.setDescontoTotal(BigDecimal.ZERO);
+				venda.setStatus(StatusVenda.EM_ABERTO);
+				if (Util.validar(venda.getItens())) {
+					itens = venda.getItens();
+					itens.add(novoItem);
+				} else {
+					itens.add(novoItem);
+				}
+				if (Util.validar(vendedor)) {
+					venda.setVendedor(vendedor);
+				}
+				venda.setItens(itens);
+				venda = salvar(venda);
+				if (Util.validar(venda.getCodigo())) {
+					itens = itemVendaService.buscarItens(venda);
+					itens.add(novoItem);
+					itens = itemVendaService.salvarItens(itens, venda);
+					if (Util.validar(itens)) {
+						venda.setItens(itens);
+					}
 				}
 			}
+			
+			venda = totalizar(venda);
+			result = venda;
 		}
-		venda = totalizar(venda);
-		result = venda;
 		return result;
 	}
 

@@ -16,13 +16,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.caracore.pdv.model.ItemVenda;
 import br.com.caracore.pdv.model.Operador;
+import br.com.caracore.pdv.model.Produto;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.repository.filter.ProdutoFilter;
 import br.com.caracore.pdv.repository.filter.VendaFilter;
 import br.com.caracore.pdv.repository.filter.VendedorFilter;
 import br.com.caracore.pdv.service.VendaService;
+import br.com.caracore.pdv.service.exception.LojaNaoEncontradaException;
 import br.com.caracore.pdv.service.exception.ProdutoNaoCadastradoException;
+import br.com.caracore.pdv.service.exception.ProdutoNaoEncontradoException;
+import br.com.caracore.pdv.service.exception.QuantidadeNaoExistenteEmEstoqueException;
 import br.com.caracore.pdv.service.exception.VendedorNaoEncontradoException;
 import br.com.caracore.pdv.util.Util;
 import br.com.caracore.pdv.vo.CompraVO;
@@ -43,8 +47,10 @@ public class VendasController {
 		Long codigoProduto = null;
 		String codigoBarra = null;
 		
+		Produto produto = null;
 		Venda venda = null;
 		Vendedor vendedor = null;
+		
 		
 		String error = null;
 		ModelAndView mv = new ModelAndView("venda/cadastro-venda");
@@ -75,7 +81,15 @@ public class VendasController {
 				}
 			}
 			
-			venda = vendaService.comprar(codigoProduto, quantidade, codigoBarra, codigoVenda, vendedor);
+			if (Util.validar(codigoProduto)) {
+				produto = vendaService.recuperarProdutoPorCodigo(codigoProduto);
+			} else if (Util.validar(codigoBarra)) {
+				produto = vendaService.recuperarProdutoPorCodigoBarra(codigoBarra);
+			}
+			
+			if (Util.validar(produto)) {
+				venda = vendaService.comprar(produto, quantidade, codigoVenda, vendedor);
+			}
 			
 			// salvar venda na sessão
 			if (Util.validar(venda)) {
@@ -84,7 +98,13 @@ public class VendasController {
 			
 			return novo(venda);
 			
+		} catch (QuantidadeNaoExistenteEmEstoqueException ex) {
+			error = ex.getMessage();
 		} catch (ProdutoNaoCadastradoException ex) {
+			error = ex.getMessage();
+		} catch (ProdutoNaoEncontradoException ex) {
+			error = ex.getMessage();
+		} catch (LojaNaoEncontradaException ex) {
 			error = ex.getMessage();
 		} catch (VendedorNaoEncontradoException ex) {
 			error = ex.getMessage();

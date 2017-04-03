@@ -118,12 +118,9 @@ public class EstoqueService {
 	private Estoque buscarProdutoEmEstoque(Loja loja, Produto produto) {
 		Estoque estoque = null;
 		if ((Util.validar(loja)) && (Util.validar(produto))) {
-			List<Estoque> estoqueDB = estoqueRepository.findByLojaAndProduto(loja, produto);
+			Estoque estoqueDB = estoqueRepository.findByLojaAndProduto(loja, produto);
 			if (Util.validar(estoqueDB)) {
-				for (Estoque _estoque : estoqueDB) {
-					estoque = _estoque;
-					break;
-				}
+				estoque = estoqueDB;
 			}
 		}
 		return estoque;

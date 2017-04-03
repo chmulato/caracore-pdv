@@ -15,7 +15,8 @@ public interface EstoqueRepository extends JpaRepository<Estoque, Long> {
 
 	List<Estoque> findByProduto(Produto produto);
 
-	List<Estoque> findByLojaAndProduto(Loja loja, Produto produto);
+	@Query("select e from Estoque e where e.loja = ?1 and e.produto = ?2)")
+	public Estoque findByLojaAndProduto(Loja loja, Produto produto);
 	
 	@Query("select e from Estoque e where e.loja.nome like ?1 and e.produto.descricao like ?2 order by e.produto")
 	public List<Estoque> findByLojaAndProdutoByOrderByProduto(String loja, String produto);
