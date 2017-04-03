@@ -10,6 +10,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
 import br.com.caracore.pdv.model.Operador;
+import br.com.caracore.pdv.repository.OperadorRepository;
 import br.com.caracore.pdv.service.exception.EmailInvalidoException;
 import br.com.caracore.pdv.service.exception.LoginInvalidoException;
 import br.com.caracore.pdv.util.Mail;
@@ -22,7 +23,7 @@ public class EmailService {
 	private JavaMailSender javaMailSender;
 
 	@Autowired
-	private OperadorService operadorService;
+	private OperadorRepository operadorRepository;
 	
 	/**
 	 * Método externo para validar objeto Mail
@@ -64,7 +65,7 @@ public class EmailService {
 		login = msg.getLogin();
 		email = msg.getTo();
 
-		Operador operador = operadorService.buscar(login);
+		Operador operador = buscar(login);
 		if (!Util.validar(operador)) {
 			throw new LoginInvalidoException("Login Inválido!");
 		}
@@ -114,5 +115,17 @@ public class EmailService {
 			throw new EmailInvalidoException(strError);
 		}			
 		throw new EmailInvalidoException("Erro: " + ex.getMessage());
+	}
+
+	/**
+	 * Método interno para recuperar o operador
+	 * 
+	 * @param login
+	 * @return
+	 */
+	private Operador buscar(String login) {
+		Operador operador = null;
+		operador = operadorRepository.findByNome(login);
+		return operador;
 	}
 }
