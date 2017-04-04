@@ -173,32 +173,63 @@ public class EstoqueService {
 		
 		if (Util.validar(filtro)) {
 			
+			Long codigo = null;
+			String strCodigoBarra = null;
 			String strProduto = null;
 			String strLoja = null;
 
-			if ((!Util.validar(filtro.getLoja())) && (!Util.validar(filtro.getProduto()))) {
+			if ((!Util.validar(filtro.getCodigo())) && (!Util.validar(filtro.getCodigoBarra())) && (!Util.validar(filtro.getLoja())) && (!Util.validar(filtro.getProduto()))) {
 				
 				lista = estoqueRepository.findAll();
 			
-			} else if ((Util.validar(filtro.getLoja())) && (!Util.validar(filtro.getProduto()))) {
+			} else if ((!Util.validar(filtro.getCodigo())) && (!Util.validar(filtro.getCodigoBarra())) && (Util.validar(filtro.getLoja())) && (!Util.validar(filtro.getProduto()))) {
 				
 				strLoja = FILTRO_LIKE +  filtro.getLoja() + FILTRO_LIKE;
 				
 				lista = estoqueRepository.findByLojaByOrderByProduto(strLoja);
 			
-			} else if ((!Util.validar(filtro.getLoja())) && (Util.validar(filtro.getProduto()))) {
+			} else if ((!Util.validar(filtro.getCodigo())) && (!Util.validar(filtro.getCodigoBarra())) && (!Util.validar(filtro.getLoja())) && (Util.validar(filtro.getProduto()))) {
 				
 				strProduto = FILTRO_LIKE + filtro.getProduto() + FILTRO_LIKE;
 				
 				lista = estoqueRepository.findByProdutoByOrderByProduto(strProduto);
 
-			} else if ((Util.validar(filtro.getLoja())) && (Util.validar(filtro.getProduto()))) {
+			} else if ((!Util.validar(filtro.getCodigo())) && (!Util.validar(filtro.getCodigoBarra())) && (Util.validar(filtro.getLoja())) && (Util.validar(filtro.getProduto()))) {
 				
 				strLoja = FILTRO_LIKE + filtro.getLoja() + FILTRO_LIKE;
 				strProduto = FILTRO_LIKE + filtro.getProduto() + FILTRO_LIKE;
 
 				lista = estoqueRepository.findByLojaAndProdutoByOrderByProduto(strLoja, strProduto);
 			
+			} else if ((Util.validar(filtro.getCodigo())) && (!Util.validar(filtro.getCodigoBarra())) && (!Util.validar(filtro.getLoja())) && (!Util.validar(filtro.getProduto()))) {
+
+				codigo = filtro.getCodigo();
+				Produto produto = produtoRepository.findOne(codigo);
+				
+				if (Util.validar(produto)) {
+					lista = estoqueRepository.findByProdutoByOrderByProduto(produto);
+				}
+				
+			} else if ((Util.validar(filtro.getCodigo())) && (!Util.validar(filtro.getCodigoBarra())) && (Util.validar(filtro.getLoja())) && (!Util.validar(filtro.getProduto()))) {
+
+				strLoja = FILTRO_LIKE + filtro.getLoja() + FILTRO_LIKE;
+				codigo = filtro.getCodigo();
+				Produto produto = produtoRepository.findOne(codigo);
+				
+				if (Util.validar(produto)) {
+					lista = estoqueRepository.findByLojaAndProdutoByOrderByProduto(strLoja, produto);
+				}
+				
+			} else if ((!Util.validar(filtro.getCodigo())) && (Util.validar(filtro.getCodigoBarra())) && (Util.validar(filtro.getLoja())) && (!Util.validar(filtro.getProduto()))) {
+
+				strLoja = FILTRO_LIKE + filtro.getLoja() + FILTRO_LIKE;
+				strCodigoBarra = filtro.getCodigoBarra();
+				Produto produto = produtoRepository.findByCodigoBarra(strCodigoBarra);
+				
+				if (Util.validar(produto)) {
+					lista = estoqueRepository.findByLojaAndProdutoByOrderByProduto(strLoja, produto);
+				}
+				
 			}
 		
 		}

@@ -38,6 +38,24 @@
 				<div class="row">
 					<div class="col-sm-2">
 						<div class="form-group">
+							<label for="codigo" class="control-label">Código do Produto</label>
+							<input id="codigo" type="text" th:field="*{codigo}" class="form-control" onkeypress='return event.charCode >= 48 && event.charCode <= 57' />
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="form-group">
+							<label for="codigoBarra" class="control-label">Código de Barra</label>
+							<input id="codigoBarra" type="text" th:field="*{codigoBarra}" class="form-control" />
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="form-group">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-2">
+						<div class="form-group">
 							<label for="produto" class="control-label">Produto</label>
 							<input id="produto" type="text" th:field="*{produto}" class="form-control" />
 						</div>
@@ -48,12 +66,6 @@
 							<input id="loja" type="text" th:field="*{loja}" class="form-control" />
 						</div>
 					</div>
-					<div class="col-sm-2">
-						<div class="form-group">
-						</div>
-					</div>
-				</div>
-				<div class="row">
 					<div class="col-sm-2">
 						<div class="form-group">
 							<button class="btn  btn-primary  btn-venda" type="submit">Pesquisar</button>
