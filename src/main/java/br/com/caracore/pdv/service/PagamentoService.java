@@ -10,6 +10,7 @@ import br.com.caracore.pdv.model.Cliente;
 import br.com.caracore.pdv.model.Estoque;
 import br.com.caracore.pdv.model.ItemVenda;
 import br.com.caracore.pdv.model.Loja;
+import br.com.caracore.pdv.model.Operador;
 import br.com.caracore.pdv.model.Pagamento;
 import br.com.caracore.pdv.model.Produto;
 import br.com.caracore.pdv.model.Venda;
@@ -29,6 +30,7 @@ import br.com.caracore.pdv.service.exception.QuantidadeNaoExistenteEmEstoqueExce
 import br.com.caracore.pdv.service.exception.TrocoInvalidoException;
 import br.com.caracore.pdv.service.exception.ValorInvalidoException;
 import br.com.caracore.pdv.util.Util;
+import br.com.caracore.pdv.vo.CompraVO;
 
 @Service
 public class PagamentoService {
@@ -60,6 +62,9 @@ public class PagamentoService {
 
 	@Autowired
 	private VendedorRepository vendedorRepository;
+
+	@Autowired
+	private SessionService sessionService;
 
 	/**
 	 * Método interno para validar cpf e se o cpf informado corresponde ao
@@ -326,6 +331,16 @@ public class PagamentoService {
 	}
 	
 	/**
+	 * Apagar dados da sessão
+	 * 
+	 */
+	private void apagarVendaDaSessão() {
+		CompraVO sessao = sessionService.getSessionVO();
+		Operador operador = sessao.getOperador();
+		sessionService.setSession(operador, null, null);
+	}
+	
+	/**
 	 * Método interno para atualizar o desconto total da compra
 	 * 
 	 * @param pagamento
@@ -346,6 +361,7 @@ public class PagamentoService {
 					venda.setTotal(valorPago);
 					venda.setStatus(StatusVenda.FINALIZADO);
 					vendaRepository.save(venda);
+					apagarVendaDaSessão();
 				}
 			}
 		}
