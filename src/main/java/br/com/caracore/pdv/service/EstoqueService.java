@@ -210,6 +210,15 @@ public class EstoqueService {
 					lista = estoqueRepository.findByProdutoByOrderByProduto(produto);
 				}
 				
+			} else if ((!Util.validar(filtro.getCodigo())) && (Util.validar(filtro.getCodigoBarra())) && (!Util.validar(filtro.getLoja())) && (!Util.validar(filtro.getProduto()))) {
+
+				strCodigoBarra = filtro.getCodigoBarra();
+				Produto produto = produtoRepository.findByCodigoBarra(strCodigoBarra);
+				
+				if (Util.validar(produto)) {
+					lista = estoqueRepository.findByProdutoByOrderByProduto(produto);
+				}
+				
 			} else if ((Util.validar(filtro.getCodigo())) && (!Util.validar(filtro.getCodigoBarra())) && (Util.validar(filtro.getLoja())) && (!Util.validar(filtro.getProduto()))) {
 
 				strLoja = FILTRO_LIKE + filtro.getLoja() + FILTRO_LIKE;
