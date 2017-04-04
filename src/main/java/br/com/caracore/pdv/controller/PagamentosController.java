@@ -22,8 +22,10 @@ import br.com.caracore.pdv.service.VendaService;
 import br.com.caracore.pdv.service.exception.CpfInvalidoException;
 import br.com.caracore.pdv.service.exception.DescontoInvalidoException;
 import br.com.caracore.pdv.service.exception.EmailInvalidoException;
+import br.com.caracore.pdv.service.exception.LojaNaoEncontradaException;
 import br.com.caracore.pdv.service.exception.NomeExistenteException;
 import br.com.caracore.pdv.service.exception.PagamentoInvalidoException;
+import br.com.caracore.pdv.service.exception.QuantidadeNaoExistenteEmEstoqueException;
 import br.com.caracore.pdv.service.exception.TrocoInvalidoException;
 import br.com.caracore.pdv.service.exception.ValorInvalidoException;
 import br.com.caracore.pdv.util.Util;
@@ -118,6 +120,10 @@ public class PagamentosController {
 			errors.rejectValue("troco", " ", ex.getMessage());
 			attributes.addFlashAttribute("error", ex.getMessage());
 		} catch (PagamentoInvalidoException ex) {
+			attributes.addFlashAttribute("error", ex.getMessage());
+		} catch (QuantidadeNaoExistenteEmEstoqueException ex) {
+			attributes.addFlashAttribute("error", ex.getMessage());
+		} catch (LojaNaoEncontradaException ex) {
 			attributes.addFlashAttribute("error", ex.getMessage());
 		}
 		mv.addObject(pagamento);

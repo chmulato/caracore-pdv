@@ -431,31 +431,6 @@ public class VendaService {
 	}
 
 	/**
-	 * Método para atualizar o desconto total da compra
-	 * 
-	 * @param pagamento
-	 */
-	public void salvarVendaPaga(Pagamento pagamento) {
-		if (Util.validar(pagamento)) {
-			if (Util.validar(pagamento.getTotalApagar()) && Util.validar(pagamento.getDesconto())) {
-				Long codigo = pagamento.getVenda().getCodigo();
-				BigDecimal valorPago = pagamento.getTotalApagar();
-				BigDecimal desconto = pagamento.getDesconto();
-				if ((desconto.doubleValue() < ZERO) || (desconto.doubleValue() > PORCENTAGEM)) {
-					throw new DescontoInvalidoException("Desconto inválido!");
-				}
-				Venda venda = vendaRepository.findOne(codigo);
-				if (Util.validar(venda)) {
-					venda.setDescontoTotal(desconto);
-					venda.setTotal(valorPago);
-					venda.setStatus(StatusVenda.FINALIZADO);
-					vendaRepository.save(venda);
-				}
-			}
-		}
-	}
-
-	/**
 	 * Método para recuperar lista de vendas por periodo e por vendedor
 	 * 
 	 * @param vendedor

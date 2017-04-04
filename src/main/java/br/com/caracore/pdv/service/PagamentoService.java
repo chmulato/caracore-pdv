@@ -1,18 +1,31 @@
 package br.com.caracore.pdv.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.caracore.pdv.model.Cliente;
+import br.com.caracore.pdv.model.Estoque;
+import br.com.caracore.pdv.model.ItemVenda;
+import br.com.caracore.pdv.model.Loja;
 import br.com.caracore.pdv.model.Pagamento;
+import br.com.caracore.pdv.model.Produto;
 import br.com.caracore.pdv.model.Venda;
+import br.com.caracore.pdv.model.Vendedor;
+import br.com.caracore.pdv.model.types.StatusVenda;
+import br.com.caracore.pdv.repository.EstoqueRepository;
+import br.com.caracore.pdv.repository.ItemVendaRepository;
 import br.com.caracore.pdv.repository.PagamentoRepository;
+import br.com.caracore.pdv.repository.VendaRepository;
+import br.com.caracore.pdv.repository.VendedorRepository;
 import br.com.caracore.pdv.service.exception.CpfExistenteException;
 import br.com.caracore.pdv.service.exception.CpfInvalidoException;
 import br.com.caracore.pdv.service.exception.DescontoInvalidoException;
+import br.com.caracore.pdv.service.exception.LojaNaoEncontradaException;
 import br.com.caracore.pdv.service.exception.PagamentoInvalidoException;
+import br.com.caracore.pdv.service.exception.QuantidadeNaoExistenteEmEstoqueException;
 import br.com.caracore.pdv.service.exception.TrocoInvalidoException;
 import br.com.caracore.pdv.service.exception.ValorInvalidoException;
 import br.com.caracore.pdv.util.Util;
@@ -34,10 +47,19 @@ public class PagamentoService {
 	private ClienteService clienteService;
 
 	@Autowired
+	private EstoqueRepository estoqueRepository;
+	
+	@Autowired
+	private ItemVendaRepository itemVendaRepository;
+	
+	@Autowired
 	private PagamentoRepository pagamentoRepository;
 
 	@Autowired
-	private VendaService vendaService;
+	private VendaRepository vendaRepository;
+
+	@Autowired
+	private VendedorRepository vendedorRepository;
 
 	/**
 	 * Método interno para validar cpf e se o cpf informado corresponde ao
@@ -188,7 +210,7 @@ public class PagamentoService {
 		pagamento = pagamentoRepository.save(pagamento);
 		if ((Util.validar(pagamento)) && (Util.validar(pagamento.getVenda()))) {
 			if (Util.validar(pagamento.getVenda().getCodigo())) {
-				vendaService.salvarVendaPaga(pagamento);
+				salvarVendaPaga(pagamento);
 			}
 		}
 		return pagamento;
@@ -239,6 +261,94 @@ public class PagamentoService {
 	public Cliente buscarCliente(String cpf) {
 		cpf = Util.removerFormatoCpf(cpf);
 		return clienteService.pesquisarPorCpf(cpf);
+	}
+
+	/**
+	 * Método interno para recuperar loja
+	 * 
+	 * @param venda
+	 * @return
+	 */
+	private Loja recuperarLoja(Venda venda) {
+		Loja loja = null;
+		if (Util.validar(venda)) {
+			if ((Util.validar(venda.getVendedor())) && (Util.validar(venda.getVendedor().getCodigo()))) {
+				if (Util.validar(venda.getVendedor().getLoja())) {
+					loja = venda.getVendedor().getLoja();
+				} else {
+					Long codigo = venda.getVendedor().getCodigo();
+					Vendedor vendedor = vendedorRepository.findOne(codigo);
+					if (Util.validar(vendedor)) {
+						loja = vendedor.getLoja();
+					}
+				}
+			}
+		}
+		return loja;
+	}
+	
+	/**
+	 * 
+	 * Método interno para atualizar estoque
+	 * 
+	 * @param venda
+	 */
+	private void atualizarEstoque(Venda venda) {
+		Loja loja = recuperarLoja(venda);
+		if (Util.validar(loja)) {
+			if ((Util.validar(venda)) && (Util.validar(venda.getItens()))) {
+				List<ItemVenda> itens = itemVendaRepository.findByVenda(venda);
+				if (Util.validar(itens)) {
+					for (ItemVenda item : itens) {
+						if (Util.validar(item)) {
+							if ((Util.validar(item.getProduto())) && (Util.validar(item.getQuantidade()))) {
+								Produto produto = item.getProduto();
+								int quantidadeComprada = item.getQuantidade().intValue();
+								Estoque estoque = estoqueRepository.findByLojaAndProduto(loja, produto);
+								if ((Util.validar(estoque)) && (Util.validar(estoque.getQuantidade()))) {
+									int quantidadeEstoque = estoque.getQuantidade().intValue();
+									quantidadeEstoque = quantidadeEstoque - quantidadeComprada;
+									if (quantidadeEstoque >= 0) {
+										estoque.setQuantidade(quantidadeEstoque);
+										estoqueRepository.save(estoque);
+									} else {
+										throw new QuantidadeNaoExistenteEmEstoqueException("Quantidade de produto não existente em estoque!");
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		} else {
+			throw new LojaNaoEncontradaException("Loja não encontrada!");
+		}
+	}
+	
+	/**
+	 * Método interno para atualizar o desconto total da compra
+	 * 
+	 * @param pagamento
+	 */
+	private void salvarVendaPaga(Pagamento pagamento) {
+		if (Util.validar(pagamento)) {
+			if (Util.validar(pagamento.getTotalApagar()) && Util.validar(pagamento.getDesconto())) {
+				Long codigo = pagamento.getVenda().getCodigo();
+				BigDecimal valorPago = pagamento.getTotalApagar();
+				BigDecimal desconto = pagamento.getDesconto();
+				if ((desconto.doubleValue() < ZERO) || (desconto.doubleValue() > PORCENTAGEM)) {
+					throw new DescontoInvalidoException("Desconto inválido!");
+				}
+				Venda venda = vendaRepository.findOne(codigo);
+				if (Util.validar(venda)) {
+					atualizarEstoque(venda);
+					venda.setDescontoTotal(desconto);
+					venda.setTotal(valorPago);
+					venda.setStatus(StatusVenda.FINALIZADO);
+					vendaRepository.save(venda);
+				}
+			}
+		}
 	}
 
 }
