@@ -189,8 +189,10 @@ public class VendasController {
 		filtroVenda.setVendedor("");
 		filtroVenda.setLoja("");
 		if (Util.validar(codigo)) {
-			vendaService.cancelar(codigo);
-			vendaService.apagarVendaDaSessão();
+			Venda venda = vendaService.cancelar(codigo);
+			if (Util.validar(venda)) {
+				vendaService.apagarVendaDaSessão(venda);
+			}
 		}
 		return pesquisarVendas(filtroVenda);
 	}

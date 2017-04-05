@@ -78,13 +78,28 @@ public class VendaService {
 	private VendedorService vendedorService;
 
 	/**
-	 * Método externo para apagar dados da sessão 
+	 * Método externo para apagar dados da sessão
 	 * 
+	 * @param venda
 	 */
-	public void apagarVendaDaSessão() {
-		CompraVO sessao = sessionService.getSessionVO();
-		Operador operador = sessao.getOperador();
-		sessionService.setSession(operador, null, null);
+	public void apagarVendaDaSessão(Venda venda) {
+		if (Util.validar(venda)) {
+			if (Util.validar(sessionService.getSessionVO())) {
+				CompraVO sessao = sessionService.getSessionVO();
+				if (Util.validar(sessao.getOperador())) {
+					Operador operador = sessao.getOperador();
+					if ((Util.validar(sessao.getVenda())) && (Util.validar(sessao.getVenda().getCodigo()))) {
+						Long codigoVendaSessao = sessao.getVenda().getCodigo().longValue();
+						if ((Util.validar(venda)) && (Util.validar(venda.getCodigo()))) {
+							Long codigoVenda = venda.getCodigo().longValue();
+							if (codigoVenda != codigoVendaSessao) {
+								sessionService.setSession(operador, null, null);
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -161,15 +176,18 @@ public class VendaService {
 	 * Método para cancelar venda
 	 * 
 	 * @param codigo
+	 * @return
 	 */
-	public void cancelar(Long codigo) {
+	public Venda cancelar(Long codigo) {
+		Venda venda = null;
 		if (Util.validar(codigo)) {
-			Venda venda = vendaRepository.findOne(codigo);
+			venda = vendaRepository.findOne(codigo);
 			if (Util.validar(venda)) {
 				venda.setStatus(StatusVenda.CANCELADA);
-				vendaRepository.save(venda);
+				venda = vendaRepository.save(venda);
 			}
 		}
+		return venda;
 	}
 	
 	/**
