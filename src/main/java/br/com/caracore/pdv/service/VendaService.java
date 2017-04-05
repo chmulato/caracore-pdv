@@ -78,6 +78,16 @@ public class VendaService {
 	private VendedorService vendedorService;
 
 	/**
+	 * Método externo para apagar dados da sessão 
+	 * 
+	 */
+	public void apagarVendaDaSessão() {
+		CompraVO sessao = sessionService.getSessionVO();
+		Operador operador = sessao.getOperador();
+		sessionService.setSession(operador, null, null);
+	}
+
+	/**
 	 * Método externo para recuperar dados da sessão
 	 * 
 	 * @return

@@ -190,6 +190,7 @@ public class VendasController {
 		filtroVenda.setLoja("");
 		if (Util.validar(codigo)) {
 			vendaService.cancelar(codigo);
+			vendaService.apagarVendaDaSessão();
 		}
 		return pesquisarVendas(filtroVenda);
 	}
