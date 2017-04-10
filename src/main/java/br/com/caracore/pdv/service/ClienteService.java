@@ -86,17 +86,6 @@ public class ClienteService {
 	}
 
 	/**
-	 * Método externo para pesquisar o cliente DEFAULT
-	 * ou seja, não informado 
-	 * 
-	 * @param strDefault
-	 * @return
-	 */
-	public Cliente pesquisarClienteDefault(String strDefault) {
-		return pesquisarPorNome(strDefault);
-	}
-
-	/**
 	 * Método externo para pesquisar cliente por CPF
 	 * 
 	 * @param strCpf
