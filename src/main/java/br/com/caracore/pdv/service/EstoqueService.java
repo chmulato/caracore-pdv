@@ -156,10 +156,6 @@ public class EstoqueService {
 	public Estoque pesquisarPorCodigo(Long codigo) {
 		return estoqueRepository.findOne(codigo);
 	}
-	
-	public List<Estoque> listarEstoque(Loja loja) {
-		return estoqueRepository.findByLojaOrderByProduto(loja);
-	}
 
 	/**
 	 * Método para pesquisar o estoque por filtro informado

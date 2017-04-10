@@ -15,6 +15,14 @@ import br.com.caracore.pdv.model.Loja;
 import br.com.caracore.pdv.model.Pagamento;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
+import br.com.caracore.pdv.model.types.StatusVenda;
+import br.com.caracore.pdv.repository.ClienteRepository;
+import br.com.caracore.pdv.repository.EstoqueRepository;
+import br.com.caracore.pdv.repository.ItemVendaRepository;
+import br.com.caracore.pdv.repository.LojaRepository;
+import br.com.caracore.pdv.repository.PagamentoRepository;
+import br.com.caracore.pdv.repository.VendaRepository;
+import br.com.caracore.pdv.repository.VendedorRepository;
 import br.com.caracore.pdv.util.Util;
 import br.com.caracore.pdv.vo.EstoqueVO;
 import br.com.caracore.pdv.vo.VendaDiariaVO;
@@ -23,26 +31,26 @@ import br.com.caracore.pdv.vo.VendaDiariaVO;
 public class RelatorioService {
 
 	@Autowired
-	private ClienteService clienteService;
+	private ClienteRepository clienteRepository;
 
 	@Autowired
-	private EstoqueService estoqueService;
+	private EstoqueRepository estoqueRepository;
 
 	@Autowired
-	private ItemVendaService itemVendaService;
+	private ItemVendaRepository itemVendaRepository;
 
 	@Autowired
-	private LojaService lojaService;
-	
-	@Autowired
-	private PagamentoService pagamentoService;
+	private LojaRepository lojaRepository;
 
 	@Autowired
-	private VendaService vendaService;
+	private PagamentoRepository pagamentoRepository;
 
 	@Autowired
-	private VendedorService vendedorService;
-	
+	private VendaRepository vendaRepository;
+
+	@Autowired
+	private VendedorRepository vendedorRepository;
+
 	/**
 	 * Pesquisar o pagamento pelo código
 	 * 
@@ -50,9 +58,9 @@ public class RelatorioService {
 	 * @return
 	 */
 	public Pagamento buscarPorCodigoPagamento(Long codigoPagamento) {
-		return pagamentoService.pesquisarPorCodigo(codigoPagamento);
+		return this.pesquisarPorCodigo(codigoPagamento);
 	}
-	
+
 	/**
 	 * Método externo para buscar itens da compra
 	 * 
@@ -60,7 +68,7 @@ public class RelatorioService {
 	 * @return
 	 */
 	public List<ItemVenda> buscarPorVenda(Venda venda) {
-		List<ItemVenda> lista = itemVendaService.buscarItens(venda);
+		List<ItemVenda> lista = this.buscarItens(venda);
 		if (Util.validar(lista)) {
 			List<ItemVenda> result = new ArrayList<>();
 			for (ItemVenda itemVenda : lista) {
@@ -86,10 +94,10 @@ public class RelatorioService {
 	public String cliente(Venda venda, String cpf) {
 		String nome = "";
 		if (Util.validar(venda.getCliente())) {
-			nome = venda.getCliente().getNome(); 
+			nome = venda.getCliente().getNome();
 		} else {
 			if (Util.validar(cpf)) {
-				Cliente cliente = clienteService.pesquisarPorCpf(cpf);
+				Cliente cliente = this.pesquisarPorCpf(cpf);
 				if (Util.validar(cliente)) {
 					nome = cliente.getNome();
 				}
@@ -107,7 +115,7 @@ public class RelatorioService {
 	public String vendedor(Venda venda) {
 		String nome = "";
 		if (Util.validar(venda.getVendedor())) {
-			nome = venda.getVendedor().getNome(); 
+			nome = venda.getVendedor().getNome();
 		}
 		return nome;
 	}
@@ -122,46 +130,12 @@ public class RelatorioService {
 		String nome = "";
 		if (Util.validar(venda.getVendedor())) {
 			if (Util.validar(venda.getVendedor().getLoja())) {
-				nome = venda.getVendedor().getLoja().getNome(); 
+				nome = venda.getVendedor().getLoja().getNome();
 			}
 		}
 		return nome;
 	}
-	
-	/**
-	 *	Método interno para buscar itens da venda
-	 * 
-	 * @param venda
-	 * @return
-	 */
-	private List<ItemVenda> buscarItens(Venda venda) {
-		List<ItemVenda> itens = null;
-		if (Util.validar(venda)) {
-			if (Util.validar(venda.getItens())) {
-				itens = venda.getItens();
-			} else {
-				itens = itemVendaService.buscarItens(venda);
-			}
-		}
-		return itens;
-	}
-	
-	/**
-	 * Método interno para recuperar pagamento
-	 * 
-	 * @param venda
-	 * @return
-	 */
-	private Pagamento buscarPagamento(Venda venda) {
-		Pagamento pagamento = null;
-		if (Util.validar(venda.getPagamento())) {
-			pagamento = venda.getPagamento();
-		} else {
-			pagamento = pagamentoService.pesquisarPorVenda(venda);
-		}
-		return pagamento;
-	}
-	
+
 	/**
 	 * Método externo para buscar o total pago
 	 * 
@@ -182,7 +156,7 @@ public class RelatorioService {
 		}
 		return BigDecimal.valueOf(total);
 	}
-	
+
 	/**
 	 * Método externo para buscar o total de outros
 	 * 
@@ -203,7 +177,7 @@ public class RelatorioService {
 		}
 		return BigDecimal.valueOf(total);
 	}
-	
+
 	/**
 	 * Método externo para buscar o total em cartão de crédito
 	 * 
@@ -224,7 +198,7 @@ public class RelatorioService {
 		}
 		return BigDecimal.valueOf(total);
 	}
-	
+
 	/**
 	 * Método externo para buscar o total de desconto
 	 * 
@@ -262,7 +236,7 @@ public class RelatorioService {
 						if (Util.validar(pagamento.getTroco())) {
 							double troco = pagamento.getTroco().doubleValue();
 							double dinheiro = pagamento.getDinheiro().doubleValue();
-							double diferenca = (dinheiro - troco); 
+							double diferenca = (dinheiro - troco);
 							total = total + diferenca;
 						} else {
 							total = total + pagamento.getDinheiro().doubleValue();
@@ -273,7 +247,7 @@ public class RelatorioService {
 		}
 		return BigDecimal.valueOf(total);
 	}
-	
+
 	/**
 	 * Método externo para buscar o total pago em cartão debito
 	 * 
@@ -294,7 +268,7 @@ public class RelatorioService {
 		}
 		return BigDecimal.valueOf(total);
 	}
-	
+
 	/**
 	 * Método externo para buscar o total
 	 * 
@@ -314,33 +288,13 @@ public class RelatorioService {
 	}
 
 	/**
-	 * Método externo para listar as vendas por periodo e por vendedor
-	 * 
-	 * @param vendedor
-	 * @return
-	 */
-	public List<Venda> listarVendasPorPeriodoPorVendedor(Vendedor vendedor, Date dataInicial, Date dataFinal) {
-		return vendaService.listarVendasPorPeriodoPorVendedor(vendedor, dataInicial, dataFinal);
-	}
-	
-	/**
 	 * Método externo para listar as vendas do dia do vendedor
 	 * 
 	 * @param vendedor
 	 * @return
 	 */
 	public List<Venda> listarVendasDoDiaPorVendedor(Vendedor vendedor) {
-		return vendaService.listarVendasPorVendedor(vendedor, new Date());
-	}
-
-	/**
-	 * Método externo para listar as vendas do dia da loja
-	 * 
-	 * @param loja
-	 * @return
-	 */
-	public List<Venda> listarVendasPorPeriodoPorLoja(Loja loja, Date dataInicial, Date dataFinal) {
-		return vendaService.listarVendasPorPeriodoPorLoja(loja, dataInicial, dataFinal);
+		return this.listarVendasPorVendedor(vendedor, new Date());
 	}
 
 	/**
@@ -350,9 +304,8 @@ public class RelatorioService {
 	 * @return
 	 */
 	public List<Venda> listarVendasDoDiaPorLoja(Loja loja) {
-		return vendaService.listarVendasPorLoja(loja, new Date());
+		return this.listarVendasPorLoja(loja, new Date());
 	}
-	
 
 	/**
 	 * Método externo para recuperar lista de estoque da loja
@@ -363,7 +316,7 @@ public class RelatorioService {
 	public List<EstoqueVO> listarEstoqueDaLoja(Loja loja) {
 		List<EstoqueVO> lista = null;
 		if (Util.validar(loja)) {
-			List<Estoque> estoques = estoqueService.listarEstoque(loja);
+			List<Estoque> estoques = this.listarEstoque(loja);
 			if (Util.validar(estoques)) {
 				lista = listarEstoqueDaLoja(estoques);
 			}
@@ -393,51 +346,6 @@ public class RelatorioService {
 		return BigDecimal.valueOf(total);
 	}
 
-	
-	/**
-	 * Método interno para preparar lista de estoque
-	 * 
-	 * @param estoques
-	 * @return
-	 */
-	private List<EstoqueVO> listarEstoqueDaLoja(List<Estoque> estoques) {
-		List<EstoqueVO> lista = null;
-		if (Util.validar(estoques)) {
-			lista = new ArrayList<>();
-			for (Estoque estoque : estoques) {
-				EstoqueVO vo = new EstoqueVO();
-				if (Util.validar(estoque.getProduto())) {
-					String produto = estoque.getProduto().getDescricao();
-					vo.setProduto(produto);
-				}
-				if (Util.validar(estoque.getValorUnitario())) {
-					BigDecimal valorUnitario = estoque.getValorUnitario();
-					vo.setValorUnitario(valorUnitario);
-				}
-				if (Util.validar(estoque.getQuantidade())) {
-					Integer quantidade = estoque.getQuantidade();
-					vo.setQuantidade(quantidade);
-				}
-				if (Util.validar(estoque.getEstoqueMinimo())) {
-					Integer  estoqueMinimo = estoque.getEstoqueMinimo();
-					vo.setEstoqueMinimo(estoqueMinimo);
-				}
-				if (Util.validar(estoque.getEstoqueMaximo())) {
-					Integer  estoqueMaximo = estoque.getEstoqueMaximo();
-					vo.setEstoqueMaximo(estoqueMaximo);
-				}
-				if ((Util.validar(estoque.getValorUnitario())) && (Util.validar(estoque.getQuantidade()))) {
-					double valorUnitario = estoque.getValorUnitario().doubleValue();
-					int quantidade = estoque.getQuantidade().intValue();
-					double total = valorUnitario * quantidade;
-					vo.setTotal(BigDecimal.valueOf(total));
-				}
-				lista.add(vo);
-			}
-		}
-		return lista;
-	}
-	
 	/**
 	 * Método para recuperar lista de vendas do dia por vendedor informado
 	 *
@@ -457,7 +365,8 @@ public class RelatorioService {
 					vo.setData(venda.getData());
 				}
 				if ((Util.validar(venda.getVendedor())) && (Util.validar(venda.getVendedor().getNome()))) {
-					String vendedor = String.valueOf(venda.getVendedor().getCodigo()) + " - " + venda.getVendedor().getNome();
+					String vendedor = String.valueOf(venda.getVendedor().getCodigo()) + " - "
+							+ venda.getVendedor().getNome();
 					vo.setVendedor(vendedor);
 				}
 				List<ItemVenda> itens = buscarItens(venda);
@@ -490,7 +399,7 @@ public class RelatorioService {
 	public Vendedor buscarVendedorELoja(Long codigo) {
 		Vendedor vendedor = null;
 		if (Util.validar(codigo)) {
-			Vendedor vendedorDB = vendedorService.pesquisarPorCodigo(codigo);
+			Vendedor vendedorDB = this.pesquisarVendedorPorCodigo(codigo);
 			if (Util.validar(vendedorDB)) {
 				if (Util.validar(vendedorDB.getLoja())) {
 					if (Util.validar(vendedorDB.getLoja().getNome())) {
@@ -511,12 +420,229 @@ public class RelatorioService {
 	public Loja buscarLoja(Long codigo) {
 		Loja loja = null;
 		if (Util.validar(codigo)) {
-			Loja lojaDB = lojaService.pesquisarPorCodigo(codigo);
+			Loja lojaDB = this.pesquisarLojaPorCodigo(codigo);
 			if (Util.validar(lojaDB)) {
 				loja = lojaDB;
 			}
 		}
 		return loja;
 	}
-	
+
+	/**
+	 * Método para recuperar lista de vendas por periodo e por loja
+	 * 
+	 * @param loja
+	 * @param dataInicial
+	 * @param dataFinal
+	 * @return
+	 */
+	public List<Venda> listarVendasPorPeriodoPorLoja(Loja loja, Date dataInicial, Date dataFinal) {
+		dataInicial = Util.dataHoraInicial(dataInicial);
+		dataFinal = Util.dataHoraFinal(dataFinal);
+		return vendaRepository.findByDataBetweenAndLojaAndStatus(dataInicial, dataFinal, loja, StatusVenda.FINALIZADO);
+	}
+
+	/**
+	 * Método externo para recuperar lista de vendas por periodo e por vendedor
+	 * 
+	 * @param vendedor
+	 * @param dataInicial
+	 * @param dataFinal
+	 * @return
+	 */
+	public List<Venda> listarVendasPorPeriodoPorVendedor(Vendedor vendedor, Date dataInicial, Date dataFinal) {
+		dataInicial = Util.dataHoraInicial(dataInicial);
+		dataFinal = Util.dataHoraFinal(dataFinal);
+		return vendaRepository.findByDataBetweenAndVendedorAndStatus(dataInicial, dataFinal, vendedor,
+				StatusVenda.FINALIZADO);
+	}
+
+	/**
+	 * Método interno para pesquisar pagamento por código Id
+	 * 
+	 * @param codigo
+	 * @return
+	 */
+	private Pagamento pesquisarPorCodigo(Long codigo) {
+		Pagamento pagamento = pagamentoRepository.findOne(codigo);
+		if (Util.validar(pagamento)) {
+			if (Util.validar(pagamento.getCpf())) {
+				String cpf = pagamento.getCpf();
+				Cliente cliente = this.pesquisarPorCpf(cpf);
+				if (Util.validar(cliente)) {
+					pagamento.setCliente(cliente);
+				}
+			}
+		}
+		return pagamento;
+	}
+
+	/**
+	 * Método interno para buscar itens da venda
+	 * 
+	 * @param venda
+	 * @return
+	 */
+	private List<ItemVenda> buscarItens(Venda venda) {
+		List<ItemVenda> itens = null;
+		if (Util.validar(venda)) {
+			if (Util.validar(venda.getItens())) {
+				itens = venda.getItens();
+			} else {
+				itens = this.buscarItensDB(venda);
+			}
+		}
+		return itens;
+	}
+
+	/**
+	 * Método interno para recuperar pagamento
+	 * 
+	 * @param venda
+	 * @return
+	 */
+	private Pagamento buscarPagamento(Venda venda) {
+		Pagamento pagamento = null;
+		if (Util.validar(venda.getPagamento())) {
+			pagamento = venda.getPagamento();
+		} else {
+			pagamento = this.pesquisarPorVenda(venda);
+		}
+		return pagamento;
+	}
+
+	/**
+	 * Método interno para recuperar lista de vendas por loja
+	 * 
+	 * @param loja
+	 * @param dataInicial
+	 * @return
+	 */
+	private List<Venda> listarVendasPorLoja(Loja loja, Date data) {
+		Date dataInicial = Util.dataHoraInicial(data);
+		Date dataFinal = Util.dataHoraFinal(data);
+		return vendaRepository.findByDataBetweenAndLojaAndStatus(dataInicial, dataFinal, loja, StatusVenda.FINALIZADO);
+	}
+
+	/**
+	 * Método interno para preparar lista de estoque
+	 * 
+	 * @param estoques
+	 * @return
+	 */
+	private List<EstoqueVO> listarEstoqueDaLoja(List<Estoque> estoques) {
+		List<EstoqueVO> lista = null;
+		if (Util.validar(estoques)) {
+			lista = new ArrayList<>();
+			for (Estoque estoque : estoques) {
+				EstoqueVO vo = new EstoqueVO();
+				if (Util.validar(estoque.getProduto())) {
+					String produto = estoque.getProduto().getDescricao();
+					vo.setProduto(produto);
+				}
+				if (Util.validar(estoque.getValorUnitario())) {
+					BigDecimal valorUnitario = estoque.getValorUnitario();
+					vo.setValorUnitario(valorUnitario);
+				}
+				if (Util.validar(estoque.getQuantidade())) {
+					Integer quantidade = estoque.getQuantidade();
+					vo.setQuantidade(quantidade);
+				}
+				if (Util.validar(estoque.getEstoqueMinimo())) {
+					Integer estoqueMinimo = estoque.getEstoqueMinimo();
+					vo.setEstoqueMinimo(estoqueMinimo);
+				}
+				if (Util.validar(estoque.getEstoqueMaximo())) {
+					Integer estoqueMaximo = estoque.getEstoqueMaximo();
+					vo.setEstoqueMaximo(estoqueMaximo);
+				}
+				if ((Util.validar(estoque.getValorUnitario())) && (Util.validar(estoque.getQuantidade()))) {
+					double valorUnitario = estoque.getValorUnitario().doubleValue();
+					int quantidade = estoque.getQuantidade().intValue();
+					double total = valorUnitario * quantidade;
+					vo.setTotal(BigDecimal.valueOf(total));
+				}
+				lista.add(vo);
+			}
+		}
+		return lista;
+	}
+
+	/**
+	 * Método interno para pesquisar pagamento por venda
+	 * 
+	 * @param venda
+	 * @return
+	 */
+	private Pagamento pesquisarPorVenda(Venda venda) {
+		return pagamentoRepository.findByVenda(venda);
+	}
+
+	/**
+	 * Método para pesquisar vendedor por código
+	 * 
+	 * @param codigo
+	 * @return
+	 */
+	private Vendedor pesquisarVendedorPorCodigo(Long codigo) {
+		return vendedorRepository.findOne(codigo);
+	}
+
+	/**
+	 * Método interno para recuperar lista de vendas por vendedor
+	 * 
+	 * @param vendedor
+	 * @param dataInicial
+	 * @return
+	 */
+	private List<Venda> listarVendasPorVendedor(Vendedor vendedor, Date data) {
+		Date dataInicial = Util.dataHoraInicial(data);
+		Date dataFinal = Util.dataHoraFinal(data);
+		return vendaRepository.findByDataBetweenAndVendedorAndStatus(dataInicial, dataFinal, vendedor,
+				StatusVenda.FINALIZADO);
+	}
+
+	/**
+	 * Método interno para pesquisar cliente por CPF
+	 * 
+	 * @param strCpf
+	 * @return
+	 */
+	private Cliente pesquisarPorCpf(String cpf) {
+		return clienteRepository.findByCpfContainingIgnoreCase(cpf);
+	}
+
+	/**
+	 * Método interno para pesquisar loja por código
+	 * 
+	 * @param codigo
+	 * @return
+	 */
+	private Loja pesquisarLojaPorCodigo(Long codigo) {
+		return lojaRepository.findOne(codigo);
+	}
+
+	/**
+	 * Método interno de buscar itens da venda no banco de dados
+	 * 
+	 * @param venda
+	 * @return
+	 */
+	private List<ItemVenda> buscarItensDB(Venda venda) {
+		List<ItemVenda> itens = null;
+		if (Util.validar(venda)) {
+			itens = itemVendaRepository.findByVenda(venda);
+		}
+		return itens;
+	}
+
+	/**
+	 * Método interno de buscar estoque
+	 * 
+	 * @param loja
+	 * @return
+	 */
+	private List<Estoque> listarEstoque(Loja loja) {
+		return estoqueRepository.findByLojaOrderByProduto(loja);
+	}
 }

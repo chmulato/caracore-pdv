@@ -214,7 +214,7 @@ public class ItemVendaService {
 		}
 	}
 
-	List<ItemVenda> buscarItens(Venda venda) {
+	public List<ItemVenda> buscarItens(Venda venda) {
 		List<ItemVenda> itens = null;
 		if (Util.validar(venda)) {
 			itens = itemVendaRepository.findByVenda(venda);
