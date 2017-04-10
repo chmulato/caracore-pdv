@@ -3,6 +3,8 @@ package br.com.caracore.pdv.service;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import br.com.caracore.pdv.model.Produto;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.model.types.StatusVenda;
+import br.com.caracore.pdv.repository.ClienteRepository;
 import br.com.caracore.pdv.repository.EstoqueRepository;
 import br.com.caracore.pdv.repository.ItemVendaRepository;
 import br.com.caracore.pdv.repository.PagamentoRepository;
@@ -24,7 +27,9 @@ import br.com.caracore.pdv.repository.VendedorRepository;
 import br.com.caracore.pdv.service.exception.CpfExistenteException;
 import br.com.caracore.pdv.service.exception.CpfInvalidoException;
 import br.com.caracore.pdv.service.exception.DescontoInvalidoException;
+import br.com.caracore.pdv.service.exception.EmailInvalidoException;
 import br.com.caracore.pdv.service.exception.LojaNaoEncontradaException;
+import br.com.caracore.pdv.service.exception.NomeExistenteException;
 import br.com.caracore.pdv.service.exception.PagamentoInvalidoException;
 import br.com.caracore.pdv.service.exception.QuantidadeNaoExistenteEmEstoqueException;
 import br.com.caracore.pdv.service.exception.TrocoInvalidoException;
@@ -46,8 +51,8 @@ public class PagamentoService {
 	final private boolean CPF_JA_CADASTRADO = true;
 
 	@Autowired
-	private ClienteService clienteService;
-
+	private ClienteRepository clienteRepository;
+	
 	@Autowired
 	private EstoqueRepository estoqueRepository;
 	
@@ -76,11 +81,10 @@ public class PagamentoService {
 		if (Util.validar(pagamento)) {
 			if (Util.validar(pagamento.getCpf())) {
 				String cpf = pagamento.getCpf();
-				// cpf = Util.removerFormatoCpf(cpf);
 				if (!Util.isCPF(cpf)) {
 					throw new CpfInvalidoException("Cpf inválido!");
 				}
-				Cliente clienteDB = clienteService.pesquisarPorCpf(cpf);
+				Cliente clienteDB = this.pesquisarPorCpf(cpf);
 				if (Util.validar(clienteDB)) {
 					if (Util.validar(clienteDB.getCpf())) {
 						String cpfDB = clienteDB.getCpf();
@@ -94,6 +98,119 @@ public class PagamentoService {
 			}
 		} else {
 			throw new PagamentoInvalidoException("Pagamento inválido!");
+		}
+	}
+
+	/**
+	 * Método interno para pesquisar cliente por CPF
+	 * 
+	 * @param strCpf
+	 * @return
+	 */
+	private Cliente pesquisarPorCpf(String cpf) {
+		return clienteRepository.findByCpfContainingIgnoreCase(cpf);
+	}
+
+	/**
+	 * Método interno para pesquisar cliente por nome
+	 * 
+	 * @param nome
+	 * @return
+	 */
+	private Cliente pesquisarPorNome(String nome) {
+		return clienteRepository.findByNomeIgnoreCase(nome);
+	}
+
+	/**
+	 * Método interno para salvar cliente
+	 * 
+	 * @param cliente
+	 * @return
+	 */
+	private Cliente salvar(Cliente cliente) {
+		validarCpf(cliente);
+		validarNome(cliente);
+		try {
+			return clienteRepository.save(cliente);
+		} catch (ConstraintViolationException ex) {
+			throw new EmailInvalidoException("Email com formato inválido!");
+		}
+	}
+	
+	/**
+	 * Método interno para atualizar o desconto total da compra
+	 * 
+	 * @param pagamento
+	 */
+	private void salvarVendaPaga(Pagamento pagamento) {
+		if (Util.validar(pagamento)) {
+			if (Util.validar(pagamento.getTotalApagar()) && Util.validar(pagamento.getDesconto())) {
+				Long codigo = pagamento.getVenda().getCodigo();
+				BigDecimal valorPago = pagamento.getTotalApagar();
+				BigDecimal desconto = pagamento.getDesconto();
+				if ((desconto.doubleValue() < ZERO) || (desconto.doubleValue() > PORCENTAGEM)) {
+					throw new DescontoInvalidoException("Desconto inválido!");
+				}
+				Venda venda = vendaRepository.findOne(codigo);
+				if (Util.validar(venda)) {
+					atualizarEstoque(venda);
+					venda.setDescontoTotal(desconto);
+					venda.setTotal(valorPago);
+					venda.setStatus(StatusVenda.FINALIZADO);
+					vendaRepository.save(venda);
+					apagarVendaDaSessão();
+				}
+			}
+		}
+	}
+
+	/**
+	 * Método interno para validar cpf do cliente
+	 * 
+	 * @param cliente
+	 */
+	private void validarCpf(Cliente cliente) {
+		if (Util.validar(cliente) && Util.validar(cliente.getCpf())) {
+			String strCpf = String.valueOf(cliente.getCpf());
+			if (!Util.isCPF(strCpf)) {
+				throw new CpfInvalidoException("Cpf inválido!");
+			}
+		}
+		if (Util.validar(cliente) && Util.validar(cliente.getCpf())) {
+			Cliente clienteDB = pesquisarPorCpf(cliente.getCpf());
+			if (Util.validar(clienteDB)) {
+				if (Util.validar(cliente.getCodigo())) {
+					long codigo = cliente.getCodigo().longValue();
+					long codigoDB = clienteDB.getCodigo().longValue();
+					if (codigo != codigoDB) {
+						throw new CpfExistenteException("Cpf já existente!");
+					}
+				} else {
+					throw new CpfExistenteException("Cpf já existente!");
+				}
+			}
+		}
+	}
+
+	/**
+	 * Método interno para validar nome do cliente
+	 * 
+	 * @param cliente
+	 */
+	private void validarNome(Cliente cliente) {
+		if (Util.validar(cliente) && Util.validar(cliente.getNome())) {
+			Cliente clienteDB = pesquisarPorNome(cliente.getNome());
+			if (Util.validar(clienteDB)) {
+				if (Util.validar(cliente.getCodigo())) {
+					long codigo = cliente.getCodigo().longValue();
+					long codigoDB = clienteDB.getCodigo().longValue();
+					if (codigo != codigoDB) {
+						throw new NomeExistenteException("Nome já existente!");
+					}
+				} else {
+					throw new NomeExistenteException("Nome já existente!");
+				}
+			}
 		}
 	}
 
@@ -184,7 +301,7 @@ public class PagamentoService {
 		if (Util.validar(pagamento)) {
 			if (Util.validar(pagamento.getCpf())) {
 				String cpf = pagamento.getCpf();
-				Cliente cliente = clienteService.pesquisarPorCpf(cpf);
+				Cliente cliente = this.pesquisarPorCpf(cpf);
 				if (Util.validar(cliente)) {
 					pagamento.setCliente(cliente);
 				}
@@ -231,10 +348,10 @@ public class PagamentoService {
 	public Pagamento salvar(Pagamento pagamento, Cliente cliente) {
 		if ((Util.validar(pagamento)) && (Util.validar(cliente))) {
 			if (!Util.validar(cliente.getNome())) {
-				cliente = clienteService.pesquisarClienteDefault(CLIENTE_NAO_INFORMADO);
+				cliente = this.pesquisarPorNome(CLIENTE_NAO_INFORMADO);
 				if (!Util.validar(cliente)) {
 					cliente = new Cliente(CLIENTE_NAO_INFORMADO);
-					clienteService.salvar(cliente);
+					this.salvar(cliente);
 				}
 			}
 		}
@@ -250,9 +367,9 @@ public class PagamentoService {
 	 */
 	public Cliente salvarCliente(Cliente cliente) {
 		try {
-			cliente = clienteService.salvar(cliente);
+			cliente = this.salvar(cliente);
 		} catch (CpfExistenteException ex) {
-			cliente = clienteService.pesquisarPorCpf(cliente.getCpf());
+			cliente = this.pesquisarPorCpf(cliente.getCpf());
 			cliente.setThereIs(CPF_JA_CADASTRADO);
 		}
 		return cliente;
@@ -265,7 +382,7 @@ public class PagamentoService {
 	 */
 	public Cliente buscarCliente(String cpf) {
 		cpf = Util.removerFormatoCpf(cpf);
-		return clienteService.pesquisarPorCpf(cpf);
+		return this.pesquisarPorCpf(cpf);
 	}
 
 	/**
@@ -338,33 +455,6 @@ public class PagamentoService {
 		CompraVO sessao = sessionService.getSessionVO();
 		Operador operador = sessao.getOperador();
 		sessionService.setSession(operador, null, null);
-	}
-	
-	/**
-	 * Método interno para atualizar o desconto total da compra
-	 * 
-	 * @param pagamento
-	 */
-	private void salvarVendaPaga(Pagamento pagamento) {
-		if (Util.validar(pagamento)) {
-			if (Util.validar(pagamento.getTotalApagar()) && Util.validar(pagamento.getDesconto())) {
-				Long codigo = pagamento.getVenda().getCodigo();
-				BigDecimal valorPago = pagamento.getTotalApagar();
-				BigDecimal desconto = pagamento.getDesconto();
-				if ((desconto.doubleValue() < ZERO) || (desconto.doubleValue() > PORCENTAGEM)) {
-					throw new DescontoInvalidoException("Desconto inválido!");
-				}
-				Venda venda = vendaRepository.findOne(codigo);
-				if (Util.validar(venda)) {
-					atualizarEstoque(venda);
-					venda.setDescontoTotal(desconto);
-					venda.setTotal(valorPago);
-					venda.setStatus(StatusVenda.FINALIZADO);
-					vendaRepository.save(venda);
-					apagarVendaDaSessão();
-				}
-			}
-		}
 	}
 
 }
