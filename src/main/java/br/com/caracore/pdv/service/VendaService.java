@@ -20,15 +20,20 @@ import br.com.caracore.pdv.model.Produto;
 import br.com.caracore.pdv.model.Venda;
 import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.model.types.StatusVenda;
+import br.com.caracore.pdv.model.types.TipoVendedor;
 import br.com.caracore.pdv.repository.EstoqueRepository;
+import br.com.caracore.pdv.repository.ItemVendaRepository;
+import br.com.caracore.pdv.repository.LojaRepository;
+import br.com.caracore.pdv.repository.OperadorRepository;
+import br.com.caracore.pdv.repository.PagamentoRepository;
 import br.com.caracore.pdv.repository.ProdutoRepository;
 import br.com.caracore.pdv.repository.VendaRepository;
+import br.com.caracore.pdv.repository.VendedorRepository;
 import br.com.caracore.pdv.repository.filter.VendaFilter;
 import br.com.caracore.pdv.repository.filter.VendedorFilter;
 import br.com.caracore.pdv.service.exception.DescontoInvalidoException;
 import br.com.caracore.pdv.service.exception.LojaNaoEncontradaException;
 import br.com.caracore.pdv.service.exception.ProdutoNaoCadastradoException;
-import br.com.caracore.pdv.service.exception.ProdutoNaoEncontradoException;
 import br.com.caracore.pdv.service.exception.QuantidadeInvalidaException;
 import br.com.caracore.pdv.service.exception.QuantidadeNaoExistenteEmEstoqueException;
 import br.com.caracore.pdv.service.exception.VendedorNaoEncontradoException;
@@ -54,16 +59,19 @@ public class VendaService {
 	private EstoqueRepository estoqueRepository;
 
 	@Autowired
+	private ItemVendaRepository itemVendaRepository;
+
+	@Autowired
 	private ItemVendaService itemVendaService;
 
 	@Autowired
-	private LojaService lojaService;
+	private LojaRepository lojaRepository;
 
 	@Autowired
-	private OperadorService operadorService;
+	private OperadorRepository operadorRepository;
 
 	@Autowired
-	private PagamentoService pagamentoService;
+	private PagamentoRepository pagamentoRepository;
 
 	@Autowired
 	private ProdutoRepository produtoRepository;
@@ -75,7 +83,7 @@ public class VendaService {
 	private VendaRepository vendaRepository;
 
 	@Autowired
-	private VendedorService vendedorService;
+	private VendedorRepository vendedorRepository;
 
 	/**
 	 * Método externo para apagar dados da sessão
@@ -221,8 +229,8 @@ public class VendaService {
 				dataInicial = Util.dataHoraInicialDoMes(new Date());
 				dataFinal = Util.dataHoraFinalDoMes(new Date());
 			}
-			Vendedor vendedor = vendedorService.pesquisar(nomeVendedor);
-			Loja loja = lojaService.pesquisarPorNome(nomeLoja);
+			Vendedor vendedor = this.pesquisar(nomeVendedor);
+			Loja loja = this.pesquisarLojaPorNome(nomeLoja);
 			if ((Util.validar(vendedor)) && (Util.validar(loja))) {
 				lista = vendaRepository.findByDataBetweenAndVendedorAndLojaByOrderByDataDesc(dataInicial, dataFinal, vendedor, loja);
 			}
@@ -244,7 +252,7 @@ public class VendaService {
 	 */
 	private Venda buscarPagamento(Venda venda) {
 		if (Util.validar(venda)) {
-			Pagamento pagamento = pagamentoService.pesquisarPorVenda(venda);
+			Pagamento pagamento = this.pesquisarPagamentoPorVenda(venda);
 			if (Util.validar(pagamento)) {
 				venda.setPagamento(pagamento);
 			}
@@ -259,7 +267,7 @@ public class VendaService {
 	 * @return
 	 */
 	public List<Vendedor> pesquisar(VendedorFilter filtro) {
-		return vendedorService.pesquisar(filtro);
+		return this.pesquisarVendedor(filtro);
 	}
 
 	/**
@@ -271,7 +279,7 @@ public class VendaService {
 	public Vendedor recuperarVendedorPorId(Long codigo) {
 		Vendedor vendedor = null;
 		if (Util.validar(codigo)) {
-			vendedor = vendedorService.pesquisarPorCodigo(codigo);
+			vendedor = this.pesquisarPorCodigo(codigo);
 		}
 		return vendedor;
 	}
@@ -285,7 +293,7 @@ public class VendaService {
 	public Operador recuperarOperadorPorId(Long codigo) {
 		Operador operador = null;
 		if (Util.validar(codigo)) {
-			operador = operadorService.pesquisarPorId(codigo);
+			operador = this.pesquisarOperadorPorId(codigo);
 		}
 		return operador;
 	}
@@ -299,7 +307,7 @@ public class VendaService {
 	public ItemVenda recuperarUltimoItemVendaDaCesta(Venda venda) {
 		ItemVenda ultimoItem = null;
 		if (Util.validar(venda) && Util.validar(venda.getCodigo())) {
-			List<ItemVenda> itens = itemVendaService.buscarItens(venda);
+			List<ItemVenda> itens = this.buscarItens(venda);
 			if (Util.validar(itens)) {
 				long codigo = 0;
 				long ultimoCodigo = 0;
@@ -346,7 +354,7 @@ public class VendaService {
 			if (lista.size() == QUANTIDADE_UNITARIA) {
 				for (Venda venda : lista) {
 					if (!Util.validar(venda.getItens())) {
-						List<ItemVenda> itens = itemVendaService.buscarItens(venda);
+						List<ItemVenda> itens = this.buscarItens(venda);
 						if (Util.validar(itens)) {
 							venda.setItens(itens);
 						}
@@ -372,7 +380,7 @@ public class VendaService {
 			if (lista.size() == QUANTIDADE_UNITARIA) {
 				for (Venda venda : lista) {
 					if (!Util.validar(venda.getItens())) {
-						List<ItemVenda> itens = itemVendaService.buscarItens(venda);
+						List<ItemVenda> itens = this.buscarItens(venda);
 						if (Util.validar(itens)) {
 							venda.setItens(itens);
 						}
@@ -386,7 +394,7 @@ public class VendaService {
 	}
 
 	/**
-	 * Método para recuperar o vendedor
+	 * Método interno para recuperar o vendedor pro codigo do vendedor
 	 * 
 	 * @param codigoVendedor
 	 * @return
@@ -394,42 +402,23 @@ public class VendaService {
 	public Vendedor buscarVendedorPorCodigo(Long codigoVendedor) {
 		Vendedor vendedor = null;
 		if (Util.validar(codigoVendedor)) {
-			vendedor = vendedorService.buscarPorCodigo(codigoVendedor);
+			vendedor = this.pesquisarPorCodigo(codigoVendedor);
 		}
 		return vendedor;
 	}
-
+	
 	/**
-	 * Método para recuperar o vendedor do operador, se não encontrar recupera o
-	 * vendedor padrão da loja
-	 * 
-	 * @param operador
-	 * @return
-	 */
-	public Vendedor buscarVendedor(Operador operador) {
-		Vendedor vendedor = null;
-		if (Util.validar(operador)) {
-			vendedor = vendedorService.buscarPorOperador(operador);
-			if (!Util.validar(vendedor)) {
-				if (Util.validar(operador.getLoja())) {
-					Loja loja = operador.getLoja();
-					vendedor = vendedorService.buscarDefault(loja);
-				}
-			}
-		}
-		return vendedor;
-	}
-
-	/**
-	 * Método interno para recuperar lista de vendedores da loja
+	 * Método interno para buscar vendedor por loja
 	 * 
 	 * @param loja
 	 * @return
 	 */
-	private List<Vendedor> listarVendedoresPorLoja(Loja loja) {
-		return lojaService.listarVendedores(loja);
+	private Vendedor buscarDefault(Loja loja) {
+		Vendedor vendedor = null;
+		TipoVendedor tipo = TipoVendedor.DEFAULT;
+		vendedor = vendedorRepository.findByTipoAndLoja(tipo, loja);
+		return vendedor;
 	}
-
 	/**
 	 * Método externo para recuperar operador logado
 	 * 
@@ -439,7 +428,7 @@ public class VendaService {
 	public Operador recuperarOperador(String login) {
 		Operador operador = null;
 		if (Util.validar(login)) {
-			operador = operadorService.pesquisarPorNome(login);
+			operador = this.pesquisarOperadorPorNome(login);
 		}
 		return operador;
 	}
@@ -456,7 +445,7 @@ public class VendaService {
 				throw new DescontoInvalidoException("Desconto inválido!");
 			}
 			Venda venda = vendaRepository.findOne(codigo);
-			vendedor = vendedorService.pesquisarPorCodigo(vendedor.getCodigo());
+			vendedor = this.pesquisarPorCodigo(vendedor.getCodigo());
 			if (Util.validar(venda)) {
 				venda.setDescontoTotal(desconto);
 				venda.setVendedor(vendedor);
@@ -520,7 +509,7 @@ public class VendaService {
 		List<Vendedor> lista = null;
 		if (Util.validar(operador) && Util.validar(operador.getLoja())) {
 			Loja loja = operador.getLoja();
-			Vendedor vendedor = vendedorService.buscarDefault(loja);
+			Vendedor vendedor = this.buscarDefault(loja);
 			if (Util.validar(vendedor)) {
 				lista = listarVendedoresPorLoja(loja);
 			}
@@ -599,7 +588,7 @@ public class VendaService {
 		if (Util.validar(session)) {
 			if (Util.validar(session.getVenda())) {
 				Venda venda = session.getVenda();
-				List<ItemVenda> itens = itemVendaService.buscarItens(venda);
+				List<ItemVenda> itens = this.buscarItens(venda);
 				if (Util.validar(itens)) {
 					int _quantidade = 0;
 					for (ItemVenda item : itens) {
@@ -649,7 +638,7 @@ public class VendaService {
 		}
 
 		if (!Util.validar(produto)) {
-			throw new ProdutoNaoEncontradoException("Produto não encontrado!");
+			throw new ProdutoNaoCadastradoException("Produto não cadastrado!");
 		}
 		
 		if (!Util.validar(vendedor.getLoja())) {
@@ -683,7 +672,7 @@ public class VendaService {
 				venda.setItens(itens);
 				venda = salvar(venda);
 				if (Util.validar(venda.getCodigo())) {
-					itens = itemVendaService.buscarItens(venda);
+					itens = this.buscarItens(venda);
 					itens.add(novoItem);
 					itens = itemVendaService.salvarItens(itens, venda);
 					if (Util.validar(itens)) {
@@ -728,5 +717,123 @@ public class VendaService {
 			venda.setTotal(BigDecimal.valueOf(dblTotal));
 		}
 		return venda;
+	}
+
+	/**
+	 * Pesquisar vendedor por nome 
+	 * 
+	 * @param nomeVendedor
+	 * @return
+	 */
+	private Vendedor pesquisar(String nomeVendedor) {
+		Vendedor result = null;
+		if (Util.validar(nomeVendedor)) {
+			List<Vendedor> lista = vendedorRepository.findByNomeContainingIgnoreCase(nomeVendedor);
+			if (Util.validar(lista)) {
+				for (Vendedor vendedor : lista) {
+					result = vendedor;
+					break;
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Pesquisar vendedor por filtro 
+	 * 
+	 * @param filtro
+	 * @return
+	 */
+	private List<Vendedor> pesquisarVendedor(VendedorFilter filtro) {
+		String nome = filtro.getNome() == null ? "%" : filtro.getNome();
+		return vendedorRepository.findByNomeContainingIgnoreCase(nome);
+	}
+
+	/**
+	 * Pesquisar vendedor por código de vendedor
+	 * 
+	 * @param codigo
+	 * @return
+	 */
+	private Vendedor pesquisarPorCodigo(Long codigo) {
+		return vendedorRepository.findOne(codigo);
+	}
+
+	/**
+	 * Recuperar lista de itens de venda por venda
+	 * 
+	 * @param venda
+	 * @return
+	 */
+	private List<ItemVenda> buscarItens(Venda venda) {
+		List<ItemVenda> itens = null;
+		if (Util.validar(venda)) {
+			itens = itemVendaRepository.findByVenda(venda);
+		}
+		return itens;
+	}
+	
+	/**
+	 * Método interno para recuperar lista de vendedores da loja
+	 * 
+	 * @param loja
+	 * @return
+	 */
+	private List<Vendedor> listarVendedoresPorLoja(Loja loja) {
+		return vendedorRepository.findByLoja(loja);
+	}
+	
+	/**
+	 * Método interno para recuperar loja por nome
+	 * 
+	 * @param nome
+	 * @return
+	 */
+	private Loja pesquisarLojaPorNome(String nome) {
+		return lojaRepository.findByNomeIgnoreCase(nome);
+	}
+
+	/**
+	 * Método interno para recuperar operador por id
+	 * 
+	 * @param codigo
+	 * @return
+	 */
+	private Operador pesquisarOperadorPorId(Long codigo) {
+		return operadorRepository.findOne(codigo);
+	}
+	
+	
+	private Operador pesquisarOperadorPorNome(String login) {
+		Operador operador = null;
+		List<Operador> operadores = pesquisarPorLogin(login);
+		if (Util.validar(operadores)) {
+			for (Operador _operador : operadores) {
+				operador = _operador;
+				break;
+			}
+		}
+		return operador;
+	}
+	
+	/**
+	 * Método interno para recuperar operador por login
+	 * 
+	 * @param login
+	 * @return
+	 */
+	private List<Operador> pesquisarPorLogin(String login) {
+		return operadorRepository.findByNomeContainingIgnoreCase(login);
+	}
+
+	/**
+	 * Método interno para pesquisar pagamento por venda
+	 * 
+	 * @param venda
+	 * @return
+	 */
+	private Pagamento pesquisarPagamentoPorVenda(Venda venda) {
+		return pagamentoRepository.findByVenda(venda);
 	}
 }

@@ -26,24 +26,41 @@ public class OperadorService {
 	@Autowired
 	private LojaRepository lojaRepository;
 	
+	/**
+	 * Método para pesquisar operador por nome
+	 * 
+	 * @param login
+	 * @return
+	 */
 	public Operador pesquisarPorNome(String login) {
-		Operador result = null;
-		List<Operador> lista = pesquisarPorLogin(login);
-		if (lista != null && lista.size() > 0) {
-			if (lista.size() == 1) {
-				for (Operador operador : lista) {
-					result = operador;
+		Operador operador = null;
+		List<Operador> operadores = pesquisarPorLogin(login);
+		if (Util.validar(operadores)) {
+			if (operadores.size() == 1) {
+				for (Operador _operador : operadores) {
+					operador = _operador;
 				}
 			}
 		}
-		return result;
+		return operador;
 	}
 
+	/**
+	 * Método externo para pesquisar operadores por filtro
+	 * 
+	 * @param filtro
+	 * @return
+	 */
 	public List<Operador> pesquisar(OperadorFilter filtro) {
 		String nome = filtro.getNome() == null ? "%" : filtro.getNome();
 		return operadorRepository.findByNomeContainingIgnoreCase(nome);
 	}
 	
+	/**
+	 * Método extrno para buscar todos os operadores
+	 * 
+	 * @return
+	 */
 	public List<Operador> buscarTodos() {
 		return operadorRepository.findAll();
 	}

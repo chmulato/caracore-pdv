@@ -25,7 +25,6 @@ import br.com.caracore.pdv.repository.filter.VendedorFilter;
 import br.com.caracore.pdv.service.VendaService;
 import br.com.caracore.pdv.service.exception.LojaNaoEncontradaException;
 import br.com.caracore.pdv.service.exception.ProdutoNaoCadastradoException;
-import br.com.caracore.pdv.service.exception.ProdutoNaoEncontradoException;
 import br.com.caracore.pdv.service.exception.QuantidadeNaoExistenteEmEstoqueException;
 import br.com.caracore.pdv.service.exception.VendedorNaoEncontradoException;
 import br.com.caracore.pdv.util.Util;
@@ -87,9 +86,7 @@ public class VendasController {
 				produto = vendaService.recuperarProdutoPorCodigoBarra(codigoBarra);
 			}
 			
-			if (Util.validar(produto)) {
-				venda = vendaService.comprar(produto, quantidade, codigoVenda, vendedor);
-			}
+			venda = vendaService.comprar(produto, quantidade, codigoVenda, vendedor);
 			
 			// salvar venda na sessão
 			if (Util.validar(venda)) {
@@ -101,8 +98,6 @@ public class VendasController {
 		} catch (QuantidadeNaoExistenteEmEstoqueException ex) {
 			error = ex.getMessage();
 		} catch (ProdutoNaoCadastradoException ex) {
-			error = ex.getMessage();
-		} catch (ProdutoNaoEncontradoException ex) {
 			error = ex.getMessage();
 		} catch (LojaNaoEncontradaException ex) {
 			error = ex.getMessage();

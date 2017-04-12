@@ -39,30 +39,10 @@ public class VendedorService {
 		return buscarDefault(loja);
 	}
 	
-	public Vendedor verificarOperador(Operador operador) {
-		return vendedorRepository.findByOperador(operador);
-	}
-	
 	public List<Operador> buscarOperadores() {
 		List<Operador> lista = null;
 		lista = operadorRepository.findAll();
 		return lista;
-	}
-	
-	public Vendedor buscarPorCodigo(Long codigo) {
-		Vendedor vendedor = null;
-		if (Util.validar(codigo)) {
-			vendedor = vendedorRepository.findOne(codigo);
-		}
-		return vendedor;
-	}
-	
-	public Vendedor buscarPorOperador(Operador operador) {
-		Vendedor vendedor = null;
-		if (Util.validar(operador)) {
-			vendedor = vendedorRepository.findByOperador(operador);
-		}
-		return vendedor;
 	}
 	
 	public List<Loja> buscarLojas() {
@@ -166,4 +146,13 @@ public class VendedorService {
 		return msg;
 	}
 	
+	/**
+	 * Método interno para recuperar vendedor por operador
+	 * 
+	 * @param operador
+	 * @return
+	 */
+	private Vendedor verificarOperador(Operador operador) {
+		return vendedorRepository.findByOperador(operador);
+	}
 }

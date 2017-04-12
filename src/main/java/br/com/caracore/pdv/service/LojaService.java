@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.caracore.pdv.model.Loja;
-import br.com.caracore.pdv.model.Vendedor;
 import br.com.caracore.pdv.repository.LojaRepository;
-import br.com.caracore.pdv.repository.VendedorRepository;
 import br.com.caracore.pdv.repository.filter.LojaFilter;
 import br.com.caracore.pdv.service.exception.NomeExistenteException;
 import br.com.caracore.pdv.util.Util;
@@ -18,9 +16,6 @@ public class LojaService {
 
 	@Autowired
 	private LojaRepository lojaRepository;
-
-	@Autowired
-	private VendedorRepository vendedorRepository;
 
 	/**
 	 * Método interno de validar nome da loja
@@ -71,10 +66,6 @@ public class LojaService {
 	public List<Loja> pesquisar(LojaFilter filtro) {
 		String nome = filtro.getNome() == null ? "%" : filtro.getNome();
 		return lojaRepository.findByNomeContainingIgnoreCase(nome);
-	}
-	
-	public List<Vendedor> listarVendedores(Loja loja) {
-		return vendedorRepository.findByLoja(loja);
 	}
 	
 }
