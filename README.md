@@ -32,6 +32,8 @@ O banco de dados HSQLDB é compatível com o Open Office e Libre Office.
 
 Este banco de dados segue o padrão (SGDB) de bancos relacionais.
 
+Veja no Youtube: https://youtu.be/MSPIJADHYYA
+
 
 
 
