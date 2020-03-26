@@ -6,7 +6,7 @@
 	<groupId>com.algaworks</groupId>
 	<artifactId>caracore.pdv</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<name>caracore-pdv</name>
 	<description>PDV Cara Core Project for Spring MVC and Spring Boot</description>
@@ -44,6 +44,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		
 		<dependency>
@@ -100,12 +101,12 @@
 			<artifactId>commons-dbcp2</artifactId>
 			<version>2.1.1</version>
 		</dependency>
-
+<!--
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 		</dependency>
-		
+-->
 	</dependencies>
 
 	<build>
