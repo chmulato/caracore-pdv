@@ -26,9 +26,25 @@ Este projeto tem como objetivo executar uma aplicação local de:
 
 A aplicação será acessada via browser do sistema operacional na url: https://caracore.com.br/caracorepdv/login
 
-O banco de dados da aplicação é o HSQLDB.
+Administrator Profile:
 
-O banco de dados HSQLDB é compatível com o Open Office e Libre Office.
+User: master
+Password: 123456
+
+Operator Profile:
+
+User: maria
+Password: 1234
+
+Guest profile:
+
+User: joao
+Password: 1234
+
+
+O banco de dados da aplicação no site é o Postgree SQL.
+
+Também podemos configurar o banco de dados HSQLDB desktop, o qual é compatível com o Open Office e Libre Office.
 
 Este banco de dados segue o padrão (SGDB) de bancos relacionais.
 
