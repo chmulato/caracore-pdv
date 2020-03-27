@@ -24,7 +24,7 @@ Este projeto tem como objetivo executar uma aplicação local de:
 - PDV (point-of-sale system); e
 - Controle de estoque (inventory control).
 
-A aplicação será acessada via browser do sistema operacional na url: http://localhost:8080/
+A aplicação será acessada via browser do sistema operacional na url: https://caracore.com.br/caracorepdv/login
 
 O banco de dados da aplicação é o HSQLDB.
 
