@@ -24,7 +24,7 @@ Este projeto tem como objetivo executar uma aplicação local de:
 - PDV (point-of-sale system); e
 - Controle de estoque (inventory control).
 
-A aplicação será acessada via browser do sistema operacional na url: https://caracore.com.br/caracorepdv/login
+A aplicação será acessada via browser do sistema operacional na url: https://caracore.com.br/caracorepdv
 
 Administrator Profile:
 
