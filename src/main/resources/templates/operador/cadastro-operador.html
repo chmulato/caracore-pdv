@@ -89,14 +89,14 @@
 				<div class="col-sm-4">
 					<div class="form-group">
 						<label for="email">E-mail</label>
-						<input id="email" type="text" class="form-control" th:field="*{email}"/>
+						<input id="email" type="text" class="form-control" th:field="*{email}" th:disabled="true" />
 					</div>
 				</div>
 		
 				<div class="col-sm-4">
 					<div class="form-group" th:classappend="${#fields.hasErrors('repetirEmail')} ? has-error">
 						<label for="repetirEmail">Repetir E-mail</label>
-						<input id="repetirEmail" type="text" class="form-control" th:field="*{repetirEmail}"/>
+						<input id="repetirEmail" type="text" class="form-control" th:field="*{repetirEmail}" />
 					</div>
 				</div>
 
