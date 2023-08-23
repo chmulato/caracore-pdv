@@ -1,5 +1,7 @@
 package br.com.caracore.pdv;
 
+import java.util.Locale;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -11,18 +13,16 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 
-import java.util.Locale;
-
 @SpringBootApplication
-public class SpringBootWarDeploymentApplication  extends SpringBootServletInitializer {
+public class SpringBootTomcatApplication extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(SpringBootWarDeploymentApplication.class);
+        return application.sources(SpringBootTomcatApplication.class);
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringBootWarDeploymentApplication.class, args);
+        SpringApplication.run(SpringBootTomcatApplication.class, args);
     }
 
     @Bean

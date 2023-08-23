@@ -35,16 +35,15 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
+<!-- 
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-jasper</artifactId>
 		</dependency>
-
+ -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
 		</dependency>
 		
 		<dependency>
@@ -90,9 +89,10 @@
 
 		<!-- Postgree JDBC driver -->
 		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<version>42.0.0.jre7</version>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.37</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- Apache Commons DBCP connection pool -->
@@ -107,6 +107,7 @@
 			<artifactId>spring-boot-devtools</artifactId>
 		</dependency>
 -->
+
 	</dependencies>
 
 	<build>
