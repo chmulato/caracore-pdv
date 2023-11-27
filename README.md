@@ -26,27 +26,26 @@ Este projeto tem como objetivo executar uma aplicação local de:
 
 A aplicação será acessada via browser do sistema operacional na url: [https://] pdv.caracore.com.br
 
-Administrator Profile:
+- Administrator Profile:
 
-User: master
-Password: 123456
+    - User: master
+    - Password: 123456
 
-Operator Profile:
+- Operator Profile:
 
-User: maria
-Password: 1234
+    - User: maria
+    - Password: 1234
 
-Guest profile:
+- Guest profile:
 
-User: joao
-Password: 1234
+    - User: joao
+    - Password: 1234
 
+O banco de dados da aplicação no site é o MySQL.
 
-O banco de dados da aplicação no site é o Postgree SQL.
+Também podemos configurar o banco de dados HSQLDB desktop, o qual é compatível com as ferramentas de escritório do Open Office e Libre Office.
 
-Também podemos configurar o banco de dados HSQLDB desktop, o qual é compatível com o Open Office e Libre Office.
-
-Este banco de dados segue o padrão (SGDB) de bancos relacionais.
+Este banco de dados segue o padrão (SGDB), ou seja, bancos de dados relacionais.
 
 Veja no Youtube: https://youtu.be/MSPIJADHYYA
 
